@@ -17,7 +17,6 @@ import java.io.Serializable;
  */
 
 @Named
-@ViewScopped
 
 public class AuthBean implements Serializable {
     @Serial
