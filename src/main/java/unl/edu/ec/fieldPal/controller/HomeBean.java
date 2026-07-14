@@ -1,8 +1,8 @@
-package com.fieldPal.controller;
+package unl.edu.ec.fieldPal.controller;
 
-import com.fieldpal.model.Organization;
-import com.fieldpal.model.enums.Zone;
-import com.fieldpal.service.OrganizationService;
+import unl.edu.ec.fieldPal.model.Organization;
+import unl.edu.ec.fieldPal.model.enums.Zone;
+import unl.edu.ec.fieldPal.service.OrganizationService;
 import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;

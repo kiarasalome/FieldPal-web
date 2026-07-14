@@ -7,9 +7,9 @@ import unl.edu.ec.fieldPal.model.enums.CourtType;
 import unl.edu.ec.fieldPal.model.enums.ReservationStatus;
 import unl.edu.ec.fieldPal.model.enums.Zone;
 import unl.edu.ec.fieldPal.service.CourtService;
-import unl.edu.ec.fieldPall.service.OrganizationService;
+import unl.edu.ec.fieldPal.service.OrganizationService;
 import unl.edu.ec.fieldPal.service.ReservationService;
-import cunl.edu.ec.fieldPal.service.UserService;
+import unl.edu.ec.fieldPal.service.UserService;
 
 import jakarta.faces.application.FacesMessage;
 import jakarta.faces.context.FacesContext;

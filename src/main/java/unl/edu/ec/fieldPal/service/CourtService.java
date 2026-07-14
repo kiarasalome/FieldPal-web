@@ -1,9 +1,9 @@
-package com.fieldPal.service;
+package unl.edu.ec.fieldPal.service;
 
 
-import com.fieldPal.model.Court;
-import com.fieldPal.model.TimeSlot;
-import com.fieldPal.model.enums.CourtType;
+import unl.edu.ec.fieldPal.model.Court;
+import unl.edu.ec.fieldPal.model.TimeSlot;
+import unl.edu.ec.fieldPal.model.enums.CourtType;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Named;
 import java.util.ArrayList;

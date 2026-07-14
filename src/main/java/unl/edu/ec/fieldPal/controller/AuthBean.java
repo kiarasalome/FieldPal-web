@@ -1,15 +1,14 @@
 package unl.edu.ec.fieldPal.controller;
 
-import unl.edu.ec.fieldPal.model.enums.User;
+import jakarta.faces.application.FacesMessage;
+import jakarta.faces.context.FacesContext;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
+import unl.edu.ec.fieldPal.model.User;
 import unl.edu.ec.fieldPal.model.enums.UserRole;
 import unl.edu.ec.fieldPal.service.UserService;
 
-import jakarta.faces.application.FacesMessage;
-import jakarta.faces.context.FacesContext;
-import jakarta.faces.view.ViewScoped;
-import jakarta.inject.Inject;
-import jakarta.inject.Named;
-
+import java.io.Serial;
 import java.io.Serializable;
 
 /**
@@ -19,7 +18,9 @@ import java.io.Serializable;
 
 @Named
 @ViewScopped
+
 public class AuthBean implements Serializable {
+    @Serial
     private static final long serialVersionUID = 1L;
 
     @Inject

@@ -1,6 +1,6 @@
-package com.fieldPal.model;
+package unl.edu.ec.fieldPal.model;
 
-import com.fieldPal.model.enums.Zone;
+import unl.edu.ec.fieldPal.model.enums.Zone;
 import java.io.Serializable;
 
 public class Organization implements Serializable {

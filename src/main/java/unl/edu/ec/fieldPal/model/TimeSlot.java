@@ -1,4 +1,4 @@
-package com.fieldPal.model;
+package unl.edu.ec.fieldPal.model;
 
 import java.io.Serializable;
 

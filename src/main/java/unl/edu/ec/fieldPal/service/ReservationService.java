@@ -1,8 +1,8 @@
-package com.fieldPal.service;
+package unl.edu.ec.fieldPal.service;
 
 
-import com.fieldPal.model.Reservation;
-import com.fieldPal.model.enums.ReservationStatus;
+import unl.edu.ec.fieldPal.model.Reservation;
+import unl.edu.ec.fieldPal.model.enums.ReservationStatus;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Named;
 import java.util.ArrayList;

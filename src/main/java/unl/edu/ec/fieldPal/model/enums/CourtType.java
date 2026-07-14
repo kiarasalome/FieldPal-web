@@ -1,4 +1,4 @@
-package com.fieldPal.model.enums;
+package unl.edu.ec.fieldPal.model.enums;
 
 public enum CourtType {
     FUTBOL("Fútbol", "sports_soccer", "⚽"),

@@ -1,8 +1,8 @@
-package com.fieldPal.service;
+package unl.edu.ec.fieldPal.service;
 
 
-import com.fieldPal.model.Organization;
-import com.fieldPal.model.enums.Zone;
+import unl.edu.ec.fieldPal.model.Organization;
+import unl.edu.ec.fieldPal.model.enums.Zone;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Named;
 import java.util.ArrayList;

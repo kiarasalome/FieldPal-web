@@ -1,7 +1,7 @@
-package com.fieldPal.service;
+package unl.edu.ec.fieldPal.service;
 
-import com.fieldPal.model.User;
-import com.fieldPal.model.enums.UserRole;
+import unl.edu.ec.fieldPal.model.User;
+import unl.edu.ec.fieldPal.model.enums.UserRole;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Named;
 import java.util.ArrayList;

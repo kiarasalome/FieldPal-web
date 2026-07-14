@@ -1,14 +1,14 @@
-package com.fieldPal.controller;
+package unl.edu.ec.fieldPal.controller;
 
-import com.fieldpal.model.Court;
-import com.fieldpal.model.Organization;
-import com.fieldpal.model.Reservation;
-import com.fieldpal.model.enums.CourtType;
-import com.fieldpal.model.enums.ReservationStatus;
-import com.fieldpal.model.enums.Zone;
-import com.fieldpal.service.CourtService;
-import com.fieldpal.service.OrganizationService;
-import com.fieldpal.service.ReservationService;
+import unl.edu.ec.fieldPal.model.Court;
+import unl.edu.ec.fieldPal.model.Organization;
+import unl.edu.ec.fieldPal.model.Reservation;
+import unl.edu.ec.fieldPal.model.enums.CourtType;
+import unl.edu.ec.fieldPal.model.enums.ReservationStatus;
+import unl.edu.ec.fieldPal.model.enums.Zone;
+import unl.edu.ec.fieldPal.service.CourtService;
+import unl.edu.ec.fieldPal.service.OrganizationService;
+import unl.edu.ec.fieldPal.service.ReservationService;
 import jakarta.faces.application.FacesMessage;
 import jakarta.faces.context.FacesContext;
 import jakarta.faces.view.ViewScoped;
@@ -21,6 +21,7 @@ import java.util.List;
  * Managed Bean para la página de reserva.
  * Datos quemados - editar después para conectar a BD real.
  */
+
 @Named
 @ViewScoped
 public class ReservaBean implements Serializable {

@@ -1,10 +1,12 @@
-package com.fieldPal.model;
+package unl.edu.ec.fieldPal.model;
 
+import unl.edu.ec.fieldPal.model.enums.UserRole;
 
-import com.fieldPal.model.enums.UserRole;
+import java.io.Serial;
 import java.io.Serializable;
 
 public class User implements Serializable {
+    @Serial
     private static final long serialVersionUID = 1L;
 
     private String id;

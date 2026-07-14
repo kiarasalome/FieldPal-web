@@ -1,7 +1,7 @@
-package com.fieldPal.model;
+package unl.edu.ec.fieldPal.model;
 
 
-import com.fieldPal.model.enums.ReservationStatus;
+import unl.edu.ec.fieldPal.model.enums.ReservationStatus;
 import java.io.Serializable;
 
 public class Reservation implements Serializable {
