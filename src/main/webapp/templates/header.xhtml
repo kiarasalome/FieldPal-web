@@ -1,0 +1,113 @@
+<!--
+    header.xhtml — equivalente a Navbar.tsx
+    ═══════════════════════════════════════════════════════════
+    Debe incluirse DENTRO de un <h:form> (lo hace layout.xhtml).
+
+    Contrato esperado de AuthBean:
+      - boolean            isAuthenticated()
+      - User               getCurrentUser()   -> getName(), getRole() (PLAYER/ADMIN)
+      - void               openLogin()        -> abre modal en modo login
+      - void               openRegister()     -> abre modal en modo registro
+      - void               logout()
+
+    Enlaces de navegación (GET, sin submit) según el rol:
+      - Público   : Inicio, Canchas
+      - Jugador   : + Reservar, Mis Reservas
+      - Admin     : + Panel Admin
+-->
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:h="jakarta.faces.html" xmlns:f="jakarta.faces.core" xmlns:ui="jakarta.faces.facelets" xmlns:p="primefaces" xmlns:fn="jakarta.tags.functions">
+
+    <header class="fp-header" id="fpHeader">
+        <div class="fp-header-inner">
+
+            <!-- Logo -->
+            <h:link outcome="/home" class="fp-logo">
+                <span class="fp-logo-icon">
+                    <span class="material-symbols-outlined" style="font-variation-settings:'FILL' 1">sports_soccer</span>
+                </span>
+                <span>FieldPal<span class="fp-dot-accent">.</span></span>
+                <h:panelGroup rendered="#{authBean.authenticated}">
+                    <span class="fp-role-tag #{authBean.currentUser.role == 'ADMIN' ? 'admin' : 'player'}">
+                        #{authBean.currentUser.role == 'ADMIN' ? 'Admin' : 'Jugador'}
+                    </span>
+                </h:panelGroup>
+            </h:link>
+
+            <!-- Desktop nav -->
+            <nav class="fp-nav-links">
+                <h:link outcome="/home" styleClass="fp-nav-link" value="Inicio"/>
+                <h:link outcome="/horarios" styleClass="fp-nav-link" value="Canchas"/>
+                <h:link outcome="/reserva" styleClass="fp-nav-link" value="Reservar" rendered="#{authBean.authenticated and authBean.currentUser.role != 'ADMIN'}"/>
+                <h:link outcome="/mis-reservas" styleClass="fp-nav-link" value="Mis Reservas" rendered="#{authBean.authenticated and authBean.currentUser.role != 'ADMIN'}"/>
+                <h:link outcome="/admin/gestion" styleClass="fp-nav-link" value="Panel Admin" rendered="#{authBean.authenticated and authBean.currentUser.role == 'ADMIN'}"/>
+            </nav>
+
+            <!-- Right actions -->
+            <div class="fp-header-actions">
+
+                <!-- Dark mode (100% cliente, no requiere bean) -->
+                <button type="button" class="fp-icon-btn" onclick="fpToggleDarkMode(this)" aria-label="Cambiar tema">
+                    <span class="material-symbols-outlined fp-icon-dark">dark_mode</span>
+                    <span class="material-symbols-outlined fp-icon-light" style="display:none">light_mode</span>
+                </button>
+
+                <!-- Authenticated: user menu -->
+                <h:panelGroup rendered="#{authBean.authenticated}" styleClass="fp-user-area">
+                    <button type="button" class="fp-user-btn" onclick="PF('userMenu').toggle(); return false;">
+                        <span class="fp-avatar #{authBean.currentUser.role == 'ADMIN' ? 'admin' : 'player'}">
+                            #{fn:toUpperCase(fn:substring(authBean.currentUser.name,0,1))}
+                        </span>
+                        <span class="fp-user-name">#{authBean.currentUser.name}</span>
+                        <span class="material-symbols-outlined" style="font-size:16px">expand_more</span>
+                    </button>
+
+                    <p:overlayPanel widgetVar="userMenu" for="@(.fp-user-btn)" dismissable="true" showEvent="click" hideEvent="click" styleClass="fp-user-dropdown">
+                        <div class="fp-user-dropdown-head">
+                            <p class="fp-user-dropdown-name">#{authBean.currentUser.name}</p>
+                            <p class="fp-user-dropdown-email">#{authBean.currentUser.email}</p>
+                        </div>
+                        <ul class="fp-user-dropdown-list">
+                            <li>
+                                <h:link outcome="/mis-reservas" rendered="#{authBean.currentUser.role != 'ADMIN'}">
+                                    <span class="material-symbols-outlined">event_note</span> Mis Reservas
+                                </h:link>
+                            </li>
+                            <li>
+                                <h:link outcome="/reserva" rendered="#{authBean.currentUser.role != 'ADMIN'}">
+                                    <span class="material-symbols-outlined">edit_calendar</span> Nueva Reserva
+                                </h:link>
+                            </li>
+                            <li>
+                                <h:link outcome="/admin/gestion" rendered="#{authBean.currentUser.role == 'ADMIN'}">
+                                    <span class="material-symbols-outlined">dashboard</span> Panel de Gestión
+                                </h:link>
+                            </li>
+                        </ul>
+                        <p:commandButton value="Cerrar Sesión" icon="pi pi-sign-out" styleClass="fp-logout-btn" action="#{authBean.logout}" process="@this" update="appForm"/>
+                    </p:overlayPanel>
+                </h:panelGroup>
+
+                <!-- Not authenticated: login button -->
+                <p:commandButton rendered="#{not authBean.authenticated}" value="Iniciar Sesión" icon="pi pi-user" styleClass="fp-btn-accent fp-desktop-only" action="#{authBean.openLogin}" process="@this" update="@(.fp-auth-modal)" oncomplete="PF('authModal').show()"/>
+
+                <!-- Mobile burger -->
+                <button type="button" class="fp-burger" onclick="fpToggleMobileNav()" aria-label="Menú">
+                    <span></span><span></span><span></span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Mobile nav -->
+        <nav class="fp-nav-mobile" id="fpMobileNav">
+            <h:link outcome="/home" styleClass="fp-nav-link" value="Inicio"/>
+            <h:link outcome="/horarios" styleClass="fp-nav-link" value="Canchas"/>
+            <h:link outcome="/reserva" styleClass="fp-nav-link" value="Reservar" rendered="#{authBean.authenticated and authBean.currentUser.role != 'ADMIN'}"/>
+            <h:link outcome="/mis-reservas" styleClass="fp-nav-link" value="Mis Reservas" rendered="#{authBean.authenticated and authBean.currentUser.role != 'ADMIN'}"/>
+            <h:link outcome="/admin/gestion" styleClass="fp-nav-link" value="Panel Admin" rendered="#{authBean.authenticated and authBean.currentUser.role == 'ADMIN'}"/>
+
+            <p:commandButton rendered="#{not authBean.authenticated}" value="Iniciar Sesión" icon="pi pi-user" styleClass="fp-btn-accent" style="width:100%;margin-top:10px" action="#{authBean.openLogin}" process="@this" update="@(.fp-auth-modal)" oncomplete="PF('authModal').show()"/>
+            <p:commandButton rendered="#{authBean.authenticated}" value="Cerrar Sesión" icon="pi pi-sign-out" styleClass="fp-btn-outline" style="width:100%;margin-top:10px" action="#{authBean.logout}" process="@this" update="appForm"/>
+        </nav>
+    </header>
+
+</ui:composition>

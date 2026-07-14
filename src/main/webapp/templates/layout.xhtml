@@ -1,0 +1,59 @@
+<!--
+    layout.xhtml
+    ═══════════════════════════════════════════════════════════
+    Plantilla maestra — equivalente a App.tsx.
+    Cada vista (home.xhtml, horarios.xhtml, reserva.xhtml,
+    mis-reservas.xhtml, admin/gestion.xhtml) hace:
+
+        <ui:composition template="/templates/layout.xhtml">
+            <ui:define name="title">...</ui:define>
+            <ui:define name="content">...</ui:define>
+        </ui:composition>
+
+    Contrato esperado de bean (no se define aquí, solo se usa):
+      - themeBean.dark (boolean)              -> opcional, modo oscuro
+      - authBean.showAuthModal (boolean)      -> usado por auth-modal.xhtml
+-->
+
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="jakarta.faces.html" xmlns:f="jakarta.faces.core" xmlns:ui="jakarta.faces.facelets" xmlns:p="primefaces" lang="es">
+
+<h:head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FieldPal — <ui:insert name="title">Reserva tu cancha</ui:insert></title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&amp;family=DM+Sans:wght@400;500;600;700&amp;family=Space+Grotesk:wght@500;600;700&amp;family=JetBrains+Mono:wght@500;700&amp;display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+
+    <h:outputStylesheet library="css" name="fieldpal.css"/>
+    <h:outputScript library="js" name="fieldpal.js" target="head"/>
+</h:head>
+
+<h:body styleClass="#{authBean.currentUser != null and authBean.currentUser.role == 'ADMIN' ? 'fp-role-admin' : ''}">
+
+    <p:ajaxStatus onstart="PF('globalStatus').show()" onsuccess="PF('globalStatus').hide()" widgetVar="globalStatusEv"/>
+    <p:blockUI block=":appForm" widgetVar="globalStatus" styleClass="fp-block-ui">
+        <span class="material-symbols-outlined fp-spin">progress_activity</span>
+    </p:blockUI>
+
+    <h:form id="appForm">
+        <p:growl id="growl" showDetail="true" life="3500"/>
+
+        <!-- ═══ HEADER / NAVBAR ═══ -->
+        <ui:include src="/templates/header.xhtml"/>
+
+        <!-- ═══ PAGE CONTENT ═══ -->
+        <div class="fp-page-wrap">
+            <ui:insert name="content">Contenido no definido</ui:insert>
+        </div>
+
+        <!-- ═══ FOOTER ═══ -->
+        <ui:include src="/templates/footer.xhtml"/>
+
+        <!-- ═══ AUTH MODAL (login / registro) ═══ -->
+        <ui:include src="/templates/auth-modal.xhtml"/>
+    </h:form>
+
+</h:body>
+</html>

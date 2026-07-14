@@ -1,0 +1,117 @@
+<!--
+    auth-modal.xhtml — equivalente a AuthModal.tsx
+    ═══════════════════════════════════════════════════════════
+    Contrato esperado de AuthBean:
+      - boolean  isShowAuthModal() / setShowAuthModal(boolean)
+      - String   getAuthMode() / setAuthMode(String)     "login" | "register"
+      - String   loginEmail, loginPassword
+      - String   registerName, registerEmail, registerPhone,
+                 registerPassword
+      - UserRole registerRole                             PLAYER | ADMIN
+      - void     submitLogin()      -> action, agrega FacesMessage si falla
+      - void     submitRegister()   -> action, agrega FacesMessage si falla
+      - void     switchToLogin()
+      - void     switchToRegister()
+      - void     closeAuth()
+-->
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:h="jakarta.faces.html" xmlns:f="jakarta.faces.core" xmlns:ui="jakarta.faces.facelets" xmlns:p="primefaces">
+
+    <p:dialog id="authDialog" widgetVar="authModal" visible="#{authBean.showAuthModal}" modal="true" resizable="false" draggable="false" closable="true" showHeader="false" styleClass="fp-auth-modal" width="440" onHide="authBean.showAuthModal=false" closeOnEscape="true">
+
+        <button type="button" class="fp-modal-close" onclick="PF('authModal').hide()">
+            <span class="material-symbols-outlined">close</span>
+        </button>
+        <p:commandButton style="display:none" process="@this" action="#{authBean.closeAuth}" styleClass="fp-modal-close-hidden-trigger" id="hiddenCloseTrigger"/>
+
+        <div class="fp-auth-head">
+            <div class="fp-auth-icon">
+                <span class="material-symbols-outlined" style="font-variation-settings:'FILL' 1">sports_soccer</span>
+            </div>
+            <h2>#{authBean.authMode == 'login' ? 'Iniciar Sesión' : 'Crear Cuenta'}</h2>
+            <p>#{authBean.authMode == 'login' ? 'Accede a tu cuenta de FieldPal' : 'Regístrate para empezar a reservar'}</p>
+        </div>
+
+        <p:messages id="authMessages" showDetail="true" closable="false" globalOnly="true" styleClass="fp-form-error"/>
+
+        <!-- ═══ LOGIN ═══ -->
+        <h:panelGroup rendered="#{authBean.authMode == 'login'}" layout="block">
+            <div class="fp-field">
+                <label>Correo electrónico</label>
+                <span class="fp-input-icon">
+                    <span class="material-symbols-outlined">mail</span>
+                    <p:inputText value="#{authBean.loginEmail}" styleClass="fp-input" placeholder="correo@ejemplo.com"/>
+                </span>
+            </div>
+            <div class="fp-field">
+                <label>Contraseña</label>
+                <span class="fp-input-icon">
+                    <span class="material-symbols-outlined">lock</span>
+                    <p:password value="#{authBean.loginPassword}" styleClass="fp-input" placeholder="••••••••" feedback="false"/>
+                </span>
+            </div>
+
+            <p:commandButton value="Iniciar Sesión" icon="pi pi-sign-in" styleClass="fp-btn-primary fp-btn-block" action="#{authBean.submitLogin}" process="@this authDialog" update="appForm"/>
+
+            <p class="fp-auth-switch">
+                ¿No tienes cuenta?
+                <p:commandLink value="Regístrate aquí" action="#{authBean.switchToRegister}" process="@this" update="authDialog"/>
+            </p>
+
+            <div class="fp-auth-demo">
+                <span class="fp-auth-demo-label">Demo:</span> jugador@fieldpal.com / jugador123 o admin@fieldpal.com / admin123
+            </div>
+        </h:panelGroup>
+
+        <!-- ═══ REGISTRO ═══ -->
+        <h:panelGroup rendered="#{authBean.authMode == 'register'}" layout="block">
+            <div class="fp-field">
+                <label>Nombre completo</label>
+                <span class="fp-input-icon">
+                    <span class="material-symbols-outlined">person</span>
+                    <p:inputText value="#{authBean.registerName}" styleClass="fp-input" placeholder="Tu nombre"/>
+                </span>
+            </div>
+            <div class="fp-field">
+                <label>Teléfono</label>
+                <span class="fp-input-icon">
+                    <span class="material-symbols-outlined">call</span>
+                    <p:inputText value="#{authBean.registerPhone}" styleClass="fp-input" placeholder="+593 99 123 4567"/>
+                </span>
+            </div>
+            <div class="fp-field">
+                <label>Correo electrónico</label>
+                <span class="fp-input-icon">
+                    <span class="material-symbols-outlined">mail</span>
+                    <p:inputText value="#{authBean.registerEmail}" styleClass="fp-input" placeholder="correo@ejemplo.com"/>
+                </span>
+            </div>
+            <div class="fp-field">
+                <label>Contraseña</label>
+                <span class="fp-input-icon">
+                    <span class="material-symbols-outlined">lock</span>
+                    <p:password value="#{authBean.registerPassword}" styleClass="fp-input" placeholder="••••••••" feedback="false"/>
+                </span>
+            </div>
+
+            <div class="fp-field">
+                <label>Tipo de cuenta</label>
+                <div class="fp-role-toggle">
+                    <p:selectOneButton value="#{authBean.registerRole}" styleClass="fp-role-radio">
+                        <f:selectItem itemLabel="Jugador" itemValue="PLAYER"/>
+                        <f:selectItem itemLabel="Administrador" itemValue="ADMIN"/>
+                    </p:selectOneButton>
+                </div>
+            </div>
+
+            <p:commandButton value="Crear Cuenta" icon="pi pi-user-plus" styleClass="fp-btn-primary fp-btn-block" action="#{authBean.submitRegister}" process="@this authDialog" update="appForm"/>
+
+            <p class="fp-auth-switch">
+                ¿Ya tienes cuenta?
+                <p:commandLink value="Inicia sesión" action="#{authBean.switchToLogin}" process="@this" update="authDialog"/>
+            </p>
+        </h:panelGroup>
+
+    </p:dialog>
+
+</ui:composition>
