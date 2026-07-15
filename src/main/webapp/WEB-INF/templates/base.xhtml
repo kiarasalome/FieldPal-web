@@ -34,7 +34,7 @@
                  o un panel de administrador), puede sobreescribirlo con:
                  <ui:define name="header"> ...otro header... </ui:define> -->
             <ui:insert name="header">
-                <ui:include src="/templates/header.xhtml"/>
+                <ui:include src="/WEB-INF/templates/fragments/header.xhtml"/>
             </ui:insert>
 
             <!-- ═══ CONTENIDO ═══
@@ -50,7 +50,7 @@
                  Mismo patrón que el header: por defecto se incluye footer.xhtml, pero
                  cualquier página puede reemplazarlo si es necesario -->
             <ui:insert name="footer">
-                <ui:include src="/templates/footer.xhtml"/>
+                <ui:include src="/WEB-INF/templates/fragments/footer.xhtml"/>
             </ui:insert>
 
         </h:panelGroup>
