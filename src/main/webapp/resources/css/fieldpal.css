@@ -518,3 +518,49 @@ body.dark .fp-admin-tab.active { color: #0A0A0A; }
 .fp-text-xs { font-size: 0.75rem; }
 .fp-font-bold { font-weight: 700; }
 .fp-w-full { width: 100%; }
+
+/* ═══ PAGE HEADER (reserva, horarios, etc.) ═══ */
+.fp-page-header { max-width: 80rem; margin: 0 auto; padding: 6rem 1rem 2rem; }
+.fp-page-header-title { display:flex; align-items:center; gap:.625rem; margin-bottom:.5rem; }
+.fp-page-header-title .material-symbols-outlined { font-size:1.75rem; color: var(--fp-primary-text); }
+.fp-page-header-title h1 { font-family:'DM Sans',sans-serif; font-weight:700; font-size:clamp(1.75rem,3vw,2.25rem); color:var(--fp-text); letter-spacing:-0.01em; }
+.fp-page-header p { color: var(--fp-text-secondary); max-width: 40rem; }
+
+/* ═══ EYEBROW (motivo "línea de cancha") ═══ */
+.fp-eyebrow { display:flex; align-items:center; gap:.625rem; font-size:.6875rem; font-weight:700; text-transform:uppercase; letter-spacing:.08em; color:var(--fp-text-muted); margin-bottom:1.25rem; }
+.fp-eyebrow::before { content:""; width:22px; height:2px; background: var(--fp-primary); flex-shrink:0; }
+
+/* ═══ RESERVA — LAYOUT DE 2 COLUMNAS ═══ */
+.fp-reserva-grid { display:grid; grid-template-columns: 1fr; gap:1.75rem; max-width:80rem; margin:0 auto; padding:0 1rem 5rem; align-items:start; }
+@media (min-width: 960px) { .fp-reserva-grid { grid-template-columns: minmax(320px, 420px) 1fr; } }
+
+/* ═══ FOTO DE LA CANCHA ═══ */
+.fp-court-photo {
+    position: relative; height: 12rem; overflow: hidden;
+    border-radius: 1rem 1rem 0 0;
+    background: linear-gradient(135deg, var(--fp-primary), var(--fp-primary-dark));
+}
+.fp-court-photo-placeholder { width:100%; height:100%; display:flex; align-items:center; justify-content:center; font-size:4rem; }
+.fp-court-photo .fp-chip { border:none; cursor:default; }
+
+/* ═══ GRID DE HORARIOS ═══ */
+.fp-slots-grid { display:grid; grid-template-columns: repeat(auto-fill, minmax(84px, 1fr)); gap:.625rem; }
+.fp-slot {
+    display:flex; flex-direction:column; align-items:center; gap:.25rem;
+    padding:.75rem .25rem; border-radius:.75rem; border:1px solid transparent;
+    font-family:'DM Sans', sans-serif; font-weight:600; font-size:.8125rem;
+    cursor:pointer; transition: all .2s ease; text-decoration:none; background:none;
+}
+.fp-slot .material-symbols-outlined { font-size:1.125rem; }
+.fp-slot-free { background: rgba(34, 197, 94, 0.1); color:#16A34A; border-color: rgba(34,197,94,0.25); }
+.fp-slot-free:hover { transform: translateY(-2px); border-color:#16A34A; }
+body.dark .fp-slot-free { color:#4ADE80; }
+.fp-slot-busy { background: rgba(220, 38, 38, 0.08); color: var(--fp-error); border-color: rgba(220,38,38,0.2); cursor:not-allowed; opacity:.75; pointer-events:none; }
+.fp-slot-selected { background: var(--fp-primary) !important; color:#fff !important; border-color: var(--fp-primary) !important; }
+body.dark .fp-slot-selected { color:#0A0A0A !important; }
+.fp-slot-dot { width:8px; height:8px; border-radius:50%; display:inline-block; }
+.fp-slot-dot-free { background:#22C55E; }
+.fp-slot-dot-busy { background: var(--fp-error); }
+
+/* ═══ RESUMEN DE PRECIO ═══ */
+.fp-price-summary { background: var(--fp-bg-elevated); border:1px solid var(--fp-border-light); border-radius:.75rem; padding:1.25rem; display:flex; flex-direction:column; gap:.5rem; font-size:.875rem; color:var(--fp-text-secondary); }

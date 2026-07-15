@@ -1,9 +1,7 @@
 package unl.edu.ec.fieldPal.controller;
 
-import jakarta.enterprise.context.SessionScoped;
 import jakarta.faces.application.FacesMessage;
 import jakarta.faces.context.FacesContext;
-import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import unl.edu.ec.fieldPal.model.User;
@@ -19,7 +17,7 @@ import java.io.Serializable;
  */
 
 @Named
-@SessionScoped
+
 public class AuthBean implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
