@@ -2,6 +2,7 @@ package unl.edu.ec.fieldPal.controller;
 
 import jakarta.faces.application.FacesMessage;
 import jakarta.faces.context.FacesContext;
+import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import unl.edu.ec.fieldPal.model.User;
@@ -17,6 +18,7 @@ import java.io.Serializable;
  */
 
 @Named
+@ViewScoped
 
 public class AuthBean implements Serializable {
     @Serial
@@ -42,7 +44,7 @@ public class AuthBean implements Serializable {
     private User currentUser;
 
     // === Métodos de Login ===
-    public String doLogin() {
+    public String submitLogin() {
         // TODO: Implementar autenticación real con BD
         User user = userService.login(loginEmail, loginPassword);
         if (user != null) {
@@ -62,7 +64,7 @@ public class AuthBean implements Serializable {
     }
 
     // === Métodos de Registro ===
-    public String doRegister() {
+    public String submitRegister() {
         // TODO: Implementar registro real con BD
         UserRole role = "ADMIN".equals(registerRole) ? UserRole.ADMIN : UserRole.PLAYER;
         User user = userService.register(registerName, registerEmail,
@@ -112,7 +114,7 @@ public class AuthBean implements Serializable {
         showAuthModal = true;
     }
 
-    public void closeModal() {
+    public void closeAuth() {
         showAuthModal = false;
         clearLoginForm();
         clearRegisterForm();
