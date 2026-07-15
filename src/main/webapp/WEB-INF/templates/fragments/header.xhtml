@@ -15,12 +15,16 @@
       - Jugador   : + Reservar, Mis Reservas
       - Admin     : + Panel Admin
 -->
-<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:h="jakarta.faces.html" xmlns:f="jakarta.faces.core" xmlns:ui="jakarta.faces.facelets" xmlns:p="primefaces" xmlns:fn="jakarta.tags.functions">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="jakarta.faces.html"
+                xmlns:f="jakarta.faces.core"
+                xmlns:ui="jakarta.faces.facelets"
+                xmlns:p="primefaces"
+                xmlns:fn="jakarta.tags.functions">
 
     <header class="fp-header" id="fpHeader">
         <div class="fp-header-inner">
 
-            <!-- Logo -->
             <h:link outcome="/home" class="fp-logo">
                 <span class="fp-logo-icon">
                     <span class="material-symbols-outlined" style="font-variation-settings:'FILL' 1">sports_soccer</span>
@@ -33,7 +37,6 @@
                 </h:panelGroup>
             </h:link>
 
-            <!-- Desktop nav -->
             <nav class="fp-nav-links">
                 <h:link outcome="/home" styleClass="fp-nav-link" value="Inicio"/>
                 <h:link outcome="/horarios" styleClass="fp-nav-link" value="Canchas"/>
@@ -42,16 +45,13 @@
                 <h:link outcome="/admin/gestion" styleClass="fp-nav-link" value="Panel Admin" rendered="#{authBean.authenticated and authBean.currentUser.role == 'ADMIN'}"/>
             </nav>
 
-            <!-- Right actions -->
             <div class="fp-header-actions">
 
-                <!-- Dark mode (100% cliente, no requiere bean) -->
                 <button type="button" class="fp-icon-btn" onclick="fpToggleDarkMode(this)" aria-label="Cambiar tema">
                     <span class="material-symbols-outlined fp-icon-dark">dark_mode</span>
                     <span class="material-symbols-outlined fp-icon-light" style="display:none">light_mode</span>
                 </button>
 
-                <!-- Authenticated: user menu -->
                 <h:panelGroup rendered="#{authBean.authenticated}" styleClass="fp-user-area">
                     <button type="button" class="fp-user-btn" onclick="PF('userMenu').toggle(); return false;">
                         <span class="fp-avatar #{authBean.currentUser.role == 'ADMIN' ? 'admin' : 'player'}">
@@ -87,17 +87,21 @@
                     </p:overlayPanel>
                 </h:panelGroup>
 
-                <!-- Not authenticated: login button -->
-                <p:commandButton rendered="#{not authBean.authenticated}" value="Iniciar Sesión" icon="pi pi-user" styleClass="fp-btn-accent fp-desktop-only" action="#{authBean.openLogin}" process="@this" update="@(.fp-auth-modal)" oncomplete="PF('authModal').show()"/>
+                <p:commandButton rendered="#{not authBean.authenticated}"
+                                 value="Iniciar Sesión"
+                                 icon="pi pi-user"
+                                 styleClass="fp-btn-accent fp-desktop-only"
+                                 action="#{authBean.openLogin()}"
+                                 process="@this"
+                                 update="@(.fp-auth-modal)"
+                                 oncomplete="PF('authModal').show();"/>
 
-                <!-- Mobile burger -->
                 <button type="button" class="fp-burger" onclick="fpToggleMobileNav()" aria-label="Menú">
                     <span></span><span></span><span></span>
                 </button>
             </div>
         </div>
 
-        <!-- Mobile nav -->
         <nav class="fp-nav-mobile" id="fpMobileNav">
             <h:link outcome="/home" styleClass="fp-nav-link" value="Inicio"/>
             <h:link outcome="/horarios" styleClass="fp-nav-link" value="Canchas"/>
@@ -105,8 +109,24 @@
             <h:link outcome="/mis-reservas" styleClass="fp-nav-link" value="Mis Reservas" rendered="#{authBean.authenticated and authBean.currentUser.role != 'ADMIN'}"/>
             <h:link outcome="/admin/gestion" styleClass="fp-nav-link" value="Panel Admin" rendered="#{authBean.authenticated and authBean.currentUser.role == 'ADMIN'}"/>
 
-            <p:commandButton rendered="#{not authBean.authenticated}" value="Iniciar Sesión" icon="pi pi-user" styleClass="fp-btn-accent" style="width:100%;margin-top:10px" action="#{authBean.openLogin}" process="@this" update="@(.fp-auth-modal)" oncomplete="PF('authModal').show()"/>
-            <p:commandButton rendered="#{authBean.authenticated}" value="Cerrar Sesión" icon="pi pi-sign-out" styleClass="fp-btn-outline" style="width:100%;margin-top:10px" action="#{authBean.logout}" process="@this" update="appForm"/>
+            <p:commandButton rendered="#{not authBean.authenticated}"
+                             value="Iniciar Sesión"
+                             icon="pi pi-user"
+                             styleClass="fp-btn-accent"
+                             style="width:100%;margin-top:10px"
+                             action="#{authBean.openLogin}"
+                             process="@this"
+                             update="@(.fp-auth-modal)"
+                             oncomplete="PF('authModal').show()"/>
+
+            <p:commandButton rendered="#{authBean.authenticated}"
+                             value="Cerrar Sesión"
+                             icon="pi pi-sign-out"
+                             styleClass="fp-btn-outline"
+                             style="width:100%;margin-top:10px"
+                             action="#{authBean.logout}"
+                             process="@this"
+                             update="appForm"/>
         </nav>
     </header>
 
