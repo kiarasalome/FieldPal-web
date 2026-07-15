@@ -1,18 +1,22 @@
 <!--
     auth-modal.xhtml — equivalente a AuthModal.tsx
     ═══════════════════════════════════════════════════════════
+    Usa el sistema de modal ya definido en fieldpal.css
+    (fp-modal, fp-modal-header, fp-modal-icon, fp-modal-title,
+    fp-modal-subtitle, fp-modal-form, fp-form-group, fp-input...).
+    El contenedor PrimeFaces (p:dialog) recibe el estilo del
+    modal vía la clase fp-auth-modal-dialog (ver override en
+    fieldpal.css, sección "AUTH MODAL").
+
     Contrato esperado de AuthBean:
-      - boolean  isShowAuthModal() / setShowAuthModal(boolean)
-      - String   getAuthMode() / setAuthMode(String)     "login" | "register"
+      - String   getAuthMode()                          "login" | "register"
       - String   loginEmail, loginPassword
       - String   registerName, registerEmail, registerPhone,
-                 registerPassword
-      - UserRole registerRole                             PLAYER | ADMIN
-      - void     submitLogin()      -> action, agrega FacesMessage si falla
-      - void     submitRegister()   -> action, agrega FacesMessage si falla
+                 registerPassword, registerRole           PLAYER | ADMIN
+      - String   submitLogin()      -> action, navegación o FacesMessage si falla
+      - String   submitRegister()   -> action, navegación o FacesMessage si falla
       - void     switchToLogin()
       - void     switchToRegister()
-      - void     closeAuth()
 -->
 <ui:composition xmlns="http://www.w3.org/1999/xhtml"
                 xmlns:h="jakarta.faces.html"
@@ -27,93 +31,78 @@
               draggable="false"
               closable="true"
               showHeader="false"
-              styleClass="fp-auth-modal"
-              width="440"
+              styleClass="fp-auth-modal-dialog"
               closeOnEscape="true"
               appendTo="@(body)">
 
-        <button type="button" class="fp-modal-close" onclick="PF('authModal').hide()">
+        <button type="button" class="fp-modal-close" onclick="PF('authModal').hide()" aria-label="Cerrar">
             <span class="material-symbols-outlined">close</span>
         </button>
 
-        <div class="fp-auth-head">
-            <div class="fp-auth-icon">
+        <div class="fp-modal-header">
+            <div class="fp-modal-icon">
                 <span class="material-symbols-outlined" style="font-variation-settings:'FILL' 1">sports_soccer</span>
             </div>
-            <h2>#{authBean.authMode == 'login' ? 'Iniciar Sesión' : 'Crear Cuenta'}</h2>
-            <p>#{authBean.authMode == 'login' ? 'Accede a tu cuenta de FieldPal' : 'Regístrate para empezar a reservar'}</p>
+            <h2 class="fp-modal-title">#{authBean.authMode == 'login' ? 'Iniciar Sesión' : 'Crear Cuenta'}</h2>
+            <p class="fp-modal-subtitle">#{authBean.authMode == 'login' ? 'Accede a tu cuenta de FieldPal' : 'Regístrate para empezar a reservar'}</p>
         </div>
 
-        <p:messages id="authMessages" showDetail="true" closable="false" globalOnly="true" styleClass="fp-form-error"/>
+        <p:messages id="authMessages" showDetail="true" closable="false" globalOnly="true"/>
 
-        <h:panelGroup rendered="#{authBean.authMode == 'login'}" layout="block" id="loginFormGroup">
-            <div class="fp-field">
-                <label>Correo electrónico</label>
-                <span class="fp-input-icon">
-                    <span class="material-symbols-outlined">mail</span>
-                    <p:inputText value="#{authBean.loginEmail}" styleClass="fp-input" placeholder="correo@ejemplo.com"/>
-                </span>
+        <h:panelGroup rendered="#{authBean.authMode == 'login'}" layout="block" id="loginFormGroup" styleClass="fp-modal-form">
+            <div class="fp-form-group fp-input-icon-wrapper">
+                <label class="fp-form-label">Correo electrónico</label>
+                <span class="fp-input-icon material-symbols-outlined">mail</span>
+                <p:inputText value="#{authBean.loginEmail}" styleClass="fp-input fp-input-icon-field" placeholder="correo@ejemplo.com"/>
             </div>
-            <div class="fp-field">
-                <label>Contraseña</label>
-                <span class="fp-input-icon">
-                    <span class="material-symbols-outlined">lock</span>
-                    <p:password value="#{authBean.loginPassword}" styleClass="fp-input" placeholder="••••••••" feedback="false"/>
-                </span>
+            <div class="fp-form-group fp-input-icon-wrapper">
+                <label class="fp-form-label">Contraseña</label>
+                <span class="fp-input-icon material-symbols-outlined">lock</span>
+                <p:password value="#{authBean.loginPassword}" styleClass="fp-input fp-input-icon-field" placeholder="••••••••" feedback="false"/>
             </div>
 
             <p:commandButton value="Iniciar Sesión"
                              icon="pi pi-sign-in"
-                             styleClass="fp-btn-primary fp-btn-block"
+                             styleClass="fp-btn fp-btn-primary fp-btn-full"
                              action="#{authBean.submitLogin()}"
                              process="loginFormGroup @this"
                              update="appForm"
                              oncomplete="if (!args.validationFailed) PF('authModal').hide();" />
 
-            <p class="fp-auth-switch">
+            <p class="fp-form-switch">
                 ¿No tienes cuenta?
-                <p:commandLink value="Regístrate aquí" action="#{authBean.switchToRegister}" process="@this" update="@(.fp-auth-modal)"/>
+                <p:commandLink value="Regístrate aquí" action="#{authBean.switchToRegister}" process="@this" update="@(.fp-auth-modal-dialog)"/>
             </p>
 
-            <div class="fp-auth-demo">
-                <span class="fp-auth-demo-label">Demo:</span> jugador@fieldpal.com / jugador123 o admin@fieldpal.com / admin123
-            </div>
+            <p class="fp-demo-hint">Demo: jugador@fieldpal.com / jugador123 · admin@fieldpal.com / admin123</p>
         </h:panelGroup>
 
-        <h:panelGroup rendered="#{authBean.authMode == 'register'}" layout="block" id="registerFormGroup">
-            <div class="fp-field">
-                <label>Nombre completo</label>
-                <span class="fp-input-icon">
-                    <span class="material-symbols-outlined">person</span>
-                    <p:inputText value="#{authBean.registerName}" styleClass="fp-input" placeholder="Tu nombre"/>
-                </span>
+        <h:panelGroup rendered="#{authBean.authMode == 'register'}" layout="block" id="registerFormGroup" styleClass="fp-modal-form">
+            <div class="fp-form-group fp-input-icon-wrapper">
+                <label class="fp-form-label">Nombre completo</label>
+                <span class="fp-input-icon material-symbols-outlined">person</span>
+                <p:inputText value="#{authBean.registerName}" styleClass="fp-input fp-input-icon-field" placeholder="Tu nombre"/>
             </div>
-            <div class="fp-field">
-                <label>Teléfono</label>
-                <span class="fp-input-icon">
-                    <span class="material-symbols-outlined">call</span>
-                    <p:inputText value="#{authBean.registerPhone}" styleClass="fp-input" placeholder="+593 99 123 4567"/>
-                </span>
+            <div class="fp-form-group fp-input-icon-wrapper">
+                <label class="fp-form-label">Teléfono</label>
+                <span class="fp-input-icon material-symbols-outlined">call</span>
+                <p:inputText value="#{authBean.registerPhone}" styleClass="fp-input fp-input-icon-field" placeholder="+593 99 123 4567"/>
             </div>
-            <div class="fp-field">
-                <label>Correo electrónico</label>
-                <span class="fp-input-icon">
-                    <span class="material-symbols-outlined">mail</span>
-                    <p:inputText value="#{authBean.registerEmail}" styleClass="fp-input" placeholder="correo@ejemplo.com"/>
-                </span>
+            <div class="fp-form-group fp-input-icon-wrapper">
+                <label class="fp-form-label">Correo electrónico</label>
+                <span class="fp-input-icon material-symbols-outlined">mail</span>
+                <p:inputText value="#{authBean.registerEmail}" styleClass="fp-input fp-input-icon-field" placeholder="correo@ejemplo.com"/>
             </div>
-            <div class="fp-field">
-                <label>Contraseña</label>
-                <span class="fp-input-icon">
-                    <span class="material-symbols-outlined">lock</span>
-                    <p:password value="#{authBean.registerPassword}" styleClass="fp-input" placeholder="••••••••" feedback="false"/>
-                </span>
+            <div class="fp-form-group fp-input-icon-wrapper">
+                <label class="fp-form-label">Contraseña</label>
+                <span class="fp-input-icon material-symbols-outlined">lock</span>
+                <p:password value="#{authBean.registerPassword}" styleClass="fp-input fp-input-icon-field" placeholder="••••••••" feedback="false"/>
             </div>
 
-            <div class="fp-field">
-                <label>Tipo de cuenta</label>
-                <div class="fp-role-toggle">
-                    <p:selectOneButton value="#{authBean.registerRole}" styleClass="fp-role-radio">
+            <div class="fp-form-group">
+                <label class="fp-form-label">Tipo de cuenta</label>
+                <div class="fp-radio-group">
+                    <p:selectOneButton value="#{authBean.registerRole}">
                         <f:selectItem itemLabel="Jugador" itemValue="PLAYER"/>
                         <f:selectItem itemLabel="Administrador" itemValue="ADMIN"/>
                     </p:selectOneButton>
@@ -122,17 +111,18 @@
 
             <p:commandButton value="Crear Cuenta"
                              icon="pi pi-user-plus"
-                             styleClass="fp-btn-primary fp-btn-block"
+                             styleClass="fp-btn fp-btn-primary fp-btn-full"
                              action="#{authBean.submitRegister()}"
                              process="registerFormGroup @this"
                              update="appForm"
                              oncomplete="if (!args.validationFailed) PF('authModal').hide();" />
 
-            <p class="fp-auth-switch">
+            <p class="fp-form-switch">
                 ¿Ya tienes cuenta?
-                <p:commandLink value="Inicia sesión" action="#{authBean.switchToLogin}" process="@this" update="@(.fp-auth-modal)"/>
+                <p:commandLink value="Inicia sesión" action="#{authBean.switchToLogin}" process="@this" update="@(.fp-auth-modal-dialog)"/>
             </p>
         </h:panelGroup>
 
     </p:dialog>
+
 </ui:composition>

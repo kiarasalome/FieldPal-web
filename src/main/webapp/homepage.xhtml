@@ -4,102 +4,141 @@
                 xmlns:f="jakarta.faces.core"
                 xmlns:ui="jakarta.faces.facelets"
                 xmlns:p="primefaces"
+                xmlns:fn="jakarta.tags.functions"
                 template="/WEB-INF/templates/fragments/layout.xhtml">
     <ui:define name="title">
         FieldPal — Tu Cancha al Instante
     </ui:define>
 
     <ui:define name="content">
-        <p:card styleClass="fp-hero-card" style="text-align: center; margin-bottom: 30px; padding: 40px 20px; background: var(--fp-bg-elevated); border-radius: 1rem;">
-            <h:outputText value="¡Encuentra y Reserva tu Cancha Ideal!"
-                          style="font-size: 2.8rem; font-weight: bold; display: block; color: var(--fp-primary-text); font-family: 'Space Grotesk', sans-serif;" />
-            <p:spacer height="10" />
-            <h:outputText value="Elige tu deporte favorito, selecciona la zona de Loja y asegura tu juego al instante sin llamadas."
-                          style="font-size: 1.2rem; color: var(--fp-text-secondary); display: block;" />
-            <p:spacer height="25" />
 
-            <p:button value="Reservar Ahora"
-                      icon="pi pi-calendar-plus"
-                      outcome="/reserva"
-                      styleClass="ui-button-raised ui-button-success fp-btn-primary"
-                      style="font-size: 1.2rem; padding: 10px 25px;"
-                      rendered="#{authBean.authenticated}" />
+        <!-- ═══ HERO ═══ -->
+        <div class="fp-hero" style="height:auto;min-height:0;padding:5rem 1rem;background:linear-gradient(135deg, var(--fp-primary) 0%, var(--fp-primary-dark) 100%);">
+            <div class="fp-hero-content">
+                <div class="fp-eyebrow" style="justify-content:center;color:rgba(255,255,255,.85);">
+                    <span class="material-symbols-outlined" style="font-size:1rem;">bolt</span>
+                    Reservas instantáneas en Loja
+                </div>
+                <h1 class="fp-hero-title">¡Encuentra y Reserva tu Cancha Ideal!</h1>
+                <p class="fp-hero-subtitle">Elige tu deporte favorito, selecciona la zona de Loja y asegura tu juego al instante sin llamadas.</p>
 
-            <p:commandButton value="Comenzar - Iniciar Sesión"
-                             icon="pi pi-user"
-                             action="#{authBean.openLogin()}"
-                             update="@(.fp-auth-modal)"
-                             process="@this"
-                             oncomplete="PF('authModal').show()"
-                             styleClass="ui-button-raised ui-button-success fp-btn-primary"
-                             style="font-size: 1.2rem; padding: 10px 25px;"
-                             rendered="#{not authBean.authenticated}" />
-        </p:card>
+                <p:button value="Reservar Ahora"
+                          icon="pi pi-calendar-plus"
+                          outcome="/reserva"
+                          styleClass="fp-btn fp-btn-accent fp-btn-lg"
+                          rendered="#{authBean.authenticated}" />
 
-        <div style="margin-bottom: 25px;">
-            <h3 style="font-family: 'Space Grotesk', sans-serif; margin-bottom: 15px;">Explorar Canchas por Zona</h3>
-            <div style="display: flex; gap: 10px; flex-wrap: wrap;">
-                <p:commandButton value="Todas las Zonas"
-                                 action="#{homeBean.clearZoneFilter()}"
-                                 update="orgGrid"
+                <p:commandButton value="Comenzar - Iniciar Sesión"
+                                 icon="pi pi-user"
+                                 action="#{authBean.openLogin()}"
+                                 update="@(.fp-auth-modal-dialog)"
                                  process="@this"
-                                 styleClass="#{homeBean.selectedZone == null ? 'ui-button-primary' : 'ui-button-outlined'}" />
-
-                <ui:repeat value="#{homeBean.availableZones}" var="zone">
-                    <p:commandButton value="#{zone.emoji} #{zone.label}"
-                                     action="#{homeBean.filterByZone(zone)}"
-                                     update="orgGrid"
-                                     process="@this"
-                                     styleClass="#{homeBean.selectedZone == zone ? 'ui-button-primary' : 'ui-button-outlined'}" />
-                </ui:repeat>
+                                 oncomplete="PF('authModal').show()"
+                                 styleClass="fp-btn fp-btn-accent fp-btn-lg"
+                                 rendered="#{not authBean.authenticated}" />
             </div>
         </div>
 
-        <h:panelGroup id="orgGrid" layout="block" styleClass="fp-stats-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 20px;">
-            <ui:repeat value="#{homeBean.organizations}" var="org">
-                <p:card styleClass="fp-court-card" style="overflow: hidden; border-radius: 0.75rem; border: 1px solid var(--fp-border);">
-                    <div class="fp-court-img" style="height: 12rem; background-color: var(--fp-border-light); display: flex; align-items: center; justify-content: center;">
-                        <span class="material-symbols-outlined" style="font-size: 4rem; color: var(--fp-text-muted);">stadium</span>
-                    </div>
+        <!-- ═══ ESTADÍSTICAS ═══ -->
+        <div class="fp-stats-bar">
+            <div class="fp-stats-grid">
+                <div class="fp-text-center">
+                    <div class="fp-stat-value">+#{homeBean.totalReservas}</div>
+                    <div class="fp-stat-label">Reservas realizadas</div>
+                </div>
+                <div class="fp-text-center">
+                    <div class="fp-stat-value">#{homeBean.totalCanchas}</div>
+                    <div class="fp-stat-label">Canchas disponibles</div>
+                </div>
+                <div class="fp-text-center">
+                    <div class="fp-stat-value">#{homeBean.satisfaccion}%</div>
+                    <div class="fp-stat-label">Satisfacción</div>
+                </div>
+                <div class="fp-text-center">
+                    <div class="fp-stat-value">#{homeBean.atencion}</div>
+                    <div class="fp-stat-label">Atención al cliente</div>
+                </div>
+            </div>
+        </div>
 
-                    <div class="fp-court-card-body" style="padding: 15px;">
-                        <h4 style="font-family: 'Space Grotesk', sans-serif; font-size: 1.4rem; margin: 0 0 10px 0; color: var(--fp-text);">
-                            #{org.name}
-                        </h4>
+        <!-- ═══ EXPLORAR POR ZONA ═══ -->
+        <div class="fp-section" style="padding-bottom:2rem;">
+            <div class="fp-text-center fp-mb-8">
+                <div class="fp-eyebrow" style="justify-content:center;">
+                    <span class="material-symbols-outlined" style="font-size:1rem;">location_on</span>
+                    Zonas de Loja
+                </div>
+                <h2 class="fp-section-title">Explora Canchas por Zona</h2>
+                <p class="fp-section-subtitle">Filtra las organizaciones deportivas disponibles según el sector de la ciudad que más te convenga.</p>
+            </div>
 
-                        <div style="display: flex; align-items: center; gap: 5px; margin-bottom: 8px; color: var(--fp-text-secondary); font-size: 0.9rem;">
-                            <span class="material-symbols-outlined" style="font-size: 1.1rem;">location_on</span>
-                            <span>#{org.address}</span>
-                        </div>
+            <div class="fp-zone-filters" style="justify-content:center;">
+                <p:commandLink styleClass="fp-chip #{homeBean.selectedZone == null ? 'fp-chip-active' : ''}"
+                               action="#{homeBean.clearZoneFilter()}"
+                               process="@this"
+                               update="orgGrid">
+                    Todas las Zonas
+                </p:commandLink>
 
-                        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 15px; padding-top: 15px; border-top: 1px solid var(--fp-border-light);">
-                            <span style="font-size: 0.85rem; padding: 4px 8px; background: var(--fp-bg-hover); border-radius: 20px; font-weight: 500; color: var(--fp-primary-text);">
-                                #{org.zone.label}
-                            </span>
+                <ui:repeat value="#{homeBean.availableZones}" var="zone">
+                    <p:commandLink styleClass="fp-chip #{homeBean.selectedZone == zone ? 'fp-chip-active' : ''}"
+                                   action="#{homeBean.filterByZone(zone)}"
+                                   process="@this"
+                                   update="orgGrid">
+                        #{zone.emoji} #{zone.label}
+                    </p:commandLink>
+                </ui:repeat>
+            </div>
 
-                            <p:button value="Ver Canchas"
-                                      outcome="/horarios"
-                                      styleClass="ui-button-sm fp-btn-primary">
-                                <f:param name="orgId" value="#{org.id}" />
-                            </p:button>
-                        </div>
-                    </div>
-                </p:card>
-            </ui:repeat>
-        </h:panelGroup>
+            <h:panelGroup id="orgGrid" layout="block">
 
-        <div style="margin-top: 50px; display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px;">
-            <p:card style="text-align: center; padding: 20px;">
-                <i class="pi pi-bolt" style="font-size: 2.5rem; color: #2196F3; margin-bottom: 10px; display: block;"></i>
-                <h5 style="font-size: 1.25rem; font-weight: bold; margin-bottom: 8px;">Reservas al Instante</h5>
-                <p style="font-size: 0.9rem; color: var(--fp-text-secondary); margin: 0;">Olvídate de las llamadas telefónicas. Agenda tu partido en segundos.</p>
-            </p:card>
+                <h:panelGroup rendered="#{empty homeBean.organizations}" layout="block" styleClass="fp-text-center" style="padding:3rem 0;">
+                    <span class="material-symbols-outlined" style="font-size:3.5rem;color:var(--fp-text-muted);opacity:.2;">location_off</span>
+                    <p style="color:var(--fp-text-muted);margin-top:.75rem;">No hay organizaciones registradas en esta zona.</p>
+                </h:panelGroup>
 
-            <p:card style="text-align: center; padding: 20px;">
-                <i class="pi pi-shield" style="font-size: 2.5rem; color: #4CAF50; margin-bottom: 10px; display: block;"></i>
-                <h5 style="font-size: 1.25rem; font-weight: bold; margin-bottom: 8px;">Soporte de Confianza</h5>
-                <p style="font-size: 0.9rem; color: var(--fp-text-secondary); margin: 0;">Respaldo directo de administradores y complejos verificados en Loja.</p>
-            </p:card>
+                <div class="fp-org-grid">
+                    <ui:repeat value="#{homeBean.organizations}" var="org">
+                        <h:link outcome="/horarios" styleClass="fp-org-card">
+                            <f:param name="orgId" value="#{org.id}" />
+
+                            <div class="fp-zone-card-header fp-zone-#{fn:toLowerCase(org.zone)}">
+                                <h4>#{org.name}</h4>
+                                <span class="fp-org-rating">
+                                    <span class="material-symbols-outlined">star</span> #{org.rating}
+                                </span>
+                            </div>
+                            <div class="fp-org-card-body">
+                                <p><span class="material-symbols-outlined">location_on</span> #{org.address}</p>
+                                <p><span class="material-symbols-outlined">stadium</span> #{org.courtCount} canchas</p>
+                            </div>
+                        </h:link>
+                    </ui:repeat>
+                </div>
+            </h:panelGroup>
+        </div>
+
+        <!-- ═══ POR QUÉ FIELDPAL ═══ -->
+        <div class="fp-section" style="padding-top:0;">
+            <div class="fp-grid fp-grid-3">
+                <div class="fp-card fp-card-padded fp-text-center">
+                    <i class="pi pi-bolt" style="font-size:2.5rem;color:var(--fp-primary-text);margin-bottom:.75rem;display:block;"></i>
+                    <h5 style="font-family:'DM Sans',sans-serif;font-weight:700;font-size:1.1rem;margin-bottom:.5rem;">Reservas al Instante</h5>
+                    <p class="fp-text-sm" style="color:var(--fp-text-secondary);">Olvídate de las llamadas telefónicas. Agenda tu partido en segundos.</p>
+                </div>
+
+                <div class="fp-card fp-card-padded fp-text-center">
+                    <i class="pi pi-shield" style="font-size:2.5rem;color:var(--fp-primary-text);margin-bottom:.75rem;display:block;"></i>
+                    <h5 style="font-family:'DM Sans',sans-serif;font-weight:700;font-size:1.1rem;margin-bottom:.5rem;">Soporte de Confianza</h5>
+                    <p class="fp-text-sm" style="color:var(--fp-text-secondary);">Respaldo directo de administradores y complejos verificados en Loja.</p>
+                </div>
+
+                <div class="fp-card fp-card-padded fp-text-center">
+                    <i class="pi pi-map-marker" style="font-size:2.5rem;color:var(--fp-primary-text);margin-bottom:.75rem;display:block;"></i>
+                    <h5 style="font-family:'DM Sans',sans-serif;font-weight:700;font-size:1.1rem;margin-bottom:.5rem;">Cerca de Ti</h5>
+                    <p class="fp-text-sm" style="color:var(--fp-text-secondary);">Encuentra canchas en cualquier zona de Loja, a minutos de tu ubicación.</p>
+                </div>
+            </div>
         </div>
 
     </ui:define>

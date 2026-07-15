@@ -29,7 +29,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>FieldPal — <ui:insert name="title">Reserva tu cancha</ui:insert></title>
 
-    <link rel="stylesheet" type="text/css" href="#{request.contextPath}css/fieldpal.css" />
+    <h:outputStylesheet library="css" name="fieldpal.css" />
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&amp;family=DM+Sans:wght@400;500;600;700&amp;family=Space+Grotesk:wght@500;600;700&amp;family=JetBrains+Mono:wght@500;700&amp;display=swap" rel="stylesheet" />
@@ -43,7 +43,7 @@
 
         <ui:include src="/WEB-INF/templates/fragments/header.xhtml"/>
 
-        <div class="fp-page-wrap">
+        <div class="fp-main">
             <ui:insert name="content">Contenido no definido</ui:insert>
         </div>
 
