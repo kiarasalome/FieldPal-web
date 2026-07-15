@@ -1,60 +1,49 @@
-<!--
-    footer.xhtml — equivalente a Footer.tsx
-    No requiere datos de bean, es contenido estático.
--->
-
-<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:h="jakarta.faces.html" xmlns:ui="jakarta.faces.facelets">
-
-    <footer class="fp-footer">
-        <div class="fp-footer-inner">
-
-            <div class="fp-footer-brand">
-                <h:link outcome="/home" class="fp-logo" style="margin-bottom:1rem">
-                    <span class="fp-logo-icon">
-                        <span class="material-symbols-outlined" style="font-variation-settings:'FILL' 1">sports_soccer</span>
-                    </span>
-                    <span>FieldPal<span class="fp-dot-accent">.</span></span>
-                </h:link>
-                <p>La plataforma definitiva para gestionar instalaciones deportivas con precisión y eficiencia.</p>
-            </div>
-
-            <div class="fp-footer-col">
-                <h5>Navegación</h5>
-                <ul>
-                    <li><h:link outcome="/horarios" value="Consultar Horarios"/></li>
-                    <li><h:link outcome="/reserva" value="Hacer Reserva"/></li>
-                    <li><h:link outcome="/mis-reservas" value="Mis Reservas"/></li>
-                    <li><h:link outcome="/admin/gestion" value="Gestión de Canchas"/></li>
-                </ul>
-            </div>
-
-            <div class="fp-footer-col">
-                <h5>Legal</h5>
-                <ul>
-                    <li><a href="#">Términos y Condiciones</a></li>
-                    <li><a href="#">Política de Privacidad</a></li>
-                    <li><a href="#">Cookies</a></li>
-                </ul>
-            </div>
-
-            <div class="fp-footer-col">
-                <h5>Contacto</h5>
-                <ul class="fp-footer-contact">
-                    <li><span class="material-symbols-outlined">mail</span> info@fieldpal.com</li>
-                    <li><span class="material-symbols-outlined">call</span> +593 99 123 4567</li>
-                    <li><span class="material-symbols-outlined">location_on</span> Loja, Ecuador</li>
-                </ul>
-            </div>
+<!-- ================= FOOTER ================= -->
+<footer>
+    <div class="footer-inner">
+        <div>
+            <h4>
+                <span class="material-symbols-outlined" style="color: var(--fp-primary);">sports_soccer</span>
+                FieldPal<span style="color: var(--fp-accent);">.</span>
+            </h4>
+            <p>La plataforma definitiva para gestionar instalaciones deportivas con precisión y eficiencia.</p>
         </div>
 
-        <div class="fp-footer-bottom">
-            <span>© 2026 FieldPal por NeoCore. Todos los derechos reservados.</span>
-            <div class="fp-footer-social">
-                <a href="#"><span class="material-symbols-outlined">sports_soccer</span></a>
-                <a href="#"><span class="material-symbols-outlined">stadium</span></a>
-                <a href="#"><span class="material-symbols-outlined">groups</span></a>
-            </div>
+        <div class="footer-col">
+            <h5>Navegación</h5>
+            <ul>
+                <li><a href="#horarios">Consultar Horarios</a></li>
+                <li><a href="#reservar">Hacer Reserva</a></li>
+                <li><a href="#mis-reservas">Mis Reservas</a></li>
+                <li><a href="#mis-reservas">Gestión de Canchas</a></li>
+            </ul>
         </div>
-    </footer>
 
-</ui:composition>
+        <div class="footer-col">
+            <h5>Legal</h5>
+            <ul>
+                <li><a href="#" onclick="mockAlert('Términos y condiciones — próximamente'); return false;">Términos y Condiciones</a></li>
+                <li><a href="#" onclick="mockAlert('Política de privacidad — próximamente'); return false;">Política de Privacidad</a></li>
+                <li><a href="#" onclick="mockAlert('Cookies — próximamente'); return false;">Cookies</a></li>
+            </ul>
+        </div>
+
+        <div class="footer-col">
+            <h5>Contacto</h5>
+            <ul class="footer-contact">
+                <li><span class="material-symbols-outlined">mail</span> info@fieldpal.com</li>
+                <li><span class="material-symbols-outlined">call</span> +593 99 123 4567</li>
+                <li><span class="material-symbols-outlined">location_on</span> Loja, Ecuador</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="footer-bottom">
+        <span>© 2026 FieldPal por NeoCore. Todos los derechos reservados.</span>
+        <div class="footer-social">
+            <a href="#" title="Fútbol"><span class="material-symbols-outlined">sports_soccer</span></a>
+            <a href="#" title="Canchas"><span class="material-symbols-outlined">stadium</span></a>
+            <a href="#" title="Comunidad"><span class="material-symbols-outlined">groups</span></a>
+        </div>
+    </div>
+</footer>
