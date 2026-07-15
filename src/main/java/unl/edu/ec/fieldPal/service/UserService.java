@@ -42,6 +42,17 @@ public class UserService {
         return newUser;
     }
 
+    //Metodo conectado al updateUser para modificar data de un player
+    public void updateUser(User user) {
+        if (user == null || user.getId() == null) return;
+        for (int i = 0; i < users.size(); i++) {
+            if (users.get(i).getId().equals(user.getId())) {
+                users.set(i, user); // Reemplaza el usuario viejo por el editado
+                return;
+            }
+        }
+    }
+
     public User findById(String id) {
         return users.stream().filter(u -> u.getId().equals(id)).findFirst().orElse(null);
     }

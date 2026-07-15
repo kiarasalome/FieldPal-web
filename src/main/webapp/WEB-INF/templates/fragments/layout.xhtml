@@ -51,6 +51,8 @@
 
         <ui:include src="/WEB-INF/templates/fragments/auth-modal.xhtml"/>
 
+        <ui:include src="/WEB-INF/template/fragments/profile-modal.xhtml"/>
+
         <p:ajaxStatus onstart="PF('globalStatus').show()" onsuccess="PF('globalStatus').hide()" widgetVar="globalStatusEv"/>
         <p:blockUI block="appForm" widgetVar="globalStatus" styleClass="fp-block-ui">
             <span class="material-symbols-outlined fp-spin">progress_activity</span>

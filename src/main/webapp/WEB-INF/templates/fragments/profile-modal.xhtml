@@ -1,0 +1,59 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="jakarta.faces.html"
+                xmlns:f="jakarta.faces.core"
+                xmlns:ui="jakarta.faces.facelets"
+                xmlns:p="primefaces">
+
+    <p:dialog id="profileDialog" widgetVar="profileModal" modal="true"
+              resizable="false" header="Editar mis Datos"
+              styleClass="fp-modal" width="450">
+
+        <p:messages id="profileMessages" showDetail="true" closable="true">
+            <p:autoUpdate />
+        </p:messages>
+
+        <div class="fp-modal-form" style="padding: 10px;">
+            <p style="margin-bottom: 1.5rem; color: var(--fp-text-secondary);">
+                Modifica tu información personal a continuación.
+            </p>
+
+            <div class="fp-form-group">
+                <label class="fp-form-label">Nombre Completo</label>
+                <p:inputText value="#{profileBean.editingUser.name}" styleClass="fp-input" />
+            </div>
+
+            <div class="fp-form-group">
+                <label class="fp-form-label">Teléfono</label>
+                <p:inputText value="#{profileBean.editingUser.phone}" styleClass="fp-input" />
+            </div>
+
+            <div class="fp-form-group">
+                <label class="fp-form-label">Correo Electrónico</label>
+                <p:inputText value="#{profileBean.editingUser.email}" styleClass="fp-input" />
+            </div>
+
+            <div class="fp-grid fp-grid-2">
+                <div class="fp-form-group">
+                    <label class="fp-form-label">Nueva Contraseña</label>
+                    <p:password value="#{profileBean.newPassword}" styleClass="fp-input" toggleMask="true" />
+                </div>
+                <div class="fp-form-group">
+                    <label class="fp-form-label">Confirmar</label>
+                    <p:password value="#{profileBean.confirmPassword}" styleClass="fp-input" toggleMask="true" />
+                </div>
+            </div>
+
+            <div class="fp-flex fp-gap-3" style="margin-top: 20px;">
+                <p:commandButton value="Guardar Cambios"
+                                 action="#{profileBean.doUpdateProfile}"
+                                 update="@form"
+                                 styleClass="fp-btn fp-btn-primary"
+                                 oncomplete="if (!args.validationFailed &amp;&amp; !facesContext.maximumSeverity.ordinal >= 2) PF('profileModal').hide()" />
+
+                <p:commandButton value="Cancelar" type="button"
+                                 onclick="PF('profileModal').hide()"
+                                 styleClass="fp-btn fp-btn-outline" />
+            </div>
+        </div>
+    </p:dialog>
+</ui:composition>

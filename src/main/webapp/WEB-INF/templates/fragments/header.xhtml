@@ -67,6 +67,14 @@
                             <p class="fp-user-dropdown-email">#{authBean.currentUser.email}</p>
                         </div>
                         <ul class="fp-user-dropdown-list">
+                            <h:panelGroup rendered="#{authBean.currentUser.role == 'PLAYER'}">
+                            <li>
+                                <p:commandLink onclick="PF('profileModal').show()" process="@this">
+                                    <span class="material-symbols-outlined">person_edit</span> Editar mis Datos
+                                </p:commandLink>
+                            </li>
+                            </h:panelGroup>
+
                             <li>
                                 <h:link outcome="/mis-reservas" rendered="#{authBean.currentUser.role != 'ADMIN'}">
                                     <span class="material-symbols-outlined">event_note</span> Mis Reservas
@@ -80,6 +88,12 @@
                             <li>
                                 <h:link outcome="/admin/gestion" rendered="#{authBean.currentUser.role == 'ADMIN'}">
                                     <span class="material-symbols-outlined">dashboard</span> Panel de Gestión
+                                </h:link>
+                            </li>
+
+                            <li>
+                                <h:link outcome="/mis-reservas" rendered="#{authBean.currentUser.role != 'ADMIN'}">
+                                    <span class="material-symbols-outlined">event_note</span> Mis Reservas
                                 </h:link>
                             </li>
                         </ul>
