@@ -1,0 +1,291 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="jakarta.faces.html"
+                xmlns:f="jakarta.faces.core"
+                xmlns:ui="jakarta.faces.facelets"
+                xmlns:p="primefaces"
+                template="/templates/layout.xhtml">
+
+    <ui:define name="title">Registrar Complejo</ui:define>
+
+    <ui:define name="content">
+        <div style="max-width: 950px; margin: 40px auto; padding: 0 15px;">
+
+            <div style="text-align: center; margin-bottom: 40px;">
+                <h1 style="font-family: 'Oswald', sans-serif; font-size: 2.5rem; text-transform: uppercase; color: var(--primary-color, #2c3e50); margin-bottom: 10px;">
+                    ⚽ Une tu complejo a FieldPal
+                </h1>
+                <p style="font-family: 'DM Sans', sans-serif; font-size: 1.1rem; color: #666;">
+                    Configura tu establecimiento, registra tus canchas y define tus políticas de reserva.
+                </p>
+            </div>
+
+            <!-- El componente Wizard usa directamente el form maestro del layout sin anidar h:form -->
+            <p:wizard backLabel="Atrás" nextLabel="Siguiente" styleClass="fp-wizard-custom">
+
+                <!-- PASO 1: DATOS DE LA ORGANIZACIÓN -->
+                <p:tab id="organizacion" title="1. Mi Complejo">
+                    <p:panel header="Información Básica del Complejo" style="margin-top: 15px;">
+                        <div class="ui-fluid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; padding: 15px 0;">
+
+                            <div class="field">
+                                <p:outputLabel for="idOrg" value="RUC / Identificación del Complejo:" style="font-weight: 600; display:block; margin-bottom: 5px;" />
+                                <p:inputText id="idOrg" value="#{wizardBean.newOrganization.id}" required="true"
+                                             requiredMessage="El RUC/ID es obligatorio." placeholder="Ej. 1104567890001" />
+                            </div>
+
+                            <div class="field">
+                                <p:outputLabel for="nombre" value="Nombre del Complejo:" style="font-weight: 600; display:block; margin-bottom: 5px;" />
+                                <p:inputText id="nombre" value="#{wizardBean.newOrganization.name}" required="true"
+                                             requiredMessage="El nombre del complejo es obligatorio." placeholder="Ej. Arena Gol Loja" />
+                            </div>
+
+                            <div class="field">
+                                <p:outputLabel for="zona" value="Zona de Ubicación:" style="font-weight: 600; display:block; margin-bottom: 5px;" />
+                                <p:selectOneMenu id="zona" value="#{wizardBean.newOrganization.zone}" required="true"
+                                                 requiredMessage="Debe seleccionar una zona de ubicación.">
+                                    <f:selectItem itemLabel="Selecciona una zona..." itemValue="" noSelectionOption="true"/>
+                                    <f:selectItems value="#{wizardBean.zones}" var="z"
+                                                   itemLabel="#{z.emoji} #{z.label}" itemValue="#{z}" />
+                                </p:selectOneMenu>
+                            </div>
+
+                            <div class="field">
+                                <p:outputLabel for="telefono" value="Teléfono de Contacto:" style="font-weight: 600; display:block; margin-bottom: 5px;" />
+                                <p:inputText id="telefono" value="#{wizardBean.newOrganization.phone}" required="true"
+                                             requiredMessage="El teléfono es obligatorio." placeholder="Ej. +593 99 999 9999" />
+                            </div>
+
+                            <div class="field" style="grid-column: span 2;">
+                                <p:outputLabel for="direccion" value="Dirección Física Exacta:" style="font-weight: 600; display:block; margin-bottom: 5px;" />
+                                <p:inputTextarea id="direccion" value="#{wizardBean.newOrganization.address}" required="true"
+                                                 requiredMessage="La dirección es obligatoria." rows="2" placeholder="Ej. Av. Salvador Bustamante Celi y San Juan Bosco" />
+                            </div>
+
+                            <div class="field" style="grid-column: span 2;">
+                                <p:outputLabel for="descripcion" value="Descripción del lugar:" style="font-weight: 600; display:block; margin-bottom: 5px;" />
+                                <p:inputTextarea id="descripcion" value="#{wizardBean.newOrganization.description}" rows="3"
+                                                 placeholder="Cuéntales a tus clientes qué hace especial a tu complejo" />
+                            </div>
+                        </div>
+                    </p:panel>
+                </p:tab>
+
+                <!-- PASO 2: REGISTRO DE CANCHAS -->
+                <p:tab id="canchas" title="2. Mis Canchas">
+                    <p:panel header="Registro de Infraestructura Deportiva" style="margin-top: 15px;">
+
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                            <span style="color: #666; font-size: 0.95rem;">Registra las canchas disponibles de tu complejo deportivo.</span>
+                            <p:commandButton value="Añadir Cancha" icon="pi pi-plus"
+                                             actionListener="#{wizardBean.prepareNewCourt()}"
+                                             update=":appForm:courtDialogPanel"
+                                             oncomplete="PF('courtDialog').show();"
+                                             styleClass="ui-button-success"
+                                             process="@this" />
+                        </div>
+
+                        <p:dataTable id="canchasTable" value="#{wizardBean.tempCourts}" var="cancha"
+                                     emptyMessage="No has añadido ninguna cancha todavía. Haz clic en 'Añadir Cancha' para empezar."
+                                     styleClass="ui-datatable-striped">
+
+                            <p:column headerText="Identificador / Nombre">
+                                <span style="font-weight: 600;">#{cancha.name}</span>
+                            </p:column>
+
+                            <p:column headerText="Deporte">
+                                <span class="fp-tag">#{cancha.type.emoji} #{cancha.type.label}</span>
+                            </p:column>
+
+                            <p:column headerText="Precio por Hora">
+                                <span style="color: var(--primary-color); font-weight: bold;">$ #{cancha.pricePerHour}</span>
+                            </p:column>
+
+                            <p:column headerText="Características">
+                                <div style="display: flex; gap: 5px; flex-wrap: wrap;">
+                                    <span style="background: #{cancha.hasLighting ? '#2ecc71' : '#95a5a6'}; color: white; padding: 3px 8px; border-radius: 20px; font-size: 11px; font-weight: 600;">
+                                        #{cancha.hasLighting ? '💡 Con Luz' : 'Sin Luz'}
+                                    </span>
+                                    <span style="background: #{cancha.covered ? '#3498db' : '#e67e22'}; color: white; padding: 3px 8px; border-radius: 20px; font-size: 11px; font-weight: 600;">
+                                        #{cancha.covered ? '🏠 Techada' : 'Abierta'}
+                                    </span>
+                                </div>
+                            </p:column>
+
+                            <p:column headerText="Acción" style="width: 80px; text-align: center;">
+                                <p:commandButton icon="pi pi-trash"
+                                                 actionListener="#{wizardBean.removeTempCourt(cancha)}"
+                                                 update=":appForm:canchasTable :appForm:growl"
+                                                 process="@this"
+                                                 styleClass="ui-button-danger ui-button-flat ui-button-rounded" />
+                            </p:column>
+                        </p:dataTable>
+                    </p:panel>
+                </p:tab>
+
+                <!-- PASO 3: CONFIGURACIÓN DE HORARIOS SEMANALES -->
+                <p:tab id="horarios" title="3. Horarios">
+                    <p:panel header="Horarios de Atención Semanales" style="margin-top: 15px;">
+
+                        <p style="color: #666; font-size: 0.95rem; margin-bottom: 20px;">
+                            Define las horas de apertura y cierre para cada día de la semana. Desmarca los días en los que el complejo permanezca cerrado.
+                        </p>
+
+                        <!-- Tabla Interactiva de Horarios Semanales Modernizada -->
+                        <p:dataTable value="#{wizardBean.scheduleDays}" var="day" style="margin-bottom: 15px;" styleClass="ui-datatable-striped">
+
+                            <p:column headerText="Día" style="width: 150px; font-weight: bold; vertical-align: middle;">
+                                <h:outputText value="#{day.dayName}" style="font-size: 1.1rem;"/>
+                            </p:column>
+
+                            <!-- COLUMNA ESTADO: ToggleSwitch (Activado/Desactivado) -->
+                            <p:column headerText="Estado" style="width: 150px; text-align: center; vertical-align: middle;">
+                                <div style="display: flex; flex-direction: column; align-items: center; gap: 5px;">
+                                    <p:toggleSwitch value="#{day.active}">
+                                        <p:ajax update="@parent:@parent" process="@this"/>
+                                    </p:toggleSwitch>
+                                    <h:outputText value="#{day.active ? 'Activado' : 'Desactivado'}"
+                                                  style="font-size: 0.85rem; font-weight: 600; color: #{day.active ? '#2ecc71' : '#95a5a6'};" />
+                                </div>
+                            </p:column>
+
+                            <!-- COLUMNA APERTURA: DatePicker con flechas de incremento -->
+                            <p:column headerText="Hora Apertura" style="vertical-align: middle;">
+                                <div class="ui-fluid">
+                                    <p:datePicker value="#{day.openTime}"
+                                                  timeOnly="true"
+                                                  pattern="HH:mm"
+                                                  hourFormat="24"
+                                                  disabled="#{not day.active}"
+                                                  required="#{day.active}"
+                                                  requiredMessage="La hora de apertura para el #{day.dayName} es obligatoria."/>
+                                </div>
+                            </p:column>
+
+                            <!-- COLUMNA CIERRE: DatePicker con flechas de incremento -->
+                            <p:column headerText="Hora Cierre" style="vertical-align: middle;">
+                                <div class="ui-fluid">
+                                    <p:datePicker value="#{day.closeTime}"
+                                                  timeOnly="true"
+                                                  pattern="HH:mm"
+                                                  hourFormat="24"
+                                                  disabled="#{not day.active}"
+                                                  required="#{day.active}"
+                                                  requiredMessage="La hora de cierre para el #{day.dayName} es obligatoria."/>
+                                </div>
+                            </p:column>
+                        </p:dataTable>
+                    </p:panel>
+                </p:tab>
+
+                <!-- PASO 4: ANTICIPO Y POLÍTICAS DE CANCELACIÓN (SLIDER) -->
+                <p:tab id="politicas" title="4. Políticas">
+                    <p:panel header="Garantía de Reservas y Cancelación" style="margin-top: 15px;">
+
+                        <div style="display: flex; flex-direction: column; gap: 30px; padding: 15px 0;">
+
+                            <!-- Slider para el Anticipo Requerido -->
+                            <div class="field" style="background: #fdfdfd; padding: 25px; border-radius: 8px; border: 1px solid #eaeaea;">
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                                    <h:outputLabel for="depPct" value="Porcentaje de Anticipo Requerido:" style="font-weight: 600; font-size: 1.1rem; color: var(--primary-color, #2c3e50);" />
+                                    <!-- Muestra dinámica del valor en tiempo real -->
+                                    <span style="background: var(--primary-color, #3498db); color: white; padding: 5px 15px; border-radius: 20px; font-weight: bold; font-size: 1.1rem;">
+                                        <h:outputText id="sliderValueDisplay" value="#{wizardBean.reservationDepositPercentage}%" />
+                                    </span>
+                                </div>
+
+                                <p style="color: #666; font-size: 0.9rem; margin-top: -5px; margin-bottom: 25px;">
+                                    Define el porcentaje del costo total de la reserva que el cliente debe pagar por adelantado para asegurar su turno.
+                                </p>
+
+                                <div style="padding: 0 10px;">
+                                    <!-- Input oculto para enlazar con el Slider -->
+                                    <h:inputHidden id="depPct" value="#{wizardBean.reservationDepositPercentage}" />
+                                    <p:slider for="depPct" display="sliderValueDisplay" displayTemplate="{value}%" minValue="0" maxValue="100" step="5" style="margin-bottom: 10px;" />
+                                </div>
+                            </div>
+
+                            <!-- Botón de Cancelación Gratuita -->
+                            <div class="field" style="display: flex; align-items: center; justify-content: space-between; background: #fdfdfd; padding: 25px; border-radius: 8px; border: 1px solid #eaeaea;">
+                                <div>
+                                    <h:outputLabel value="¿Permitir cancelación gratuita de turnos?" style="font-weight: 600; font-size: 1.1rem; color: var(--primary-color, #2c3e50); display: block; margin-bottom: 5px;" />
+                                    <span style="color: #666; font-size: 0.9rem;">Si se permite, los jugadores podrán cancelar su reserva sin perder su depósito bajo tus condiciones.</span>
+                                </div>
+                                <p:selectBooleanButton value="#{wizardBean.allowFreeCancellation}" onLabel="Sí, Permitida" offLabel="No Permitida" onIcon="pi pi-check" offIcon="pi pi-times" style="width: 160px; height: 42px;" />
+                            </div>
+
+                        </div>
+
+                        <!-- Panel de publicación final -->
+                        <div style="text-align: center; margin-top: 35px; padding: 30px; border: 2px dashed #2ecc71; border-radius: 12px; background-color: #fbfcfb;">
+                            <h3 style="font-family: 'Space Grotesk', sans-serif; font-size: 1.4rem; color: #27ae60; margin-top: 0; margin-bottom: 10px;">¡Tu configuración está lista!</h3>
+                            <p style="color: #666; margin-bottom: 25px;">
+                                Al finalizar, tu complejo deportivo, canchas y políticas de reserva se guardarán en el sistema.
+                            </p>
+
+                            <p:commandButton value="Publicar mi Complejo Deportivo"
+                                             action="#{wizardBean.saveAll()}"
+                                             update=":appForm:growl"
+                                             process="@form"
+                                             styleClass="ui-button-success"
+                                             style="padding: 12px 30px; font-size: 1.1rem; font-weight: 600; border-radius: 8px; width: auto;" />
+                        </div>
+                    </p:panel>
+                </p:tab>
+
+            </p:wizard>
+        </div>
+
+        <!-- DIÁLOGO FLOTANTE (Sin h:form interno para evitar anidación) -->
+        <p:dialog header="Registrar Cancha" widgetVar="courtDialog" modal="true" showEffect="fade" hideEffect="fade" resizable="false">
+            <p:outputPanel id="courtDialogPanel" style="text-align:left; width: 450px;">
+                <div class="ui-fluid" style="display: flex; flex-direction: column; gap: 15px; padding: 10px 0;">
+
+                    <div class="field">
+                        <p:outputLabel for="canchaNombre" value="Nombre de la cancha:" style="font-weight: 600; display:block; margin-bottom: 5px;" />
+                        <p:inputText id="canchaNombre" value="#{wizardBean.currentCourt.name}" required="true" requiredMessage="El nombre de la cancha es obligatorio" placeholder="Ej. Cancha Sintética #1" />
+                    </div>
+
+                    <div class="field">
+                        <p:outputLabel for="canchaTipo" value="Disciplina deportiva:" style="font-weight: 600; display:block; margin-bottom: 5px;" />
+                        <p:selectOneMenu id="canchaTipo" value="#{wizardBean.currentCourt.type}">
+                            <f:selectItems value="#{wizardBean.courtTypes}" var="t"
+                                           itemLabel="#{t.emoji} #{t.label}" itemValue="#{t}" />
+                        </p:selectOneMenu>
+                    </div>
+
+                    <div class="field">
+                        <p:outputLabel for="canchaPrecio" value="Precio de alquiler (por Hora):" style="font-weight: 600; display:block; margin-bottom: 5px;" />
+                        <p:inputNumber id="canchaPrecio" value="#{wizardBean.currentCourt.pricePerHour}" required="true" requiredMessage="El precio es obligatorio" symbol=" USD" symbolPosition="s" decimalPlaces="2" />
+                    </div>
+
+                    <div class="field">
+                        <p:outputLabel for="canchaSuperficie" value="Material de la superficie / piso:" style="font-weight: 600; display:block; margin-bottom: 5px;" />
+                        <p:inputText id="canchaSuperficie" value="#{wizardBean.currentCourt.surface}" placeholder="Ej. Césped Sintético, Madera, Arcilla" />
+                    </div>
+
+                    <div style="display: flex; justify-content: space-between; align-items: center; padding-top: 10px;">
+                        <p:outputLabel value="¿Cuenta con iluminación artificial?" style="font-weight: 600;" />
+                        <p:selectBooleanCheckbox value="#{wizardBean.currentCourt.hasLighting}" />
+                    </div>
+
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <p:outputLabel value="¿La cancha es techada?" style="font-weight: 600;" />
+                        <p:selectBooleanCheckbox value="#{wizardBean.currentCourt.covered}" />
+                    </div>
+
+                </div>
+
+                <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 25px;">
+                    <p:commandButton value="Cancelar" onclick="PF('courtDialog').hide();" type="button" styleClass="ui-button-secondary ui-button-outlined" />
+                    <p:commandButton value="Añadir a la lista" actionListener="#{wizardBean.saveTempCourt()}"
+                                     update=":appForm:canchasTable :appForm:growl"
+                                     process="courtDialogPanel"
+                                     oncomplete="if (!args.validationFailed) PF('courtDialog').hide()"
+                                     styleClass="ui-button-primary" />
+                </div>
+            </p:outputPanel>
+        </p:dialog>
+    </ui:define>
+
+</ui:composition>
