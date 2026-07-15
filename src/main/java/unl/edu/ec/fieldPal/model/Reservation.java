@@ -1,6 +1,8 @@
 package unl.edu.ec.fieldPal.model;
 
 
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import unl.edu.ec.fieldPal.model.enums.ReservationStatus;
 import java.io.Serializable;
 
@@ -11,12 +13,20 @@ public class Reservation implements Serializable {
     private String userId;
     private String orgId;
     private String courtId;
+
+    @NotNull @NotEmpty
     private String date;
+
+    @NotNull @NotEmpty
     private String hour;
     private int duration;
     private int playerCount;
     private double totalPrice;
+
+    @NotNull @NotEmpty
     private ReservationStatus status;
+
+    @NotNull @NotEmpty
     private boolean confirmed;
     private String contactName;
     private String contactPhone;
