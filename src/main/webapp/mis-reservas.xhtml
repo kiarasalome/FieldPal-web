@@ -49,7 +49,7 @@
             <span class="material-symbols-outlined" style="font-size:4rem;color:var(--fp-text-muted);opacity:.25;">sports_soccer</span>
             <h2 style="font-family:'DM Sans',sans-serif;font-weight:700;font-size:1.375rem;color:var(--fp-text);margin:1rem 0 .5rem;">Selecciona una cancha primero</h2>
             <p style="color:var(--fp-text-secondary);margin-bottom:1.5rem;">Elige una cancha desde Horarios para continuar con tu reserva.</p>
-            <h:link outcome="/horarios" styleClass="fp-btn fp-btn-primary">
+            <h:link outcome="/horarios.xhtml" styleClass="fp-btn fp-btn-primary">
                 <span class="material-symbols-outlined" style="font-size:1.125rem;">event</span>
                 Ver Horarios
             </h:link>
@@ -73,7 +73,7 @@
                                 <span class="material-symbols-outlined" style="font-size:1rem;">#{reservaBean.activeCourt.type.icon}</span>
                                 #{reservaBean.activeCourt.type.label}
                             </span>
-                            <h:link outcome="/horarios" styleClass="fp-chip" style="position:absolute;top:1rem;right:1rem;background:var(--fp-bg-card);text-decoration:none;">
+                            <h:link outcome="/horarios.xhtml" styleClass="fp-chip" style="position:absolute;top:1rem;right:1rem;background:var(--fp-bg-card);text-decoration:none;">
                                 <span class="material-symbols-outlined" style="font-size:1rem;">swap_horiz</span> Cambiar
                             </h:link>
                         </div>
@@ -203,7 +203,7 @@
                                          process="@form" update="@form growl"
                                          styleClass="fp-btn fp-btn-primary" style="flex:1"
                                          oncomplete="if(!#{authBean.authenticated}){PF('authModal').show();}"/>
-                        <h:link outcome="/horarios" styleClass="fp-btn fp-btn-outline">Cancelar</h:link>
+                        <h:link outcome="/horarios.xhtml" styleClass="fp-btn fp-btn-outline">Cancelar</h:link>
                     </div>
                 </div>
 

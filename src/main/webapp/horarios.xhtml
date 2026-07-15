@@ -1,0 +1,147 @@
+<!--
+    horarios.xhtml — Consultar horarios disponibles
+    ═══════════════════════════════════════════════════════════
+    Contrato esperado de HorariosBean:
+      - Zone            selectedZone / setSelectedZone
+      - List<Zone>      getAvailableZones()
+      - List<Organization> getFilteredOrgs()
+      - Organization    getActiveOrg()
+      - List<Court>     getCourtsForSelectedOrg()
+      - Court           getActiveCourt()      -> name, surface, pricePerHour, type
+      - List<TimeSlot>  getActiveSchedule()   -> hour, available
+      - String          date / setDate
+      - void            filterByZone(Zone)
+      - void            clearZoneFilter()
+      - void            selectOrganization(String orgId)
+      - void            selectCourt(String courtId)
+
+    Navega a reserva.xhtml pasando ?courtId=X (f:param) para
+    continuar el flujo de reserva con la cancha ya seleccionada.
+-->
+<ui:composition template="/WEB-INF/templates/fragments/layout.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="jakarta.faces.html"
+                xmlns:f="jakarta.faces.core"
+                xmlns:ui="jakarta.faces.facelets"
+                xmlns:p="primefaces">
+
+    <ui:define name="title">Consultar Horarios</ui:define>
+
+    <ui:define name="content">
+
+        <div class="fp-page-header">
+            <div class="fp-page-header-title">
+                <span class="material-symbols-outlined">schedule</span>
+                <h1>Consultar Horarios</h1>
+            </div>
+            <p>Elige la zona, la organización y la cancha para ver la disponibilidad en tiempo real.</p>
+        </div>
+
+        <div style="max-width:80rem;margin:0 auto;padding:0 1rem 5rem;">
+
+            <!-- ═══ FILTRO POR ZONA ═══ -->
+            <div class="fp-zone-filters">
+                <p:commandLink styleClass="fp-chip #{empty horariosBean.selectedZone ? 'fp-chip-active' : ''}"
+                               action="#{horariosBean.clearZoneFilter}"
+                               process="@this" update="@form">
+                    Todas las zonas
+                </p:commandLink>
+                <ui:repeat value="#{horariosBean.availableZones}" var="zone">
+                    <p:commandLink styleClass="fp-chip #{horariosBean.selectedZone == zone ? 'fp-chip-active' : ''}"
+                                   action="#{horariosBean.filterByZone(zone)}"
+                                   process="@this" update="@form">
+                        #{zone.emoji} #{zone.label}
+                    </p:commandLink>
+                </ui:repeat>
+            </div>
+
+            <!-- ═══ SIN RESULTADOS ═══ -->
+            <h:panelGroup rendered="#{empty horariosBean.filteredOrgs}" layout="block" styleClass="fp-text-center" style="padding:3rem 0;">
+                <span class="material-symbols-outlined" style="font-size:3.5rem;color:var(--fp-text-muted);opacity:.2;">location_off</span>
+                <p style="color:var(--fp-text-muted);margin-top:.75rem;">No hay organizaciones registradas en esta zona.</p>
+            </h:panelGroup>
+
+            <h:panelGroup rendered="#{not empty horariosBean.filteredOrgs}">
+
+                <!-- ═══ SELECCIÓN DE ORGANIZACIÓN ═══ -->
+                <div class="fp-org-scroll">
+                    <ui:repeat value="#{horariosBean.filteredOrgs}" var="org">
+                        <p:commandLink styleClass="fp-org-card #{horariosBean.selectedOrgId == org.id ? 'active' : ''}"
+                                       action="#{horariosBean.selectOrganization(org.id)}"
+                                       process="@this" update="@form">
+                            <div class="fp-org-card-top">
+                                <h4>#{org.name}</h4>
+                                <span class="fp-org-rating">
+                                    <span class="material-symbols-outlined">star</span> #{org.rating}
+                                </span>
+                            </div>
+                            <p><span class="material-symbols-outlined">#{org.zone.icon}</span> #{org.zone.label}</p>
+                            <p><span class="material-symbols-outlined">location_on</span> #{org.address}</p>
+                        </p:commandLink>
+                    </ui:repeat>
+                </div>
+
+                <!-- ═══ SELECCIÓN DE CANCHA ═══ -->
+                <h:panelGroup rendered="#{not empty horariosBean.courtsForSelectedOrg}" layout="block" styleClass="fp-court-tabs">
+                    <ui:repeat value="#{horariosBean.courtsForSelectedOrg}" var="court">
+                        <p:commandLink styleClass="fp-chip #{horariosBean.selectedCourtId == court.id ? 'fp-chip-active' : ''}"
+                                       action="#{horariosBean.selectCourt(court.id)}"
+                                       process="@this" update="@form">
+                            <span class="material-symbols-outlined" style="font-size:1rem;">#{court.type.icon}</span>
+                            #{court.name}
+                        </p:commandLink>
+                    </ui:repeat>
+                </h:panelGroup>
+
+                <!-- ═══ TARJETA DE HORARIO ═══ -->
+                <h:panelGroup rendered="#{not empty horariosBean.activeCourt}" layout="block" styleClass="fp-card fp-card-padded fp-schedule-card">
+
+                    <div class="fp-schedule-head">
+                        <div>
+                            <h3>
+                                <span class="material-symbols-outlined">#{horariosBean.activeCourt.type.icon}</span>
+                                #{horariosBean.activeCourt.name}
+                            </h3>
+                            <p class="fp-subtext">
+                                #{horariosBean.activeCourt.surface} ·
+                                <span class="fp-font-bold fp-text-primary">$#{horariosBean.activeCourt.pricePerHour}/hora</span>
+                            </p>
+                        </div>
+                        <div class="fp-schedule-legend">
+                            <span class="fp-flex fp-items-center fp-gap-1"><span class="fp-slot-dot fp-slot-dot-free"></span>Disponible</span>
+                            <span class="fp-flex fp-items-center fp-gap-1"><span class="fp-slot-dot fp-slot-dot-busy"></span>Ocupado</span>
+                        </div>
+                    </div>
+
+                    <div class="fp-form-group" style="max-width:220px;margin-bottom:1.25rem;">
+                        <label class="fp-form-label">Fecha</label>
+                        <h:inputText value="#{horariosBean.date}" styleClass="fp-input">
+                            <f:passThroughAttribute name="type" value="date"/>
+                            <p:ajax event="change" process="@this" update="@form"/>
+                        </h:inputText>
+                    </div>
+
+                    <div class="fp-slots-grid">
+                        <ui:repeat value="#{horariosBean.activeSchedule}" var="slot">
+                            <span class="fp-slot #{slot.available ? 'fp-slot-free' : 'fp-slot-busy'}">
+                                <span class="material-symbols-outlined">#{slot.available ? 'event_available' : 'event_busy'}</span>
+                                <span>#{slot.hour}</span>
+                            </span>
+                        </ui:repeat>
+                    </div>
+
+                    <div style="margin-top:1.75rem;">
+                        <h:link outcome="/reserva" styleClass="fp-btn fp-btn-primary">
+                            <f:param name="courtId" value="#{horariosBean.selectedCourtId}"/>
+                            <span class="material-symbols-outlined" style="font-size:1.125rem;">calendar_add_on</span>
+                            Reservar esta cancha
+                        </h:link>
+                    </div>
+                </h:panelGroup>
+
+            </h:panelGroup>
+        </div>
+
+    </ui:define>
+
+</ui:composition>
