@@ -56,32 +56,33 @@
                 </div>
             </div>
 
+            <!-- Listado de Organizaciones/Sedes Deportivas -->
             <h:panelGroup id="orgGrid" layout="block" styleClass="fp-stats-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 20px;">
                 <ui:repeat value="#{homeBean.organizations}" var="org">
                     <p:card styleClass="fp-court-card" style="overflow: hidden; border-radius: 0.75rem; border: 1px solid var(--fp-border);">
+                        <!-- Imagen de Cabecera de la Sede -->
                         <div class="fp-court-img" style="height: 12rem; background-color: var(--fp-border-light); display: flex; align-items: center; justify-content: center;">
                             <span class="material-symbols-outlined" style="font-size: 4rem; color: var(--fp-text-muted);">stadium</span>
                         </div>
 
                         <div class="fp-court-card-body" style="padding: 15px;">
+                            <!-- Título unificado -->
                             <h4 style="font-family: 'Space Grotesk', sans-serif; font-size: 1.4rem; margin: 0 0 10px 0; color: var(--fp-text);">
                                 #{org.name}
                             </h4>
 
+                            <!-- Datos del Registro de la Organización -->
                             <div style="display: flex; align-items: center; gap: 5px; margin-bottom: 8px; color: var(--fp-text-secondary); font-size: 0.9rem;">
                                 <span class="material-symbols-outlined" style="font-size: 1.1rem;">location_on</span>
                                 <span>#{org.address}</span>
                             </div>
 
-                            <div style="display: flex; align-items: center; gap: 5px; margin-bottom: 12px; color: var(--fp-text-secondary); font-size: 0.9rem;">
-                                <span class="material-symbols-outlined" style="font-size: 1.1rem;">mail</span>
-                                <span>#{org.email}</span>
-                            </div>
+                            <!-- Se eliminó org.email para evitar la excepción en el modelo simple -->
 
                             <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 15px; padding-top: 15px; border-top: 1px solid var(--fp-border-light);">
-                                <span style="font-size: 0.85rem; padding: 4px 8px; background: var(--fp-bg-hover); border-radius: 20px; font-weight: 500; color: var(--fp-primary-text);">
-                                    #{org.zone.label}
-                                </span>
+                    <span style="font-size: 0.85rem; padding: 4px 8px; background: var(--fp-bg-hover); border-radius: 20px; font-weight: 500; color: var(--fp-primary-text);">
+                        #{org.zone.label}
+                    </span>
 
                                 <p:button value="Ver Canchas"
                                           outcome="/horarios"
