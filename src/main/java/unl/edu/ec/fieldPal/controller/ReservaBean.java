@@ -1,9 +1,9 @@
 package unl.edu.ec.fieldPal.controller;
 
+import jakarta.annotation.PostConstruct;
 import unl.edu.ec.fieldPal.model.Court;
 import unl.edu.ec.fieldPal.model.Organization;
 import unl.edu.ec.fieldPal.model.Reservation;
-import unl.edu.ec.fieldPal.model.enums.CourtType;
 import unl.edu.ec.fieldPal.model.enums.ReservationStatus;
 import unl.edu.ec.fieldPal.model.enums.Zone;
 import unl.edu.ec.fieldPal.service.CourtService;
@@ -38,6 +38,14 @@ public class ReservaBean implements Serializable {
 
     @Inject
     private AuthBean authBean;
+
+    @PostConstruct
+    public void init() {
+        if (authBean.isAuthenticated()) {
+            contactName = authBean.getCurrentUser().getName();
+            contactPhone = authBean.getCurrentUser().getPhone();
+        }
+    }
 
     // Filtros
     private Zone selectedZone;

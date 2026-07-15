@@ -1,6 +1,5 @@
 package unl.edu.ec.fieldPal.service;
 
-
 import unl.edu.ec.fieldPal.model.Court;
 import unl.edu.ec.fieldPal.model.TimeSlot;
 import unl.edu.ec.fieldPal.model.enums.CourtType;
@@ -19,7 +18,7 @@ public class CourtService {
     private final Random random = new Random();
 
     public CourtService() {
-        // Datos quemados - editar después para conectar a BD
+        // Datos quemados con los nombres estándar de CourtType (SOCCER, VOLLEYBALL, TENNIS, PADEL)
         // Org 1 - Complejo Deportivo El Norte
         courts.add(new Court("c1", "o1", "Cancha Pro A", CourtType.FUTBOL, 25, true, false, "Césped Sintético", ""));
         courts.add(new Court("c2", "o1", "Cancha Pro B", CourtType.FUTBOL, 20, true, false, "Césped Sintético", ""));
@@ -57,6 +56,7 @@ public class CourtService {
     }
 
     public List<Court> getByOrg(String orgId) {
+        if (orgId == null) return new ArrayList<>();
         return courts.stream()
                 .filter(c -> c.getOrgId().equals(orgId))
                 .collect(Collectors.toList());
@@ -69,18 +69,41 @@ public class CourtService {
     }
 
     public Court findById(String id) {
+        if (id == null) return null;
         return courts.stream()
                 .filter(c -> c.getId().equals(id))
                 .findFirst().orElse(null);
     }
 
+    /**
+     * Guarda una cancha en la lista. Si ya cuenta con ID único registrado, actualiza su información;
+     * de lo contrario, la añade y autogenera su ID de forma segura.
+     * (Este método es el invocado por WizardBean.java)
+     */
+    public void save(Court court) {
+        if (court == null) return;
+
+        if (court.getId() != null && findById(court.getId()) != null) {
+            updateCourt(court);
+        } else {
+            addCourt(court);
+        }
+    }
+
     public void addCourt(Court court) {
-        String id = "c" + (courts.size() + 1);
-        court.setId(id);
+        if (court == null) return;
+
+        // Autogeneración del identificador secuencial si viene vacío
+        if (court.getId() == null || court.getId().trim().isEmpty()) {
+            String id = "c" + (courts.size() + 1);
+            court.setId(id);
+        }
         courts.add(court);
     }
 
     public void updateCourt(Court court) {
+        if (court == null || court.getId() == null) return;
+
         for (int i = 0; i < courts.size(); i++) {
             if (courts.get(i).getId().equals(court.getId())) {
                 courts.set(i, court);
@@ -90,6 +113,7 @@ public class CourtService {
     }
 
     public void removeCourt(String id) {
+        if (id == null) return;
         courts.removeIf(c -> c.getId().equals(id));
     }
 
@@ -107,4 +131,3 @@ public class CourtService {
         return courts.size();
     }
 }
-

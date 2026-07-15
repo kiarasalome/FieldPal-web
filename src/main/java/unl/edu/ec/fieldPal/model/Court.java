@@ -10,31 +10,48 @@ public class Court implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private String id;
-    private String orgId;
+    private String orgId; // Mantener la variable original
     private String name;
     private CourtType type;
     private double pricePerHour;
     private boolean hasLighting;
-    private boolean isCovered;
+    private boolean covered; // Cambiado a covered para coincidir con la convención de JSF y PrimeFaces
     private String surface;
     private String imageUrl;
 
     public Court() {}
 
     public Court(String id, String orgId, String name, CourtType type, double pricePerHour,
-                 boolean hasLighting, boolean isCovered, String surface, String imageUrl) {
+                 boolean hasLighting, boolean covered, String surface, String imageUrl) {
         this.id = id;
         this.orgId = orgId;
         this.name = name;
         this.type = type;
         this.pricePerHour = pricePerHour;
         this.hasLighting = hasLighting;
-        this.isCovered = isCovered;
+        this.covered = covered;
         this.surface = surface;
         this.imageUrl = imageUrl;
     }
 
-    // Getters and Setters
+    // === Métodos Puente de Compatibilidad con WizardBean ===
+
+    /**
+     * Getter compatible con organizationId requerido por WizardBean.
+     */
+    public String getOrganizationId() {
+        return this.orgId;
+    }
+
+    /**
+     * Setter compatible con organizationId requerido por WizardBean.
+     */
+    public void setOrganizationId(String organizationId) {
+        this.orgId = organizationId;
+    }
+
+    // === Getters and Setters Estándar ===
+
     public String getId() { return id; }
     public void setId(String id) { this.id = id; }
 
@@ -50,11 +67,13 @@ public class Court implements Serializable {
     public double getPricePerHour() { return pricePerHour; }
     public void setPricePerHour(double pricePerHour) { this.pricePerHour = pricePerHour; }
 
+    // Corregido: getter estándar para booleanos
     public boolean isHasLighting() { return hasLighting; }
     public void setHasLighting(boolean hasLighting) { this.hasLighting = hasLighting; }
 
-    public boolean isCovered() { return isCovered; }
-    public void setCovered(boolean covered) { isCovered = covered; }
+    // Corregidos para evitar colisiones en la evaluación de expresiones JSF (#{cancha.covered})
+    public boolean isCovered() { return covered; }
+    public void setCovered(boolean covered) { this.covered = covered; }
 
     public String getSurface() { return surface; }
     public void setSurface(String surface) { this.surface = surface; }
