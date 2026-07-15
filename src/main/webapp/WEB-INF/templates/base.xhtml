@@ -34,7 +34,7 @@
                  o un panel de administrador), puede sobreescribirlo con:
                  <ui:define name="header"> ...otro header... </ui:define> -->
             <ui:insert name="header">
-                <ui:include src="/templates/header.xhtml"/>
+                <ui:include src="fragments/header.xhtml"/>
             </ui:insert>
 
             <!-- ═══ CONTENIDO ═══
@@ -50,13 +50,13 @@
                  Mismo patrón que el header: por defecto se incluye footer.xhtml, pero
                  cualquier página puede reemplazarlo si es necesario -->
             <ui:insert name="footer">
-                <ui:include src="/templates/footer.xhtml"/>
+                <ui:include src="fragments/footer.xhtml"/>
             </ui:insert>
 
         </h:panelGroup>
 
         <!-- Modal de login/registro disponible en toda la plataforma -->
-        <ui:include src="/templates/auth-modal.xhtml"/>
+        <ui:include src="fragments/auth-modal.xhtml"/>
 
         <!-- Aplica el modo oscuro guardado por el usuario antes de que la página termine de cargar -->
         <script>

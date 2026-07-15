@@ -14,15 +14,27 @@
       - void     switchToRegister()
       - void     closeAuth()
 -->
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="jakarta.faces.html"
+                xmlns:f="jakarta.faces.core"
+                xmlns:ui="jakarta.faces.facelets"
+                xmlns:p="primefaces">
 
-<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:h="jakarta.faces.html" xmlns:f="jakarta.faces.core" xmlns:ui="jakarta.faces.facelets" xmlns:p="primefaces">
-
-    <p:dialog id="authDialog" widgetVar="authModal" visible="#{authBean.showAuthModal}" modal="true" resizable="false" draggable="false" closable="true" showHeader="false" styleClass="fp-auth-modal" width="440" onHide="authBean.showAuthModal=false" closeOnEscape="true">
+    <p:dialog id="authDialog"
+              widgetVar="authModal"
+              modal="true"
+              resizable="false"
+              draggable="false"
+              closable="true"
+              showHeader="false"
+              styleClass="fp-auth-modal"
+              width="440"
+              closeOnEscape="true"
+              appendTo="@(body)">
 
         <button type="button" class="fp-modal-close" onclick="PF('authModal').hide()">
             <span class="material-symbols-outlined">close</span>
         </button>
-        <p:commandButton style="display:none" process="@this" action="#{authBean.closeAuth}" styleClass="fp-modal-close-hidden-trigger" id="hiddenCloseTrigger"/>
 
         <div class="fp-auth-head">
             <div class="fp-auth-icon">
@@ -34,8 +46,7 @@
 
         <p:messages id="authMessages" showDetail="true" closable="false" globalOnly="true" styleClass="fp-form-error"/>
 
-        <!-- ═══ LOGIN ═══ -->
-        <h:panelGroup rendered="#{authBean.authMode == 'login'}" layout="block">
+        <h:panelGroup rendered="#{authBean.authMode == 'login'}" layout="block" id="loginFormGroup">
             <div class="fp-field">
                 <label>Correo electrónico</label>
                 <span class="fp-input-icon">
@@ -51,11 +62,17 @@
                 </span>
             </div>
 
-            <p:commandButton value="Iniciar Sesión" icon="pi pi-sign-in" styleClass="fp-btn-primary fp-btn-block" action="#{authBean.submitLogin}" process="@this authDialog" update="appForm"/>
+            <p:commandButton value="Iniciar Sesión"
+                             icon="pi pi-sign-in"
+                             styleClass="fp-btn-primary fp-btn-block"
+                             action="#{authBean.submitLogin()}"
+                             process="loginFormGroup @this"
+                             update="appForm"
+                             oncomplete="if (!args.validationFailed) PF('authModal').hide();" />
 
             <p class="fp-auth-switch">
                 ¿No tienes cuenta?
-                <p:commandLink value="Regístrate aquí" action="#{authBean.switchToRegister}" process="@this" update="authDialog"/>
+                <p:commandLink value="Regístrate aquí" action="#{authBean.switchToRegister}" process="@this" update="@(.fp-auth-modal)"/>
             </p>
 
             <div class="fp-auth-demo">
@@ -63,8 +80,7 @@
             </div>
         </h:panelGroup>
 
-        <!-- ═══ REGISTRO ═══ -->
-        <h:panelGroup rendered="#{authBean.authMode == 'register'}" layout="block">
+        <h:panelGroup rendered="#{authBean.authMode == 'register'}" layout="block" id="registerFormGroup">
             <div class="fp-field">
                 <label>Nombre completo</label>
                 <span class="fp-input-icon">
@@ -104,14 +120,19 @@
                 </div>
             </div>
 
-            <p:commandButton value="Crear Cuenta" icon="pi pi-user-plus" styleClass="fp-btn-primary fp-btn-block" action="#{authBean.submitRegister}" process="@this authDialog" update="appForm"/>
+            <p:commandButton value="Crear Cuenta"
+                             icon="pi pi-user-plus"
+                             styleClass="fp-btn-primary fp-btn-block"
+                             action="#{authBean.submitRegister()}"
+                             process="registerFormGroup @this"
+                             update="appForm"
+                             oncomplete="if (!args.validationFailed) PF('authModal').hide();" />
 
             <p class="fp-auth-switch">
                 ¿Ya tienes cuenta?
-                <p:commandLink value="Inicia sesión" action="#{authBean.switchToLogin}" process="@this" update="authDialog"/>
+                <p:commandLink value="Inicia sesión" action="#{authBean.switchToLogin}" process="@this" update="@(.fp-auth-modal)"/>
             </p>
         </h:panelGroup>
 
     </p:dialog>
-
 </ui:composition>

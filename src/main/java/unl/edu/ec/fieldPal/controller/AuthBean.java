@@ -12,14 +12,8 @@ import unl.edu.ec.fieldPal.service.UserService;
 import java.io.Serial;
 import java.io.Serializable;
 
-/**
- * Managed Bean para autenticación (Login/Registro).
- * Datos quemados - editar después para conectar a BD real.
- */
-
 @Named
 @ViewScoped
-
 public class AuthBean implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
@@ -43,9 +37,8 @@ public class AuthBean implements Serializable {
     // Usuario actual en sesión
     private User currentUser;
 
-    // === Métodos de Login ===
+    // === Método de Login ===
     public String submitLogin() {
-        // TODO: Implementar autenticación real con BD
         User user = userService.login(loginEmail, loginPassword);
         if (user != null) {
             currentUser = user;
@@ -53,7 +46,9 @@ public class AuthBean implements Serializable {
             clearLoginForm();
             FacesContext.getCurrentInstance().addMessage(null,
                     new FacesMessage(FacesMessage.SEVERITY_INFO,
-                            "Bienvenido " + user.getName(), ""));
+                            "¡Bienvenido, " + user.getName() + "!", ""));
+
+            // Retornamos navegación explícita con redirección limpia
             return user.isAdmin() ? "/admin/gestion.xhtml?faces-redirect=true"
                     : "/home.xhtml?faces-redirect=true";
         }
@@ -63,9 +58,8 @@ public class AuthBean implements Serializable {
         return null;
     }
 
-    // === Métodos de Registro ===
+    // === Método de Registro ===
     public String submitRegister() {
-        // TODO: Implementar registro real con BD
         UserRole role = "ADMIN".equals(registerRole) ? UserRole.ADMIN : UserRole.PLAYER;
         User user = userService.register(registerName, registerEmail,
                 registerPhone, registerPassword, role);
@@ -75,7 +69,8 @@ public class AuthBean implements Serializable {
             clearRegisterForm();
             FacesContext.getCurrentInstance().addMessage(null,
                     new FacesMessage(FacesMessage.SEVERITY_INFO,
-                            "Cuenta creada exitosamente. Bienvenido " + user.getName(), ""));
+                            "Cuenta creada exitosamente. ¡Bienvenido, " + user.getName() + "!", ""));
+
             return user.isAdmin() ? "/admin/gestion.xhtml?faces-redirect=true"
                     : "/home.xhtml?faces-redirect=true";
         }
@@ -89,6 +84,11 @@ public class AuthBean implements Serializable {
     public String doLogout() {
         currentUser = null;
         return "/home.xhtml?faces-redirect=true";
+    }
+
+    // Alias para coincidir exactamente con el action de header.xhtml
+    public String logout() {
+        return doLogout();
     }
 
     public boolean isAuthenticated() {
