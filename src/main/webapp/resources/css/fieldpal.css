@@ -35,7 +35,7 @@ body.dark {
     --fp-bg-card: #141414;
     --fp-bg-elevated: #1A1A1A;
     --fp-bg-hover: #222222;
-    --fp-primary: #b7cd71;
+    --fp-primary: #677928;
     --fp-primary-light: #c8da8a;
     --fp-primary-dark: #96b04f;
     --fp-primary-text: #b7cd71;
@@ -594,22 +594,49 @@ body.dark .fp-slot-selected { color:#0A0A0A !important; }
 /* ═══ HORARIOS — ZONA CHIPS ═══ */
 .fp-zone-filters { display:flex; flex-wrap:wrap; gap:.5rem; margin-bottom:1.75rem; }
 
-/* ═══ HORARIOS — GRID DE ORGANIZACIONES ═══ */
-.fp-org-scroll { display:flex; gap:1rem; overflow-x:auto; padding-bottom:.5rem; margin-bottom:1.75rem; }
-.fp-org-card {
-    flex:0 0 260px; text-align:left; cursor:pointer;
-    padding:1.125rem; border-radius:1rem;
-    border:1.5px solid var(--fp-border-light); background: var(--fp-bg-card);
-    transition: all .25s ease;
+/* ═══ HORARIOS — GRID DE TARJETAS DE ORGANIZACIÓN ═══ */
+.fp-org-grid {
+    display:grid;
+    grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+    gap:1.25rem;
+    margin-bottom:1.75rem;
 }
-.fp-org-card:hover { border-color: rgba(27,94,59,.3); }
-.fp-org-card.active { border-color: var(--fp-primary); background: var(--fp-bg-hover); }
-.fp-org-card-top { display:flex; justify-content:space-between; align-items:flex-start; gap:.5rem; margin-bottom:.5rem; }
-.fp-org-card h4 { font-family:'DM Sans',sans-serif; font-weight:700; font-size:.9375rem; color:var(--fp-text); }
-.fp-org-rating { display:flex; align-items:center; gap:.25rem; font-size:.75rem; font-weight:700; color:var(--fp-accent-text); flex-shrink:0; }
-.fp-org-rating .material-symbols-outlined { font-size:.9375rem; font-variation-settings:'FILL' 1; color:#D4A017; }
-.fp-org-card p { font-size:.8125rem; color:var(--fp-text-secondary); display:flex; align-items:center; gap:.375rem; }
-.fp-org-card p .material-symbols-outlined { font-size:1rem; color:var(--fp-text-muted); }
+.fp-org-card {
+    display:block; text-align:left; cursor:pointer;
+    border-radius:1rem; overflow:hidden;
+    border:1.5px solid var(--fp-border-light);
+    background: var(--fp-bg-card);
+    box-shadow: 0 1px 3px rgba(0,0,0,.04);
+    transition: all .25s ease;
+    text-decoration:none;
+}
+.fp-org-card:hover { transform: translateY(-3px); box-shadow: 0 10px 24px rgba(0,0,0,.09); }
+.fp-org-card.active { border-color: var(--fp-primary); box-shadow: 0 0 0 2px var(--fp-primary); }
+
+/* Franja superior a color (reutiliza .fp-zone-norte/sur/este/oeste/centro ya definidas) */
+.fp-org-card .fp-zone-card-header { padding: .875rem 1.125rem; }
+.fp-org-card .fp-zone-card-header h4 {
+    font-family:'DM Sans',sans-serif; font-weight:700; font-size:.9375rem;
+    color:#fff; line-height:1.25;
+}
+.fp-org-card .fp-org-rating {
+    display:flex; align-items:center; gap:.25rem;
+    font-size:.75rem; font-weight:700; color:#fff;
+    background: rgba(255,255,255,.22);
+    padding:.15rem .55rem; border-radius:9999px; flex-shrink:0;
+}
+.fp-org-card .fp-org-rating .material-symbols-outlined {
+    font-size:.875rem; font-variation-settings:'FILL' 1;
+}
+
+.fp-org-card-body { padding: 1rem 1.125rem 1.125rem; }
+.fp-org-card-body p {
+    font-size:.8125rem; color:var(--fp-text-secondary);
+    display:flex; align-items:center; gap:.375rem;
+    margin-bottom:.4rem;
+}
+.fp-org-card-body p:last-child { margin-bottom:0; }
+.fp-org-card-body p .material-symbols-outlined { font-size:1rem; color:var(--fp-text-muted); flex-shrink:0; }
 
 /* ═══ HORARIOS — TABS DE CANCHAS ═══ */
 .fp-court-tabs { display:flex; flex-wrap:wrap; gap:.5rem; margin-bottom:1.75rem; }
