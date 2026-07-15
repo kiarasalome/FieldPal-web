@@ -564,3 +564,30 @@ body.dark .fp-slot-selected { color:#0A0A0A !important; }
 
 /* ═══ RESUMEN DE PRECIO ═══ */
 .fp-price-summary { background: var(--fp-bg-elevated); border:1px solid var(--fp-border-light); border-radius:.75rem; padding:1.25rem; display:flex; flex-direction:column; gap:.5rem; font-size:.875rem; color:var(--fp-text-secondary); }
+
+/* ═══ ADICIONES NECESARIAS ═══ */
+.fp-hero-title {
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 700;
+    font-size: 2.75rem;
+    line-height: 1.15;
+    color: #FFFFFF;
+    margin-bottom: 1rem;
+}
+.fp-hero-subtitle {
+    font-size: 1.125rem;
+    color: rgba(255, 255, 255, 0.85);
+    max-width: 36rem;
+    margin: 0 auto 2rem;
+}
+.fp-court-img-wrapper { position: relative; }
+.fp-rating-badge {
+    position: absolute; top: 0.75rem; left: 0.75rem;
+    display: inline-flex; align-items: center; gap: 0.25rem;
+    background: var(--fp-accent); color: var(--fp-accent-text);
+    font-size: 0.75rem; font-weight: 700;
+    padding: 0.25rem 0.625rem; border-radius: 9999px;
+}
+.fp-fav-icon { color: var(--fp-text-muted); cursor: pointer; transition: color .2s; }
+.fp-fav-icon.active { color: var(--fp-error); }
+

@@ -2,6 +2,7 @@ package unl.edu.ec.fieldPal.model;
 
 import unl.edu.ec.fieldPal.model.enums.Zone;
 import java.io.Serializable;
+import java.util.Objects;
 
 public class Organization implements Serializable {
     private static final long serialVersionUID = 1L;
@@ -69,5 +70,19 @@ public class Organization implements Serializable {
 
     public double getLongitude() { return longitude; }
     public void setLongitude(double longitude) { this.longitude = longitude; }
+
+    // Sin esto, dos objetos Organization con el mismo id se tratarían como "distintos".
+    @Override
+    public boolean equals(Object object) {
+        if (this == object) return true;
+        if (!(object instanceof Organization)) return false;
+        Organization that = (Organization) object;
+        return Objects.equals(id, that.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
 }
 
