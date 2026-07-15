@@ -4,40 +4,48 @@
       xmlns:h="jakarta.faces.html"
       xmlns:f="jakarta.faces.core"
       xmlns:ui="jakarta.faces.facelets"
-      xmlns:p="http://primefaces.org/ui">
+      xmlns:p="http://primefaces.org/ui"
+      lang="es">
 
 <h:head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>
         <ui:insert name="title">FieldPal - Reserva de Canchas</ui:insert>
     </title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&amp;family=Space+Grotesk:wght@500;700&amp;display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+
+    <h:outputStylesheet library="css" name="fieldpal.css"/>
 </h:head>
 
-<h:body>
-    <!-- Contenedor Principal de la Página -->
-    <h:panelGroup id="pageContainer" layout="block">
+<h:body styleClass="#{authBean.currentUser != null and authBean.isAdmin() ? 'fp-role-admin' : ''}">
 
-        <!-- Barra de Navegación Superior (Topbar) -->
+    <p:ajaxStatus onstart="PF('globalStatus').show()" onsuccess="PF('globalStatus').hide()"/>
+    <p:blockUI block="pageContainer" widgetVar="globalStatus" styleClass="fp-block-ui">
+        <span class="material-symbols-outlined fp-spin" style="font-size: 3rem; color: var(--fp-primary);">progress_activity</span>
+    </p:blockUI>
+
+    <h:panelGroup id="pageContainer" layout="block" styleClass="fp-app-layout">
+
         <ui:insert name="header">
             <ui:include src="/WEB-INF/templates/fragments/header.xhtml" />
         </ui:insert>
 
-        <!-- Separador sutil abajo de la barra -->
-        <p:spacer height="15" />
+        <main class="fp-main-content">
+            <h:panelGroup id="content" layout="block" style="padding: 20px; max-width: 1200px; margin: 0 auto;">
+                <ui:insert name="content">
+                </ui:insert>
+            </h:panelGroup>
+        </main>
 
-        <!-- Área de Contenido Dinámico -->
-        <h:panelGroup id="content" layout="block" style="padding: 10px 20px;">
-            <ui:insert name="content">
-                <!-- El contenido de cada vista se inyectará aquí -->
-            </ui:insert>
-        </h:panelGroup>
-
-        <p:spacer height="30" />
-
-        <!-- Pie de Página (Footer) -->
         <ui:insert name="footer">
             <ui:include src="/WEB-INF/templates/fragments/footer.xhtml" />
         </ui:insert>
 
     </h:panelGroup>
+
 </h:body>
 </html>

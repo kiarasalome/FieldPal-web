@@ -7,96 +7,106 @@
                 template="/WEB-INF/templates/base.xhtml">
 
     <ui:define name="title">
-        FieldPal - Tu Cancha al Instante
+        FieldPal — Tu Cancha al Instante
     </ui:define>
 
     <ui:define name="content">
         <p:growl id="homeGrowl" showDetail="true" life="3000" />
 
-        <p:card style="text-align: center; margin-bottom: 25px; padding: 20px;">
-            <h:outputText value="¡Encuentra y Reserva tu Cancha Ideal!" style="font-size: 2.5rem; font-weight: bold; display: block;" />
-            <p:spacer height="10" />
-            <h:outputText value="Elige tu deporte favorito, selecciona la hora y asegura tu juego al instante." style="font-size: 1.2rem; color: #666; display: block;" />
-            <p:spacer height="20" />
+        <h:form id="mainForm">
+            <p:card styleClass="fp-hero-card" style="text-align: center; margin-bottom: 30px; padding: 40px 20px; background: var(--fp-bg-elevated); border-radius: 1rem;">
+                <h:outputText value="¡Encuentra y Reserva tu Cancha Ideal!"
+                              style="font-size: 2.8rem; font-weight: bold; display: block; color: var(--fp-primary-text); font-family: 'Space Grotesk', sans-serif;" />
+                <p:spacer height="10" />
+                <h:outputText value="Elige tu deporte favorito, selecciona la zona de Loja y asegura tu juego al instante sin llamadas."
+                              style="font-size: 1.2rem; color: var(--fp-text-secondary); display: block;" />
+                <p:spacer height="25" />
 
-            <p:commandButton value="Reservar Ahora"
-                             icon="pi pi-calendar-plus"
-                             styleClass="ui-button-raised ui-button-success"
-                             style="font-size: 1.2rem; padding: 10px 20px;"
-                             rendered="#{not authBean.authenticated}"
-                             action="#{authBean.openLogin()}"
-                             process="@this"
-                             update=":authDialogID"
-                             oncomplete="PF('authModal').show()" />
+                <p:button value="Reservar Ahora"
+                          icon="pi pi-calendar-plus"
+                          outcome="/reserva"
+                          styleClass="ui-button-raised ui-button-success fp-btn-primary"
+                          style="font-size: 1.2rem; padding: 10px 25px;"
+                          rendered="#{authBean.authenticated}" />
 
-            <p:button value="Ir a Reservar"
-                      icon="pi pi-calendar-plus"
-                      styleClass="ui-button-raised ui-button-success"
-                      style="font-size: 1.2rem; padding: 10px 20px;"
-                      rendered="#{authBean.authenticated}"
-                      outcome="/reserva" />
-        </p:card>
-
-        <p:panel header="Búsqueda Rápida de Disponibilidad" style="margin-bottom: 25px;">
-            <p:panelGrid columns="4" layout="flex" styleClass="ui-noborder">
-                <h:panelGroup>
-                    <p:outputLabel for="deporte" value="Deporte:" style="font-weight: bold; display: block; margin-bottom: 5px;" />
-                    <p:selectOneMenu id="deporte" value="#{reservationController.deporte}" style="width: 100%;">
-                        <f:selectItem itemLabel="Selecciona un deporte" itemValue="" />
-                        <f:selectItem itemLabel="Fútbol" itemValue="futbol" />
-                        <f:selectItem itemLabel="Baloncesto" itemValue="basket" />
-                        <f:selectItem itemLabel="Tenis" itemValue="tenis" />
-                        <f:selectItem itemLabel="Pádel" itemValue="padel" />
-                    </p:selectOneMenu>
-                </h:panelGroup>
-
-                <h:panelGroup>
-                    <p:outputLabel for="fecha" value="Fecha:" style="font-weight: bold; display: block; margin-bottom: 5px;" />
-                    <p:datePicker id="fecha" value="#{reservationController.fecha}" showIcon="true" style="width: 100%;" />
-                </h:panelGroup>
-
-                <h:panelGroup>
-                    <p:outputLabel for="hora" value="Hora:" style="font-weight: bold; display: block; margin-bottom: 5px;" />
-                    <p:selectOneMenu id="hora" value="#{reservationController.hora}" style="width: 100%;">
-                        <f:selectItem itemLabel="Cualquier hora" itemValue="" />
-                        <f:selectItem itemLabel="Mañana (08:00 - 12:00)" itemValue="morning" />
-                        <f:selectItem itemLabel="Tarde (12:00 - 18:00)" itemValue="afternoon" />
-                        <f:selectItem itemLabel="Noche (18:00 - 22:00)" itemValue="night" />
-                    </p:selectOneMenu>
-                </h:panelGroup>
-
-                <h:panelGroup>
-                    <p:spacer height="25" style="display: block;" />
-                    <p:commandButton value="Buscar Canchas"
-                                     icon="pi pi-search"
-                                     action="#{reservationController.buscarDisponibilidad()}"
-                                     process="deporte fecha hora @this"
-                                     update="homeGrowl"
-                                     styleClass="ui-button-primary"
-                                     style="width: 100%;" />
-                </h:panelGroup>
-            </p:panelGrid>
-        </p:panel>
-
-        <p:panelGrid columns="3" layout="flex" styleClass="ui-noborder">
-            <p:card style="height: 100%; text-align: center;">
-                <i class="pi pi-bolt" style="font-size: 3rem; color: #2196F3; margin-bottom: 15px; display: block;"></i>
-                <h:outputText value="Reserva Inmediata" style="font-size: 1.5rem; font-weight: bold; display: block; margin-bottom: 10px;" />
-                <h:outputText value="Olvídate de las llamadas telefónicas. Busca horarios libres y confirma tu reserva en segundos." />
+                <p:commandButton value="Comenzar - Iniciar Sesión"
+                                 icon="pi pi-user"
+                                 action="#{authBean.openLogin()}"
+                                 update="@(.fp-auth-modal)"
+                                 oncomplete="PF('authModal').show()"
+                                 styleClass="ui-button-raised ui-button-success fp-btn-primary"
+                                 style="font-size: 1.2rem; padding: 10px 25px;"
+                                 rendered="#{not authBean.authenticated}" />
             </p:card>
 
-            <p:card style="height: 100%; text-align: center;">
-                <i class="pi pi-map-marker" style="font-size: 3rem; color: #4CAF50; margin-bottom: 15px; display: block;"></i>
-                <h:outputText value="Las Mejores Sedes" style="font-size: 1.5rem; font-weight: bold; display: block; margin-bottom: 10px;" />
-                <h:outputText value="Encuentra complejos deportivos de excelente calidad cerca de tu ubicación actual." />
-            </p:card>
+            <div style="margin-bottom: 25px;">
+                <h3 style="font-family: 'Space Grotesk', sans-serif; margin-bottom: 15px;">Explorar Canchas por Zona</h3>
+                <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                    <p:commandButton value="Todas las Zonas"
+                                     action="#{homeBean.clearZoneFilter()}"
+                                     update="orgGrid"
+                                     styleClass="#{homeBean.selectedZone == null ? 'ui-button-primary' : 'ui-button-outlined'}" />
 
-            <p:card style="height: 100%; text-align: center;">
-                <i class="pi pi-shield" style="font-size: 3rem; color: #FF9800; margin-bottom: 15px; display: block;"></i>
-                <h:outputText value="Pago Seguro" style="font-size: 1.5rem; font-weight: bold; display: block; margin-bottom: 10px;" />
-                <h:outputText value="Procesos de pago rápidos y seguros, con reembolsos amigables ante cancelaciones." />
-            </p:card>
-        </p:panelGrid>
+                    <ui:repeat value="#{homeBean.availableZones}" var="zone">
+                        <p:commandButton value="#{zone.emoji} #{zone.label}"
+                                         action="#{homeBean.filterByZone(zone)}"
+                                         update="mainForm:orgGrid"
+                                         styleClass="#{homeBean.selectedZone == zone ? 'ui-button-primary' : 'ui-button-outlined'}" />
+                    </ui:repeat>
+                </div>
+            </div>
+
+            <h:panelGroup id="orgGrid" layout="block" styleClass="fp-stats-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 20px;">
+                <ui:repeat value="#{homeBean.organizations}" var="org">
+                    <p:card styleClass="fp-court-card" style="overflow: hidden; border-radius: 0.75rem; border: 1px solid var(--fp-border);">
+                        <div class="fp-court-img" style="height: 12rem; background-color: var(--fp-border-light); display: flex; align-items: center; justify-content: center;">
+                            <span class="material-symbols-outlined" style="font-size: 4rem; color: var(--fp-text-muted);">stadium</span>
+                        </div>
+
+                        <div class="fp-court-card-body" style="padding: 15px;">
+                            <h4 style="font-family: 'Space Grotesk', sans-serif; font-size: 1.4rem; margin: 0 0 10px 0; color: var(--fp-text);">
+                                #{org.name}
+                            </h4>
+
+                            <div style="display: flex; align-items: center; gap: 5px; margin-bottom: 8px; color: var(--fp-text-secondary); font-size: 0.9rem;">
+                                <span class="material-symbols-outlined" style="font-size: 1.1rem;">location_on</span>
+                                <span>#{org.address}</span>
+                            </div>
+
+                            <div style="display: flex; align-items: center; gap: 5px; margin-bottom: 12px; color: var(--fp-text-secondary); font-size: 0.9rem;">
+                                <span class="material-symbols-outlined" style="font-size: 1.1rem;">mail</span>
+                                <span>#{org.email}</span>
+                            </div>
+
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 15px; padding-top: 15px; border-top: 1px solid var(--fp-border-light);">
+                                <span style="font-size: 0.85rem; padding: 4px 8px; background: var(--fp-bg-hover); border-radius: 20px; font-weight: 500; color: var(--fp-primary-text);">
+                                    #{org.zone.label}
+                                </span>
+
+                                <p:button value="Ver Canchas"
+                                          outcome="/horarios"
+                                          styleClass="ui-button-sm fp-btn-primary">
+                                    <f:param name="orgId" value="#{org.id}" />
+                                </p:button>
+                            </div>
+                        </div>
+                    </p:card>
+                </ui:repeat>
+            </h:panelGroup>
+
+            <div style="margin-top: 50px; display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px;">
+                <p:card style="text-align: center; padding: 20px;">
+                    <i class="pi pi-bolt" style="font-size: 2.5rem; color: #2196F3; margin-bottom: 10px; display: block;"></i>
+                    <h5 style="font-size: 1.25rem; font-weight: bold; margin-bottom: 8px;">Reservas al Instante</h5>
+                    <p style="font-size: 0.9rem; color: var(--fp-text-secondary); margin: 0;">Olvídate de las llamadas telefónicas. Agenda tu partido en segundos.</p>
+                </p:card>
+
+                <p:card style="text-align: center; padding: 20px;">
+                    <i class="pi pi-shield" style="font-size: 2.5rem; color: #4CAF50; margin-bottom: 10px; display: block;"></i>
+                    <h5 style="font-size: 1.25rem; font-weight: bold; margin-bottom: 8px;">Soporte de Confianza</h5>
+                    <p style="font-size: 0.9rem; color: var(--fp-text-secondary); margin: 0;">Respaldo directo de administradores y complejos verificados en Loja.</p>
+                </p:card>
+            </div>
+        </h:form>
     </ui:define>
-
 </ui:composition>

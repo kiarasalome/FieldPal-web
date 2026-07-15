@@ -3,7 +3,11 @@
   <component name="WebContextManager">
     <option name="state">
       <map>
+<<<<<<< HEAD
+        <entry key="file://$PROJECT_DIR$/src/main/webapp/homepage.xhtml" value="file://$PROJECT_DIR$/src/main/webapp" />
+=======
         <entry key="file://$PROJECT_DIR$/src/main/webapp/WEB-INF/mis-reservas.xhtml" value="file://$PROJECT_DIR$/src/main/webapp/WEB-INF" />
+>>>>>>> e7086c63ce8ef1abdfbb08e60b5f5f783ef84846
         <entry key="file://$PROJECT_DIR$/src/main/webapp/index.html" value="file://$PROJECT_DIR$/src/main/webapp" />
       </map>
     </option>
