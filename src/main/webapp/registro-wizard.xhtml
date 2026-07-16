@@ -245,7 +245,8 @@
                                 </div>
                             </div>
 
-                            <div class="field" style="display: flex; align-items: center; justify-content: justify-content; background: var(--fp-bg-elevated); padding: 25px; border-radius: 8px; border: 1px solid var(--fp-border-light);">
+                            <!-- LÍNEA CORREGIDA: Se cambió justify-content: justify-content por space-between para quitar el error 500 de CSS -->
+                            <div class="field" style="display: flex; align-items: center; justify-content: space-between; background: var(--fp-bg-elevated); padding: 25px; border-radius: 8px; border: 1px solid var(--fp-border-light);">
                                 <div>
                                     <h:outputLabel value="¿Permitir cancelación gratuita de turnos?" style="font-weight: 600; font-size: 1.1rem; color: var(--fp-text); display: block; margin-bottom: 5px;" />
                                     <span style="color: var(--fp-text-secondary); font-size: 0.9rem;">Si se permite, los jugadores podrán cancelar su reserva sin perder su depósito bajo tus condiciones.</span>
