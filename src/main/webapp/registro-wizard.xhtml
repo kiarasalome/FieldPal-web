@@ -11,6 +11,8 @@
     <ui:define name="content">
         <div style="max-width: 950px; margin: 40px auto; padding: 0 15px;">
 
+            <!-- SE ELIMINÓ EL <p:growl> DE AQUÍ YA QUE TU PLANTILLA BASE LAYOUT.XHTML YA LO TIENE -->
+
             <!-- ENCABEZADO: Sincronizado con las variables CSS de FieldPal -->
             <div style="text-align: center; margin-bottom: 40px;">
                 <h1 style="font-family: 'DM Sans', sans-serif; font-weight: 700; font-size: 2.5rem; color: var(--fp-primary-text); margin-bottom: 10px;">
@@ -21,8 +23,9 @@
                 </p>
             </div>
 
-            <!-- El componente Wizard usa directamente el form maestro del layout sin anidar h:form -->
-            <p:wizard backLabel="Atrás" nextLabel="Siguiente" styleClass="fp-wizard-custom">
+            <!-- El componente Wizard usa el flowListener para validar en Java antes de pasar de pestaña -->
+            <p:wizard backLabel="Atrás" nextLabel="Siguiente" styleClass="fp-wizard-custom"
+                      flowListener="#{wizardBean.onFlowProcess}">
 
                 <!-- PASO 1: DATOS DE LA ORGANIZACIÓN -->
                 <p:tab id="organizacion" title="1. Mi Complejo">
@@ -30,15 +33,30 @@
                         <div class="ui-fluid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; padding: 15px 0;">
 
                             <div class="field">
-                                <p:outputLabel for="idOrg" value="RUC / Identificación del Complejo:" style="font-weight: 600; display:block; margin-bottom: 5px; color: var(--fp-text);" />
+                                <p:outputLabel for="idOrg" value="RUC / Identificación del Complejo (13 dígitos):" style="font-weight: 600; display:block; margin-bottom: 5px; color: var(--fp-text);" />
                                 <p:inputText id="idOrg" value="#{wizardBean.newOrganization.id}" required="true"
-                                             requiredMessage="El RUC/ID es obligatorio." placeholder="Ej. 1104567890001" styleClass="fp-input" />
+                                             requiredMessage="El RUC/ID es obligatorio."
+                                             validatorMessage="La identificación debe constar exactamente de 13 dígitos numéricos."
+                                             placeholder="Ej. 1104567890001"
+                                             styleClass="fp-input"
+                                             maxlength="13">
+                                    <p:keyFilter regEx="/[\d]/" />
+                                    <f:validateRegex pattern="^\d{13}$" />
+                                </p:inputText>
+                                <p:message for="idOrg" />
                             </div>
 
                             <div class="field">
                                 <p:outputLabel for="nombre" value="Nombre del Complejo:" style="font-weight: 600; display:block; margin-bottom: 5px; color: var(--fp-text);" />
                                 <p:inputText id="nombre" value="#{wizardBean.newOrganization.name}" required="true"
-                                             requiredMessage="El nombre del complejo es obligatorio." placeholder="Ej. Arena Gol Loja" styleClass="fp-input" />
+                                             requiredMessage="El nombre del complejo es obligatorio."
+                                             validatorMessage="El nombre debe tener entre 3 y 100 caracteres."
+                                             placeholder="Ej. Arena Gol Loja"
+                                             styleClass="fp-input"
+                                             maxlength="100">
+                                    <f:validateLength minimum="3" maximum="100"/>
+                                </p:inputText>
+                                <p:message for="nombre" />
                             </div>
 
                             <div class="field">
@@ -49,24 +67,52 @@
                                     <f:selectItems value="#{wizardBean.zones}" var="z"
                                                    itemLabel="#{z.emoji} #{z.label}" itemValue="#{z}" />
                                 </p:selectOneMenu>
+                                <p:message for="zona" />
                             </div>
 
                             <div class="field">
                                 <p:outputLabel for="telefono" value="Teléfono de Contacto:" style="font-weight: 600; display:block; margin-bottom: 5px; color: var(--fp-text);" />
                                 <p:inputText id="telefono" value="#{wizardBean.newOrganization.phone}" required="true"
-                                             requiredMessage="El teléfono es obligatorio." placeholder="Ej. +593 99 999 9999" styleClass="fp-input" />
+                                             requiredMessage="El teléfono es obligatorio."
+                                             validatorMessage="El teléfono debe tener entre 7 y 15 dígitos numéricos (se admite + al inicio)."
+                                             placeholder="Ej. 0999999999"
+                                             styleClass="fp-input"
+                                             maxlength="15">
+                                    <p:keyFilter regEx="/[\d\+]/" />
+                                    <f:validateRegex pattern="^\+?\d{7,14}$" />
+                                </p:inputText>
+                                <p:message for="telefono" />
+                            </div>
+
+                            <div class="field" style="grid-column: span 2;">
+                                <p:outputLabel for="email" value="Correo Electrónico de la Organización:" style="font-weight: 600; display:block; margin-bottom: 5px; color: var(--fp-text);" />
+                                <p:inputText id="email" value="#{wizardBean.newOrganization.email}" required="true"
+                                             requiredMessage="El correo electrónico es obligatorio."
+                                             validatorMessage="El formato del correo electrónico no es válido (Ej: usuario@dominio.com)."
+                                             placeholder="Ej. contacto@arenagolloja.com"
+                                             styleClass="fp-input">
+                                    <f:validateRegex pattern="^[^@\s]+@[^@\s]+\.[^@\s]+$" />
+                                </p:inputText>
+                                <p:message for="email" />
                             </div>
 
                             <div class="field" style="grid-column: span 2;">
                                 <p:outputLabel for="direccion" value="Dirección Física Exacta:" style="font-weight: 600; display:block; margin-bottom: 5px; color: var(--fp-text);" />
                                 <p:inputTextarea id="direccion" value="#{wizardBean.newOrganization.address}" required="true"
-                                                 requiredMessage="La dirección es obligatoria." rows="2" placeholder="Ej. Av. Salvador Bustamante Celi y San Juan Bosco" styleClass="fp-input" />
+                                                 requiredMessage="La dirección es obligatoria." rows="2"
+                                                 placeholder="Ej. Av. Salvador Bustamante Celi y San Juan Bosco"
+                                                 styleClass="fp-input"
+                                                 maxlength="250" />
+                                <p:message for="direccion" />
                             </div>
 
                             <div class="field" style="grid-column: span 2;">
                                 <p:outputLabel for="descripcion" value="Descripción del lugar:" style="font-weight: 600; display:block; margin-bottom: 5px; color: var(--fp-text);" />
                                 <p:inputTextarea id="descripcion" value="#{wizardBean.newOrganization.description}" rows="3"
-                                                 placeholder="Cuéntales a tus clientes qué hace especial a tu complejo" styleClass="fp-input" />
+                                                 placeholder="Cuéntales a tus clientes qué hace especial a tu complejo"
+                                                 styleClass="fp-input"
+                                                 maxlength="500" />
+                                <p:message for="descripcion" />
                             </div>
                         </div>
                     </p:panel>
@@ -116,7 +162,7 @@
                             <p:column headerText="Acción" style="width: 80px; text-align: center;">
                                 <p:commandButton icon="pi pi-trash"
                                                  actionListener="#{wizardBean.removeTempCourt(cancha)}"
-                                                 update=":appForm:canchasTable :appForm:growl"
+                                                 update=":appForm:canchasTable"
                                                  process="@this"
                                                  styleClass="ui-button-danger ui-button-flat ui-button-rounded" />
                             </p:column>
@@ -199,7 +245,7 @@
                                 </div>
                             </div>
 
-                            <div class="field" style="display: flex; align-items: center; justify-content: space-between; background: var(--fp-bg-elevated); padding: 25px; border-radius: 8px; border: 1px solid var(--fp-border-light);">
+                            <div class="field" style="display: flex; align-items: center; justify-content: justify-content; background: var(--fp-bg-elevated); padding: 25px; border-radius: 8px; border: 1px solid var(--fp-border-light);">
                                 <div>
                                     <h:outputLabel value="¿Permitir cancelación gratuita de turnos?" style="font-weight: 600; font-size: 1.1rem; color: var(--fp-text); display: block; margin-bottom: 5px;" />
                                     <span style="color: var(--fp-text-secondary); font-size: 0.9rem;">Si se permite, los jugadores podrán cancelar su reserva sin perder su depósito bajo tus condiciones.</span>
@@ -218,7 +264,6 @@
 
                             <p:commandButton value="Publicar mi Complejo Deportivo"
                                              action="#{wizardBean.saveAll()}"
-                                             update=":appForm:growl"
                                              process="@form"
                                              styleClass="fp-btn fp-btn-lg fp-btn-primary"
                                              style="width: auto;" />
@@ -272,7 +317,7 @@
                 <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 25px;">
                     <p:commandButton value="Cancelar" onclick="PF('courtDialog').hide();" type="button" styleClass="fp-btn fp-btn-outline" />
                     <p:commandButton value="Añadir a la lista" actionListener="#{wizardBean.saveTempCourt()}"
-                                     update=":appForm:canchasTable :appForm:growl"
+                                     update=":appForm:canchasTable"
                                      process="courtDialogPanel"
                                      oncomplete="if (!args.validationFailed) PF('courtDialog').hide()"
                                      styleClass="fp-btn fp-btn-primary" />
