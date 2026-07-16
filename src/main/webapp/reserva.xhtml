@@ -1,0 +1,223 @@
+<!--
+    reserva.xhtml — página de Reserva (corregido: este archivo estaba guardado como mis-reservas.xhtml)
+    ═══════════════════════════════════════════════════════════
+    Contrato esperado de ReservaBean:
+      - String   selectedCourtId               -> bindeado desde f:viewParam "courtId"
+      - Court    getActiveCourt()               -> name, surface, pricePerHour,
+                                                    hasLighting, isCovered, imageUrl,
+                                                    type.label / type.emoji / type.icon
+      - String   date / hour                    -> get/set
+      - int      duration / playerCount         -> get/set
+      - String   contactName / contactPhone     -> get/set (autorellenado en @PostConstruct
+                                                    desde authBean.currentUser si está logueado)
+      - String[] getAvailableHours()
+      - double   getTotalPrice() / getPricePerPlayer()
+      - String   doReserve()                    -> action, agrega FacesMessage si falla
+
+    Contrato esperado de AuthBean:
+      - boolean  isAuthenticated()
+
+    Contrato esperado de CourtService (bean @Named ya disponible por CDI):
+      - List<TimeSlot> getSchedule(String courtId, String date) -> hour, available
+-->
+<ui:composition template="WEB-INF/templates/fragments/layout.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="jakarta.faces.html"
+                xmlns:f="jakarta.faces.core"
+                xmlns:ui="jakarta.faces.facelets"
+                xmlns:p="primefaces">
+
+    <f:metadata>
+        <f:viewParam name="courtId" value="#{reservaBean.selectedCourtId}"/>
+    </f:metadata>
+
+    <ui:define name="title">Hacer una Reserva</ui:define>
+
+    <ui:define name="content">
+
+        <div class="fp-page-header">
+            <div class="fp-page-header-title">
+                <span class="material-symbols-outlined">calendar_add_on</span>
+                <h1>Hacer una Reserva</h1>
+            </div>
+            <p>Revisa la disponibilidad de la cancha y completa tus datos. El sistema calculará el precio automáticamente.</p>
+        </div>
+
+        <!-- ═══ SIN SESIÓN: no se puede reservar sin haber iniciado sesión ═══ -->
+        <h:panelGroup rendered="#{not authBean.authenticated}" layout="block" styleClass="fp-text-center" style="padding:4rem 1rem 6rem;">
+            <span class="material-symbols-outlined" style="font-size:4rem;color:var(--fp-text-muted);opacity:.25;">lock</span>
+            <h2 style="font-family:'DM Sans',sans-serif;font-weight:700;font-size:1.375rem;color:var(--fp-text);margin:1rem 0 .5rem;">Inicia sesión para reservar</h2>
+            <p style="color:var(--fp-text-secondary);margin-bottom:1.5rem;">Necesitas una cuenta para hacer una reserva.</p>
+            <h:link outcome="/login" styleClass="fp-btn fp-btn-primary">
+                <span class="material-symbols-outlined" style="font-size:1.125rem;">person</span> Iniciar Sesión
+            </h:link>
+        </h:panelGroup>
+
+        <!-- ═══ SIN CANCHA SELECCIONADA ═══ -->
+        <h:panelGroup rendered="#{authBean.authenticated and empty reservaBean.activeCourt}" layout="block" styleClass="fp-text-center" style="padding:4rem 1rem 6rem;">
+            <span class="material-symbols-outlined" style="font-size:4rem;color:var(--fp-text-muted);opacity:.25;">sports_soccer</span>
+            <h2 style="font-family:'DM Sans',sans-serif;font-weight:700;font-size:1.375rem;color:var(--fp-text);margin:1rem 0 .5rem;">Selecciona una cancha primero</h2>
+            <p style="color:var(--fp-text-secondary);margin-bottom:1.5rem;">Elige una cancha desde Horarios para continuar con tu reserva.</p>
+            <h:link outcome="/horarios.xhtml" styleClass="fp-btn fp-btn-primary">
+                <span class="material-symbols-outlined" style="font-size:1.125rem;">event</span>
+                Ver Horarios
+            </h:link>
+        </h:panelGroup>
+
+        <!-- ═══ FLUJO DE RESERVA ═══ -->
+        <h:panelGroup rendered="#{authBean.authenticated and not empty reservaBean.activeCourt}" layout="block">
+            <div class="fp-reserva-grid">
+
+                <!-- ═══ COLUMNA IZQUIERDA: cancha + horarios ═══ -->
+                <div>
+                    <div class="fp-card" style="overflow:hidden;">
+                        <div class="fp-court-photo">
+                            <h:graphicImage value="#{reservaBean.activeCourt.imageUrl}"
+                                            rendered="#{not empty reservaBean.activeCourt.imageUrl}"
+                                            style="width:100%;height:100%;object-fit:cover;"/>
+                            <h:panelGroup rendered="#{empty reservaBean.activeCourt.imageUrl}" layout="block" styleClass="fp-court-photo-placeholder">
+                                #{reservaBean.activeCourt.type.emoji}
+                            </h:panelGroup>
+                            <span class="fp-chip" style="position:absolute;top:1rem;left:1rem;background:var(--fp-bg-card);">
+                                <span class="material-symbols-outlined" style="font-size:1rem;">#{reservaBean.activeCourt.type.icon}</span>
+                                #{reservaBean.activeCourt.type.label}
+                            </span>
+                            <h:link outcome="/horarios.xhtml" styleClass="fp-chip" style="position:absolute;top:1rem;right:1rem;background:var(--fp-bg-card);text-decoration:none;">
+                                <span class="material-symbols-outlined" style="font-size:1rem;">swap_horiz</span> Cambiar
+                            </h:link>
+                        </div>
+
+                        <div style="padding:1.5rem;">
+                            <h3 style="font-family:'DM Sans',sans-serif;font-weight:700;font-size:1.25rem;color:var(--fp-text);margin-bottom:.25rem;">
+                                #{reservaBean.activeCourt.name}
+                            </h3>
+                            <p class="fp-text-sm" style="color:var(--fp-text-secondary);margin-bottom:.75rem;">
+                                #{reservaBean.activeCourt.surface} ·
+                                <span class="fp-font-bold fp-text-primary">$#{reservaBean.activeCourt.pricePerHour}/hora</span>
+                            </p>
+                            <div class="fp-flex fp-gap-3" style="font-size:.8125rem;color:var(--fp-text-secondary);">
+                                <h:panelGroup rendered="#{reservaBean.activeCourt.hasLighting}" styleClass="fp-flex fp-items-center fp-gap-1">
+                                    <span class="material-symbols-outlined" style="font-size:1rem;">wb_incandescent</span> Iluminación
+                                </h:panelGroup>
+                                <h:panelGroup rendered="#{reservaBean.activeCourt.covered}" styleClass="fp-flex fp-items-center fp-gap-1">
+                                    <span class="material-symbols-outlined" style="font-size:1rem;">roofing</span> Techada
+                                </h:panelGroup>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="fp-card fp-card-padded" style="margin-top:1.5rem;" id="scheduleWrap">
+                        <div class="fp-flex fp-justify-between fp-items-center fp-mb-4" style="flex-wrap:wrap;gap:.5rem;">
+                            <h4 style="font-family:'DM Sans',sans-serif;font-weight:700;color:var(--fp-text);">Horarios disponibles</h4>
+                            <div class="fp-flex fp-gap-3" style="font-size:.75rem;color:var(--fp-text-secondary);">
+                                <span class="fp-flex fp-items-center fp-gap-1"><span class="fp-slot-dot fp-slot-dot-free"></span>Disponible</span>
+                                <span class="fp-flex fp-items-center fp-gap-1"><span class="fp-slot-dot fp-slot-dot-busy"></span>Ocupado</span>
+                            </div>
+                        </div>
+
+                        <div class="fp-slots-grid">
+                            <ui:repeat value="#{courtService.getSchedule(reservaBean.selectedCourtId, reservaBean.date)}" var="slot">
+                                <p:commandLink styleClass="fp-slot #{slot.available ? 'fp-slot-free' : 'fp-slot-busy'} #{reservaBean.hour == slot.hour ? 'fp-slot-selected' : ''}"
+                                               action="#{reservaBean.setHour(slot.hour)}"
+                                               disabled="#{!slot.available}"
+                                               process="@this" update="@form">
+                                    <span class="material-symbols-outlined">#{slot.available ? 'event_available' : 'event_busy'}</span>
+                                    <span>#{slot.hour}</span>
+                                </p:commandLink>
+                            </ui:repeat>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ═══ COLUMNA DERECHA: detalles de reserva ═══ -->
+                <div class="fp-card fp-card-padded">
+                    <span class="fp-eyebrow">Detalles de Reserva</span>
+
+                    <p:messages id="reservaMessages" showDetail="true" closable="false" globalOnly="true" styleClass="fp-form-error"/>
+
+                    <div class="fp-grid fp-grid-3" style="margin-bottom:1rem;">
+                        <div class="fp-form-group" style="margin-bottom:0;">
+                            <label class="fp-form-label">Fecha</label>
+                            <h:inputText value="#{reservaBean.date}" styleClass="fp-input">
+                                <f:passThroughAttribute name="type" value="date"/>
+                                <p:ajax event="change" process="@this" update="scheduleWrap"/>
+                            </h:inputText>
+                        </div>
+                        <div class="fp-form-group" style="margin-bottom:0;">
+                            <label class="fp-form-label">Hora</label>
+                            <p:selectOneMenu value="#{reservaBean.hour}" styleClass="fp-input" style="width:100%">
+                                <f:selectItem itemLabel="Seleccionar hora" itemValue="" noSelectionOption="true"/>
+                                <f:selectItems value="#{reservaBean.availableHours}"/>
+                                <p:ajax process="@this" update="@this"/>
+                            </p:selectOneMenu>
+                        </div>
+                        <div class="fp-form-group" style="margin-bottom:0;">
+                            <label class="fp-form-label">Duración</label>
+                            <p:selectOneMenu value="#{reservaBean.duration}" styleClass="fp-input" style="width:100%">
+                                <f:selectItem itemValue="1" itemLabel="1 hora"/>
+                                <f:selectItem itemValue="2" itemLabel="2 horas"/>
+                                <f:selectItem itemValue="3" itemLabel="3 horas"/>
+                                <p:ajax process="@this" update="priceSummary"/>
+                            </p:selectOneMenu>
+                        </div>
+                    </div>
+
+                    <div class="fp-form-group">
+                        <label class="fp-form-label">Número de Jugadores</label>
+                        <span class="fp-input-icon-wrapper">
+                            <span class="material-symbols-outlined fp-input-icon">groups</span>
+                            <h:inputText value="#{reservaBean.playerCount}" styleClass="fp-input fp-input-icon-field">
+                                <f:passThroughAttribute name="type" value="number"/>
+                                <f:passThroughAttribute name="min" value="1"/>
+                                <p:ajax event="change" process="@this" update="priceSummary"/>
+                            </h:inputText>
+                        </span>
+                    </div>
+
+                    <div class="fp-grid fp-grid-2" style="margin-bottom:0;">
+                        <div class="fp-form-group">
+                            <label class="fp-form-label">Nombre de Contacto</label>
+                            <span class="fp-input-icon-wrapper">
+                                <span class="material-symbols-outlined fp-input-icon">person</span>
+                                <h:inputText value="#{reservaBean.contactName}" styleClass="fp-input fp-input-icon-field"/>
+                            </span>
+                        </div>
+                        <div class="fp-form-group">
+                            <label class="fp-form-label">Teléfono</label>
+                            <span class="fp-input-icon-wrapper">
+                                <span class="material-symbols-outlined fp-input-icon">call</span>
+                                <h:inputText value="#{reservaBean.contactPhone}" styleClass="fp-input fp-input-icon-field"/>
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="fp-price-summary" id="priceSummary" style="margin:1.25rem 0;">
+                        <span class="fp-eyebrow" style="margin-bottom:0;">
+                            <span class="material-symbols-outlined" style="font-size:1rem;">receipt_long</span> Resumen de Precio
+                        </span>
+                        <div class="fp-flex fp-justify-between"><span>Precio por hora</span><span>$#{reservaBean.activeCourt.pricePerHour}</span></div>
+                        <div class="fp-flex fp-justify-between"><span>Duración</span><span>#{reservaBean.duration} hora(s)</span></div>
+                        <div class="fp-flex fp-justify-between" style="border-top:1px dashed var(--fp-border);padding-top:.5rem;">
+                            <span class="fp-font-bold" style="color:var(--fp-text);">Total</span>
+                            <span class="fp-font-bold fp-text-primary">$#{reservaBean.totalPrice}</span>
+                        </div>
+                        <div class="fp-flex fp-justify-between fp-text-xs">
+                            <span>Precio por jugador</span><span>$#{reservaBean.pricePerPlayer}</span>
+                        </div>
+                    </div>
+
+                    <div class="fp-flex fp-gap-3">
+                        <p:commandButton value="Confirmar Reserva" icon="pi pi-calendar-plus"
+                                         action="#{reservaBean.doReserve}"
+                                         process="@form" update="@form growl"
+                                         styleClass="fp-btn fp-btn-primary" style="flex:1"/>
+                        <h:link outcome="/horarios.xhtml" styleClass="fp-btn fp-btn-outline">Cancelar</h:link>
+                    </div>
+                </div>
+
+            </div>
+        </h:panelGroup>
+
+    </ui:define>
+
+</ui:composition>

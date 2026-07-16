@@ -46,6 +46,10 @@ public class ProfileBean implements Serializable {
                     current.getPassword(),
                     current.getRole()
             );
+        } else {
+            // Nunca dejar editingUser en null: cualquier vista que la referencie
+            // (aunque esté oculta) tiraría un error de EL sin sesión iniciada.
+            this.editingUser = new User("", "", "", "", "", null);
         }
     }
 

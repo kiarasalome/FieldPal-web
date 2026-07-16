@@ -28,14 +28,11 @@
                           styleClass="fp-btn fp-btn-accent fp-btn-lg"
                           rendered="#{authBean.authenticated}" />
 
-                <p:commandButton value="Comenzar - Iniciar Sesión"
-                                 icon="pi pi-user"
-                                 action="#{authBean.openLogin()}"
-                                 update="@(.fp-auth-modal-dialog)"
-                                 process="@this"
-                                 oncomplete="PF('authModal').show()"
-                                 styleClass="fp-btn fp-btn-accent fp-btn-lg"
-                                 rendered="#{not authBean.authenticated}" />
+                <p:button value="Comenzar - Iniciar Sesión"
+                          icon="pi pi-user"
+                          outcome="/login"
+                          styleClass="fp-btn fp-btn-accent fp-btn-lg"
+                          rendered="#{not authBean.authenticated}" />
             </div>
         </div>
 
@@ -140,6 +137,5 @@
                 </div>
             </div>
         </div>
-
     </ui:define>
 </ui:composition>

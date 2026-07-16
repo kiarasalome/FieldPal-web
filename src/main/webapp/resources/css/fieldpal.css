@@ -494,6 +494,7 @@ body:has(#fpDarkToggle:checked) .ui-tabview .ui-tabview-nav li.ui-state-active a
 .ui-selectoneradio .ui-radiobutton-box.ui-state-active { border-color: var(--fp-primary) !important; background: var(--fp-primary) !important; }
 
 /* Status chips */
+.fp-status { display: inline-flex; align-items: center; gap: .3rem; padding: .3rem .7rem; border-radius: 999px; font-size: .75rem; font-weight: 600; }
 .fp-status-upcoming { background: rgba(27, 94, 59, 0.1); color: var(--fp-primary-text); }
 .fp-status-completed { background: var(--fp-border-light); color: var(--fp-text-secondary); }
 .fp-status-cancelled { background: rgba(220, 38, 38, 0.1); color: var(--fp-error); }
@@ -695,36 +696,11 @@ body:has(#fpDarkToggle:checked) .fp-slot-selected { color:#0A0A0A !important; }
 .fp-schedule-head h3 .material-symbols-outlined { color:var(--fp-primary-text); }
 .fp-schedule-head .fp-subtext { font-size:.8125rem; color:var(--fp-text-secondary); margin-top:.125rem; }
 .fp-schedule-legend { display:flex; gap:1.25rem; font-size:.8125rem; color:var(--fp-text-secondary); }
-/* ═══ AUTH MODAL — conecta el p:dialog de PrimeFaces con la paleta FieldPal ═══ */
+/* ═══ Overlay genérico de PrimeFaces (por si se usa algún p:dialog) ═══ */
 .ui-widget-overlay {
     background: rgba(0, 0, 0, 0.6) !important;
     backdrop-filter: blur(8px);
 }
-.ui-dialog.fp-auth-modal-dialog {
-    position: relative;
-    background: var(--fp-bg-card) !important;
-    border: 1px solid var(--fp-border) !important;
-    border-radius: 1.5rem !important;
-    width: 100% !important;
-    max-width: 28rem;
-    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.25) !important;
-    animation: fp-scale-in 0.3s ease-out;
-}
-.ui-dialog.fp-auth-modal-dialog .ui-dialog-content {
-    background: transparent !important;
-    color: var(--fp-text);
-    padding: 2rem !important;
-    overflow: visible !important;
-}
-.ui-dialog.fp-auth-modal-dialog .fp-modal-close {
-    position: absolute; top: 1rem; right: 1rem;
-    width: 2.25rem; height: 2.25rem; border-radius: 0.75rem;
-    border: none; background: var(--fp-bg-hover); color: var(--fp-text-muted);
-    cursor: pointer; display: flex; align-items: center; justify-content: center;
-    transition: all 0.3s;
-}
-.ui-dialog.fp-auth-modal-dialog .fp-modal-close:hover { color: var(--fp-text); }
-.ui-dialog.fp-auth-modal-dialog .fp-input-icon-wrapper { position: relative; }
 
 /* ═══ DARK MODE — interruptor 100% CSS/HTML (sin JavaScript) ═══
    Un <input type="checkbox" id="fpDarkToggle"> oculto, seguido de un
@@ -871,56 +847,8 @@ body:has(#fpDarkToggle:checked) .ui-wizard-step-title.ui-state-highlight {
     color: #0A0A0A !important;
 }
 
-/* ==========================================================================
-   REESTRUCTURACIÓN Y DISEÑO DEL DIÁLOGO (AÑADIR CANCHA) - CORREGIDO Y CENTRADO
-   ========================================================================== */
-
-/* Contenedor flotante del modal: Ancho controlado y centrado perfecto */
-.ui-dialog.fp-auth-modal-dialog {
-    background: var(--fp-bg-card) !important;
-    border: 1px solid var(--fp-border-light) !important;
-    border-radius: 16px !important;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2) !important;
-    padding: 0 !important;
-    overflow: hidden !important;
-
-    /* Ancho elegante y responsivo */
-    width: 480px !important;
-    max-width: 95vw !important;
-
-    /* Fuerza el centrado en el viewport sin importar el scroll de la página */
-    position: fixed !important;
-    top: 50% !important;
-    left: 50% !important;
-    transform: translate(-50%, -50%) !important;
-}
-
-/* Cabecera del diálogo */
-.ui-dialog.fp-auth-modal-dialog .ui-dialog-titlebar {
-    background: var(--fp-bg-elevated) !important;
-    color: var(--fp-text) !important;
-    border-bottom: 1px solid var(--fp-border-light) !important;
-    padding: 1.25rem 1.5rem !important;
-    font-family: 'DM Sans', sans-serif !important;
-    font-weight: 700 !important;
-    font-size: 1.2rem !important;
-}
-
-/* Botón de cerrar del diálogo (X) */
-.ui-dialog.fp-auth-modal-dialog .ui-dialog-titlebar-close {
-    color: var(--fp-text-secondary) !important;
-    margin-top: 2px !important;
-    transition: color 0.2s;
-}
-.ui-dialog.fp-auth-modal-dialog .ui-dialog-titlebar-close:hover {
-    color: var(--fp-text) !important;
-}
-
-/* Cuerpo del diálogo: Espaciado interno cómodo */
-.ui-dialog.fp-auth-modal-dialog .ui-dialog-content {
-    background: var(--fp-bg-card) !important;
-    color: var(--fp-text) !important;
-    padding: 1.5rem !important;
-    max-height: 75vh !important; /* Evita que se salga si la pantalla es muy pequeña */
-    overflow-y: auto !important;
-}
+/* NOTA: el bloque anterior de "REESTRUCTURACIÓN DEL DIÁLOGO (AÑADIR CANCHA)"
+   se quitó de aquí — reutilizaba por error la clase .fp-auth-modal-dialog,
+   que ya no existe (el login ahora es una página completa, no un modal).
+   Si se necesita un diálogo estilizado para "Añadir Cancha" más adelante,
+   usar una clase propia (ej. .fp-court-dialog) para no volver a chocar. */

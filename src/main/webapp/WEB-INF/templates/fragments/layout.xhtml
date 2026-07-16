@@ -20,8 +20,7 @@
         </ui:composition>
 
     Contrato esperado de bean (no se define aquí, solo se usa):
-      - themeBean.dark (boolean)              -> opcional, modo oscuro
-      - authBean.showAuthModal (boolean)      -> usado por auth-modal.xhtml
+      - authBean.authenticated (boolean)
 -->
 
 <h:head>
@@ -49,9 +48,17 @@
 
         <ui:include src="/WEB-INF/templates/fragments/footer.xhtml"/>
 
-        <ui:include src="/WEB-INF/templates/fragments/auth-modal.xhtml"/>
+        <!-- auth-modal.xhtml (login por AJAX) se retiró: el login ahora es una
+             página completa (/login.xhtml, igual que /registro.xhtml) para
+             evitar los fallos intermitentes del modal con AJAX + autofill. -->
 
-        <ui:include src="/profile-modal.xhtml"/>
+        <!-- profile-modal.xhtml se retiró temporalmente: nada en el header la abre
+             todavía y su bean (profileBean.editingUser) queda null sin sesión,
+             lo que rompía CADA página del sitio con un error de servidor.
+             Cuando esté lista para usarse, envolver el include así:
+             <h:panelGroup rendered="#{authBean.authenticated}">
+                 <ui:include src="/profile-modal.xhtml"/>
+             </h:panelGroup> -->
 
         <p:ajaxStatus onstart="PF('globalStatus').show()" onsuccess="PF('globalStatus').hide()" widgetVar="globalStatusEv"/>
         <p:blockUI block="appForm" widgetVar="globalStatus" styleClass="fp-block-ui">

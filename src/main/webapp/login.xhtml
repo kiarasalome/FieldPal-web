@@ -1,0 +1,60 @@
+<!--
+    login.xhtml — página de login (independiente, sin AJAX)
+    ═══════════════════════════════════════════════════════════
+    Se cambió de modal-con-ajax a página completa porque el modal
+    presentaba fallos intermitentes (probablemente por autofill del
+    navegador + timing de AJAX). Este patrón es idéntico al de
+    registro.xhtml, que ya funciona de forma confiable.
+
+    Contrato esperado de AuthBean: ver submitLogin() en AuthBean.java
+-->
+<ui:composition template="/WEB-INF/templates/fragments/layout.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="jakarta.faces.html"
+                xmlns:f="jakarta.faces.core"
+                xmlns:ui="jakarta.faces.facelets"
+                xmlns:p="primefaces">
+
+    <ui:define name="title">Iniciar Sesión</ui:define>
+
+    <ui:define name="content">
+        <div class="fp-text-center" style="max-width:26rem;margin:3rem auto 5rem;padding:0 1rem;">
+
+            <div class="fp-modal-icon" style="margin:0 auto 1rem;">
+                <span class="material-symbols-outlined" style="font-variation-settings:'FILL' 1;">sports_soccer</span>
+            </div>
+            <h1 style="font-family:'DM Sans',sans-serif;font-weight:700;font-size:1.5rem;color:var(--fp-text);margin-bottom:.25rem;">Iniciar Sesión</h1>
+            <p style="color:var(--fp-text-secondary);margin-bottom:1.5rem;">Accede a tu cuenta de FieldPal</p>
+
+            <p:messages showDetail="true" closable="false" globalOnly="true"/>
+
+            <div class="fp-card fp-card-padded" style="text-align:left;">
+                <div class="fp-form-group fp-input-icon-wrapper">
+                    <label class="fp-form-label">Correo electrónico</label>
+                    <span class="fp-input-icon material-symbols-outlined">mail</span>
+                    <p:inputText value="#{authBean.loginEmail}" styleClass="fp-input fp-input-icon-field" placeholder="correo@ejemplo.com"/>
+                </div>
+                <div class="fp-form-group fp-input-icon-wrapper">
+                    <label class="fp-form-label">Contraseña</label>
+                    <span class="fp-input-icon material-symbols-outlined">lock</span>
+                    <p:password value="#{authBean.loginPassword}" styleClass="fp-input fp-input-icon-field" placeholder="••••••••" feedback="false" redisplay="true"/>
+                </div>
+
+                <!-- ajax="false": submit tradicional de formulario completo, igual que en registro.xhtml -->
+                <p:commandButton value="Iniciar Sesión"
+                                 icon="pi pi-sign-in"
+                                 styleClass="fp-btn fp-btn-primary fp-btn-full"
+                                 action="#{authBean.submitLogin()}"
+                                 ajax="false"/>
+
+                <p class="fp-form-switch" style="margin-top:1rem;">
+                    ¿No tienes cuenta?
+                    <h:link outcome="/registro" value="Regístrate aquí"/>
+                </p>
+
+                <p class="fp-demo-hint">Demo: jugador@fieldpal.com / jugador123 · admin@fieldpal.com / admin123</p>
+            </div>
+        </div>
+    </ui:define>
+
+</ui:composition>

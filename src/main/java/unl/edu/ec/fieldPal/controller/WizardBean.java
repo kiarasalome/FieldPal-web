@@ -201,7 +201,7 @@ public class WizardBean implements Serializable {
 
             FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true);
 
-            return "/home.xhtml?faces-redirect=true";
+            return "/homepage.xhtml?faces-redirect=true";
 
         } catch (Exception e) {
             showError("Error de Persistencia", "No se pudo guardar la información: " + e.getMessage());
