@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="jakarta.faces.html"
+                xmlns:f="jakarta.faces.core"
+                xmlns:ui="jakarta.faces.facelets"
+                xmlns:p="primefaces"
+                xmlns:fn="jakarta.tags.functions"
+                template="/WEB-INF/templates/fragments/layout.xhtml">
+
+    <ui:define name="titulo">FieldPal | Buscar Organización</ui:define>
+
+    <ui:define name="content">
+
+        <!-- ═══ HERO ═══ -->
+        <div class="fp-hero" style="height:auto;min-height:0;padding:5rem 1rem;background:linear-gradient(135deg, var(--fp-primary) 0%, var(--fp-primary-dark) 100%);">
+            <div class="fp-hero-content">
+                <div class="fp-eyebrow" style="justify-content:center;color:rgba(255,255,255,.85);">
+                    <span class="material-symbols-outlined" style="font-size:1rem;">bolt</span>
+                    Canchas Deportivas
+                </div>
+                <h1 class="fp-hero-title">Encuentra tu próximo desafío</h1>
+                <p class="fp-hero-subtitle">Reserva canchas, únete a torneos y gestiona tu equipo en las mejores organizaciones deportivas de tu ciudad.</p>
+
+                <div class="fp-input-icon-wrapper" style="max-width:600px; margin:0 auto;">
+                    <span class="material-symbols-outlined fp-input-icon">search</span>
+                    <p:inputText id="searchInput" value="#{organizationBean.searchTerm}"
+                                 styleClass="fp-input fp-input-icon-field"
+                                 placeholder="¿Qué deporte buscas hoy?" style="height:3rem;">
+                        <!-- Búsqueda en vivo mientras el jugador escribe -->
+                        <p:ajax event="keyup" delay="400" listener="#{organizationBean.search}" update="orgGrid"/>
+                    </p:inputText>
+                </div>
+
+                    <!-- Chips de filtro rápido, usando el label en español de cada CourtType -->
+                    <div class="fp-flex fp-gap-2 fp-justify-between" style="justify-content:center; margin-top:1rem;">
+                        <p:commandButton value="Fútbol" styleClass="fp-chip #{organizationBean.selectedSport eq 'Fútbol' ? 'fp-chip-active' : ''}"
+                                         action="#{organizationBean.filterBySport('Fútbol')}" update="orgGrid"/>
+                        <p:commandButton value="Tenis" styleClass="fp-chip #{organizationBean.selectedSport eq 'Tenis' ? 'fp-chip-active' : ''}"
+                                         action="#{organizationBean.filterBySport('Tenis')}" update="orgGrid"/>
+                        <p:commandButton value="Pádel" styleClass="fp-chip #{organizationBean.selectedSport eq 'Pádel' ? 'fp-chip-active' : ''}"
+                                         action="#{organizationBean.filterBySport('Pádel')}" update="orgGrid"/>
+                        <p:commandButton value="Vóley" styleClass="fp-chip #{organizationBean.selectedSport eq 'Vóley' ? 'fp-chip-active' : ''}"
+                                         action="#{organizationBean.filterBySport('Vóley')}" update="orgGrid"/>
+                    </div>
+            </div>
+        </div>
+
+        <!-- ═══ EXPLORAR POR ZONA ═══ -->
+        <div class="fp-section" style="padding-bottom:2rem;">
+            <div class="fp-text-center fp-mb-8">
+                <div class="fp-eyebrow" style="justify-content:center;">
+                    <span class="material-symbols-outlined" style="font-size:1rem;">location_on</span>
+                    Zonas de Loja
+                </div>
+                <h2 class="fp-section-title">Explora Canchas por Zona</h2>
+                <p class="fp-section-subtitle">Filtra las organizaciones deportivas disponibles según el sector de la ciudad que más te convenga.</p>
+            </div>
+
+            <div class="fp-zone-filters" style="justify-content:center;">
+                <p:commandLink styleClass="fp-chip #{homeBean.selectedZone == null ? 'fp-chip-active' : ''}"
+                               action="#{homeBean.clearZoneFilter()}"
+                               process="@this"
+                               update="orgGrid">
+                    Todas las Zonas
+                </p:commandLink>
+
+                <ui:repeat value="#{homeBean.availableZones}" var="zone">
+                    <p:commandLink styleClass="fp-chip #{homeBean.selectedZone == zone ? 'fp-chip-active' : ''}"
+                                   action="#{homeBean.filterByZone(zone)}"
+                                   process="@this"
+                                   update="orgGrid">
+                        #{zone.emoji} #{zone.label}
+                    </p:commandLink>
+                </ui:repeat>
+            </div>
+
+            <h:panelGroup id="orgGrid" layout="block">
+
+                <h:panelGroup rendered="#{empty homeBean.organizations}" layout="block" styleClass="fp-text-center" style="padding:3rem 0;">
+                    <span class="material-symbols-outlined" style="font-size:3.5rem;color:var(--fp-text-muted);opacity:.2;">location_off</span>
+                    <p style="color:var(--fp-text-muted);margin-top:.75rem;">No hay organizaciones registradas en esta zona.</p>
+                </h:panelGroup>
+
+                <div class="fp-org-grid">
+                    <ui:repeat value="#{homeBean.organizations}" var="org">
+                        <h:link outcome="/horarios" styleClass="fp-org-card">
+                            <f:param name="orgId" value="#{org.id}" />
+
+                            <div class="fp-zone-card-header fp-zone-#{fn:toLowerCase(org.zone)}">
+                                <h4>#{org.name}</h4>
+                                <span class="fp-org-rating">
+                                    <span class="material-symbols-outlined">star</span> #{org.rating}
+                                </span>
+                            </div>
+                            <div class="fp-org-card-body">
+                                <p><span class="material-symbols-outlined">location_on</span> #{org.address}</p>
+                                <p><span class="material-symbols-outlined">stadium</span> #{org.courtCount} canchas</p>
+                            </div>
+                        </h:link>
+                    </ui:repeat>
+                </div>
+            </h:panelGroup>
+        </div>
+    </ui:define>
+</ui:composition>
