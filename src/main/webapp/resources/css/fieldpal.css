@@ -741,3 +741,186 @@ body:has(#fpDarkToggle:checked) .fp-slot-selected { color:#0A0A0A !important; }
 
 /* Sombra fija del navbar (antes se activaba con scroll vía JS; ahora es constante) */
 .fp-glass-nav { box-shadow: var(--fp-shadow); }
+
+/* ==========================================================================
+   CONFIGURACIÓN GENERAL PARA COMPONENTES DE FORMULARIOS (MODO CLARO / OSCURO)
+   ========================================================================== */
+
+/* 1. El recuadro principal (Fondo blanco en modo claro, oscuro en modo oscuro) */
+.ui-panel,
+.ui-panel-content {
+    background: var(--fp-bg-card) !important;
+    color: var(--fp-text) !important;
+    border: none !important;
+}
+
+.ui-panel {
+    border: 1px solid var(--fp-border-light) !important;
+    border-radius: 16px !important;
+    box-shadow: var(--fp-shadow) !important;
+}
+
+/* Cabecera de los paneles */
+.ui-panel-titlebar {
+    background: var(--fp-bg-elevated) !important;
+    border-bottom: 1px solid var(--fp-border-light) !important;
+    color: var(--fp-text) !important;
+    font-family: 'DM Sans', sans-serif !important;
+    font-weight: 700 !important;
+    padding: 1.25rem 1.5rem !important;
+}
+
+/* 2. TABLAS (Canchas y Horarios): Se corrige el fondo negro de cabeceras y celdas */
+.ui-datatable,
+.ui-datatable-table,
+.ui-datatable-data > tr,
+.ui-datatable-data > tr > td {
+    background: var(--fp-bg-card) !important; /* Blanco en modo claro */
+    color: var(--fp-text) !important;
+    border-color: var(--fp-border-light) !important;
+}
+
+/* Cabecera de las tablas */
+.ui-datatable thead th {
+    background: var(--fp-bg-elevated) !important; /* Gris claro en modo claro */
+    color: var(--fp-text) !important;
+    border-color: var(--fp-border-light) !important;
+    font-weight: 700 !important;
+    font-family: 'DM Sans', sans-serif !important;
+}
+
+/* Filas alternas de las tablas */
+.ui-datatable-striped .ui-datatable-data > tr.ui-datatable-odd {
+    background: var(--fp-bg-hover) !important;
+}
+
+/* 3. Todos los campos de entrada de texto (Inputs, Textareas) */
+.ui-inputfield,
+.ui-inputtext,
+.ui-inputtextarea {
+    background: var(--fp-bg-card) !important;
+    color: var(--fp-text) !important;
+    border: 1px solid var(--fp-border) !important;
+    border-radius: 0.75rem !important;
+    padding: 0.625rem 1rem !important;
+    font-family: 'DM Sans', sans-serif !important;
+    transition: all 0.3s !important;
+    outline: none !important;
+    box-shadow: none !important;
+}
+
+/* Efecto Focus en los campos */
+.ui-inputfield.ui-state-focus {
+    border-color: var(--fp-primary) !important;
+    box-shadow: 0 0 0 3px rgba(27, 94, 59, 0.1) !important;
+}
+
+/* 4. El Menú de Selección (p:selectOneMenu) */
+.ui-selectonemenu {
+    background: var(--fp-bg-card) !important;
+    border: 1px solid var(--fp-border) !important;
+    border-radius: 0.75rem !important;
+}
+
+.ui-selectonemenu .ui-selectonemenu-label {
+    color: var(--fp-text) !important;
+    font-family: 'DM Sans', sans-serif !important;
+    background: transparent !important;
+}
+
+.ui-selectonemenu .ui-selectonemenu-trigger {
+    background: transparent !important;
+    border-left: none !important;
+    color: var(--fp-text-muted) !important;
+}
+
+/* 5. Barra de pasos superior del Wizard */
+.ui-wizard-step-titles {
+    background: var(--fp-bg-elevated) !important;
+    border: 1px solid var(--fp-border) !important;
+    border-radius: 12px !important;
+    display: flex !important;
+    gap: 6px !important;
+    padding: 6px !important;
+    margin-bottom: 2rem !important;
+}
+
+/* Pasos individuales (Inactivos) */
+.ui-wizard-step-title {
+    background: transparent !important;
+    color: var(--fp-text-secondary) !important;
+    border: none !important;
+    border-radius: 8px !important;
+    font-family: 'DM Sans', sans-serif !important;
+    font-weight: 600 !important;
+    font-size: 0.9rem !important;
+    padding: 10px 16px !important;
+    text-shadow: none !important;
+    box-shadow: none !important;
+    flex: 1;
+    text-align: center;
+    transition: background 0.3s, color 0.3s;
+}
+
+/* Paso activo */
+.ui-wizard-step-title.ui-state-highlight {
+    background: var(--fp-primary) !important;
+    color: #FFFFFF !important;
+}
+body:has(#fpDarkToggle:checked) .ui-wizard-step-title.ui-state-highlight {
+    color: #0A0A0A !important;
+}
+
+/* ==========================================================================
+   REESTRUCTURACIÓN Y DISEÑO DEL DIÁLOGO (AÑADIR CANCHA) - CORREGIDO Y CENTRADO
+   ========================================================================== */
+
+/* Contenedor flotante del modal: Ancho controlado y centrado perfecto */
+.ui-dialog.fp-auth-modal-dialog {
+    background: var(--fp-bg-card) !important;
+    border: 1px solid var(--fp-border-light) !important;
+    border-radius: 16px !important;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2) !important;
+    padding: 0 !important;
+    overflow: hidden !important;
+
+    /* Ancho elegante y responsivo */
+    width: 480px !important;
+    max-width: 95vw !important;
+
+    /* Fuerza el centrado en el viewport sin importar el scroll de la página */
+    position: fixed !important;
+    top: 50% !important;
+    left: 50% !important;
+    transform: translate(-50%, -50%) !important;
+}
+
+/* Cabecera del diálogo */
+.ui-dialog.fp-auth-modal-dialog .ui-dialog-titlebar {
+    background: var(--fp-bg-elevated) !important;
+    color: var(--fp-text) !important;
+    border-bottom: 1px solid var(--fp-border-light) !important;
+    padding: 1.25rem 1.5rem !important;
+    font-family: 'DM Sans', sans-serif !important;
+    font-weight: 700 !important;
+    font-size: 1.2rem !important;
+}
+
+/* Botón de cerrar del diálogo (X) */
+.ui-dialog.fp-auth-modal-dialog .ui-dialog-titlebar-close {
+    color: var(--fp-text-secondary) !important;
+    margin-top: 2px !important;
+    transition: color 0.2s;
+}
+.ui-dialog.fp-auth-modal-dialog .ui-dialog-titlebar-close:hover {
+    color: var(--fp-text) !important;
+}
+
+/* Cuerpo del diálogo: Espaciado interno cómodo */
+.ui-dialog.fp-auth-modal-dialog .ui-dialog-content {
+    background: var(--fp-bg-card) !important;
+    color: var(--fp-text) !important;
+    padding: 1.5rem !important;
+    max-height: 75vh !important; /* Evita que se salga si la pantalla es muy pequeña */
+    overflow-y: auto !important;
+}
