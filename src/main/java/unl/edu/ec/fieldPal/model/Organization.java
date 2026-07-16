@@ -14,6 +14,7 @@ public class Organization implements Serializable {
     private String phone;
     private String image;
     private double rating;
+    private String email;
     private String description;
     private int courtCount;
     private double latitude;
@@ -70,6 +71,14 @@ public class Organization implements Serializable {
 
     public double getLongitude() { return longitude; }
     public void setLongitude(double longitude) { this.longitude = longitude; }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
 
     // Sin esto, dos objetos Organization con el mismo id se tratarían como "distintos".
     @Override

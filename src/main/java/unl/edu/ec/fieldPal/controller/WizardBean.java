@@ -20,6 +20,7 @@ import java.util.List;
 
 /**
  * Controller para gestionar el asistente (Wizard) de registro de nuevos complejos deportivos.
+ * Lógica simplificada de validaciones apoyada en la capa de la Vista (XHTML).
  */
 @Named("wizardBean")
 @ViewScoped
@@ -36,7 +37,7 @@ public class WizardBean implements Serializable {
     // Modelos principales del flujo
     private Organization newOrganization;
     private List<Court> tempCourts;
-    private Court currentCourt; // Para el modal de añadir cancha
+    private Court currentCourt;
 
     // Variables del Paso 4 (Políticas y Horarios)
     private List<ScheduleDay> scheduleDays;
@@ -50,13 +51,13 @@ public class WizardBean implements Serializable {
 
         // Inicializar lista temporal de canchas
         tempCourts = new ArrayList<>();
-        prepareNewCourt(); // Inicializa la cancha por defecto
+        prepareNewCourt();
 
         // Inicializar políticas por defecto
-        reservationDepositPercentage = 50; // Inicia en 50% para el slider
+        reservationDepositPercentage = 50;
         allowFreeCancellation = true;
 
-        // Inicializar el configurador de horarios de 7 días con LocalTime
+        // Inicializar el configurador de horarios de 7 días
         scheduleDays = new ArrayList<>();
         scheduleDays.add(new ScheduleDay("Lunes", LocalTime.of(8, 0), LocalTime.of(22, 0), true));
         scheduleDays.add(new ScheduleDay("Martes", LocalTime.of(8, 0), LocalTime.of(22, 0), true));
@@ -64,147 +65,177 @@ public class WizardBean implements Serializable {
         scheduleDays.add(new ScheduleDay("Jueves", LocalTime.of(8, 0), LocalTime.of(22, 0), true));
         scheduleDays.add(new ScheduleDay("Viernes", LocalTime.of(8, 0), LocalTime.of(23, 0), true));
         scheduleDays.add(new ScheduleDay("Sábado", LocalTime.of(8, 0), LocalTime.of(23, 0), true));
-        scheduleDays.add(new ScheduleDay("Domingo", LocalTime.of(9, 0), LocalTime.of(21, 0), false)); // Desactivado por defecto
+        scheduleDays.add(new ScheduleDay("Domingo", LocalTime.of(9, 0), LocalTime.of(21, 0), false));
+    }
+
+    // =========================================================================
+    // LÓGICA DE VALIDACIÓN DE PASOS EN JAVA (REGULACIÓN DE NEGOCIO)
+    // =========================================================================
+
+    /**
+     * Intercepta el flujo del Wizard para validar reglas lógicas de negocio antes de cambiar de sección.
+     */
+    public String onFlowProcess(org.primefaces.event.FlowEvent event) {
+        String currentStep = event.getOldStep();
+        String nextStep = event.getNewStep();
+
+        // Permitir retroceder sin volver a disparar validaciones de negocio
+        if (isGoingBackwards(currentStep, nextStep)) {
+            return nextStep;
+        }
+
+        // VALIDACIÓN PASO 2: Canchas obligatorias
+        if ("canchas".equals(currentStep)) {
+            if (tempCourts == null || tempCourts.isEmpty()) {
+                showError("Sin Canchas Registradas", "Debe registrar al menos una cancha para su complejo deportivo.");
+                return currentStep; // Bloquea y se mantiene en "canchas"
+            }
+        }
+
+        // VALIDACIÓN PASO 3: Horarios coherentes de apertura/cierre
+        if ("horarios".equals(currentStep)) {
+            boolean alMenosUnDiaActivo = false;
+
+            for (ScheduleDay day : scheduleDays) {
+                if (day.isActive()) {
+                    alMenosUnDiaActivo = true;
+
+                    if (day.getOpenTime() != null && day.getCloseTime() != null) {
+                        if (!day.getOpenTime().isBefore(day.getCloseTime())) {
+                            showError("Inconsistencia en Horarios", "El horario configurado para el día "
+                                    + day.getDayName() + " no es válido. La hora de apertura debe ser anterior a la de cierre.");
+                            return currentStep;
+                        }
+                    } else {
+                        showError("Horario Incompleto", "Por favor, defina la hora de apertura y de cierre para el " + day.getDayName());
+                        return currentStep;
+                    }
+                }
+            }
+
+            if (!alMenosUnDiaActivo) {
+                showError("Horario Semanal Vacío", "Debe definir al menos un día de la semana para atención al público.");
+                return currentStep;
+            }
+        }
+
+        return nextStep;
+    }
+
+    private boolean isGoingBackwards(String currentStep, String nextStep) {
+        int currentIndex = getStepIndex(currentStep);
+        int nextIndex = getStepIndex(nextStep);
+        return nextIndex < currentIndex;
+    }
+
+    private int getStepIndex(String step) {
+        switch (step) {
+            case "organizacion": return 1;
+            case "canchas": return 2;
+            case "horarios": return 3;
+            case "politicas": return 4;
+            default: return 99;
+        }
     }
 
     // === Lógica del Paso 2 (Canchas) ===
 
-    /**
-     * Prepara una instancia limpia de Court para ser llenada en el diálogo flotante.
-     */
     public void prepareNewCourt() {
         currentCourt = new Court();
-        currentCourt.setType(CourtType.FUTBOL); // Usando enum corregido en español
-        currentCourt.setPricePerHour(15.0);    // Precio por defecto
+        currentCourt.setType(CourtType.FUTBOL);
+        currentCourt.setPricePerHour(15.0);
         currentCourt.setSurface("Césped Sintético");
         currentCourt.setHasLighting(true);
         currentCourt.setCovered(false);
     }
 
-    /**
-     * Agrega la cancha que se configuró en el diálogo a la lista temporal del Wizard.
-     */
     public void saveTempCourt() {
         if (currentCourt != null && currentCourt.getName() != null && !currentCourt.getName().trim().isEmpty()) {
+
+            if (currentCourt.getPricePerHour() <= 0) {
+                showError("Precio Inválido", "El precio por hora de la cancha debe ser mayor que 0.");
+                return;
+            }
+
             tempCourts.add(currentCourt);
 
             FacesContext.getCurrentInstance().addMessage(null,
                     new FacesMessage(FacesMessage.SEVERITY_INFO,
-                            "Cancha '" + currentCourt.getName() + "' añadida temporalmente.", null));
+                            "Cancha '" + currentCourt.getName() + "' añadida exitosamente.", null));
 
-            prepareNewCourt(); // Resetea el objeto para una futura inserción
+            prepareNewCourt();
         } else {
-            FacesContext.getCurrentInstance().addMessage(null,
-                    new FacesMessage(FacesMessage.SEVERITY_ERROR,
-                            "Error", "El nombre de la cancha es obligatorio."));
+            showError("Campo Requerido", "El nombre de la cancha es obligatorio.");
         }
     }
 
-    /**
-     * Remueve una cancha de la lista temporal.
-     */
     public void removeTempCourt(Court court) {
         if (tempCourts.remove(court)) {
             FacesContext.getCurrentInstance().addMessage(null,
                     new FacesMessage(FacesMessage.SEVERITY_WARN,
-                            "Cancha '" + court.getName() + "' eliminada de la lista.", null));
+                            "La cancha '" + court.getName() + "' ha sido quitada.", null));
         }
     }
 
     // === Lógica de Guardado Final (Paso 4) ===
 
-    /**
-     * Guarda la Organización, asocia las canchas temporales con el ID de la organización y persiste todo.
-     */
     public String saveAll() {
         try {
+            if (newOrganization == null || tempCourts.isEmpty()) {
+                showError("Registro Incompleto", "No es posible proceder. Faltan datos esenciales de la organización.");
+                return null;
+            }
+
             // 1. Guardar Organización
             organizationService.save(newOrganization);
 
-            // 2. Asociar y guardar cada cancha temporal
+            // 2. Asociar y guardar canchas
             for (Court court : tempCourts) {
                 court.setOrganizationId(newOrganization.getId());
                 courtService.save(court);
             }
 
-            // 3. Mostrar mensaje de éxito
             FacesContext.getCurrentInstance().addMessage(null,
                     new FacesMessage(FacesMessage.SEVERITY_INFO,
-                            "¡Enhorabuena!", "El complejo '" + newOrganization.getName() + "' ha sido registrado exitosamente."));
+                            "¡Excelente!", "El complejo '" + newOrganization.getName() + "' ha sido publicado exitosamente."));
 
-            // Forzar que persista el mensaje a través de la redirección
             FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true);
 
-            // Redirección al Home limpio
             return "/home.xhtml?faces-redirect=true";
 
         } catch (Exception e) {
-            FacesContext.getCurrentInstance().addMessage(null,
-                    new FacesMessage(FacesMessage.SEVERITY_ERROR,
-                            "Error al guardar", "Hubo un problema al registrar los datos: " + e.getMessage()));
+            showError("Error de Persistencia", "No se pudo guardar la información: " + e.getMessage());
             return null;
         }
     }
 
-    // === Listas útiles para la Vista (Comboboxes) ===
-
-    public Zone[] getZones() {
-        return Zone.values();
+    private void showError(String summary, String detail) {
+        FacesContext.getCurrentInstance().addMessage(null,
+                new FacesMessage(FacesMessage.SEVERITY_ERROR, summary, detail));
     }
 
-    public CourtType[] getCourtTypes() {
-        return CourtType.values();
-    }
+    public Zone[] getZones() { return Zone.values(); }
+    public CourtType[] getCourtTypes() { return CourtType.values(); }
 
     // === Getters y Setters ===
 
-    public Organization getNewOrganization() {
-        return newOrganization;
-    }
+    public Organization getNewOrganization() { return newOrganization; }
+    public void setNewOrganization(Organization newOrganization) { this.newOrganization = newOrganization; }
 
-    public void setNewOrganization(Organization newOrganization) {
-        this.newOrganization = newOrganization;
-    }
+    public List<Court> getTempCourts() { return tempCourts; }
+    public void setTempCourts(List<Court> tempCourts) { this.tempCourts = tempCourts; }
 
-    public List<Court> getTempCourts() {
-        return tempCourts;
-    }
+    public Court getCurrentCourt() { return currentCourt; }
+    public void setCurrentCourt(Court currentCourt) { this.currentCourt = currentCourt; }
 
-    public void setTempCourts(List<Court> tempCourts) {
-        this.tempCourts = tempCourts;
-    }
+    public List<ScheduleDay> getScheduleDays() { return scheduleDays; }
+    public void setScheduleDays(List<ScheduleDay> scheduleDays) { this.scheduleDays = scheduleDays; }
 
-    public Court getCurrentCourt() {
-        return currentCourt;
-    }
+    public Integer getReservationDepositPercentage() { return reservationDepositPercentage; }
+    public void setReservationDepositPercentage(Integer reservationDepositPercentage) { this.reservationDepositPercentage = reservationDepositPercentage; }
 
-    public void setCurrentCourt(Court currentCourt) {
-        this.currentCourt = currentCourt;
-    }
-
-    public List<ScheduleDay> getScheduleDays() {
-        return scheduleDays;
-    }
-
-    public void setScheduleDays(List<ScheduleDay> scheduleDays) {
-        this.scheduleDays = scheduleDays;
-    }
-
-    public Integer getReservationDepositPercentage() {
-        return reservationDepositPercentage;
-    }
-
-    public void setReservationDepositPercentage(Integer reservationDepositPercentage) {
-        this.reservationDepositPercentage = reservationDepositPercentage;
-    }
-
-    public boolean isAllowFreeCancellation() {
-        return allowFreeCancellation;
-    }
-
-    public void setAllowFreeCancellation(boolean allowFreeCancellation) {
-        this.allowFreeCancellation = allowFreeCancellation;
-    }
+    public boolean isAllowFreeCancellation() { return allowFreeCancellation; }
+    public void setAllowFreeCancellation(boolean allowFreeCancellation) { this.allowFreeCancellation = allowFreeCancellation; }
 
     // =========================================================================
     // CLASE AUXILIAR INTERNA: Representa el horario de un día individual de la semana
