@@ -54,15 +54,17 @@
         </h:panelGroup>
 
         <!-- ═══ SIN CANCHA SELECCIONADA ═══ -->
-        <h:panelGroup rendered="#{authBean.authenticated and empty reservaBean.activeCourt}" layout="block" styleClass="fp-text-center" style="padding:4rem 1rem 6rem;">
-            <span class="material-symbols-outlined" style="font-size:4rem;color:var(--fp-text-muted);opacity:.25;">sports_soccer</span>
-            <h2 style="font-family:'DM Sans',sans-serif;font-weight:700;font-size:1.375rem;color:var(--fp-text);margin:1rem 0 .5rem;">Selecciona una cancha primero</h2>
-            <p style="color:var(--fp-text-secondary);margin-bottom:1.5rem;">Elige una cancha desde Horarios para continuar con tu reserva.</p>
-            <h:link outcome="/horarios.xhtml" styleClass="fp-btn fp-btn-primary">
-                <span class="material-symbols-outlined" style="font-size:1.125rem;">event</span>
-                Ver Horarios
-            </h:link>
-        </h:panelGroup>
+        <div class="center">
+            <h:panelGroup rendered="#{empty reservaBean.activeCourt}" layout="block" styleClass="fp-text-center" style="padding:4rem 1rem 6rem;">
+                <span class="material-symbols-outlined" style="font-size:4rem;color:var(--fp-text-muted);opacity:.25;">sports_soccer</span>
+                <h2 style="font-family:'DM Sans',sans-serif;font-weight:700;font-size:1.375rem;color:var(--fp-text);margin:1rem 0 .5rem;">Selecciona una cancha primero</h2>
+                <p style="color:var(--fp-text-secondary);margin-bottom:1.5rem;">Elige una cancha para continuar con tu reserva.</p>
+                <h:link outcome="/horarios.xhtml" styleClass="fp-btn fp-btn-primary">
+                    <span class="material-symbols-outlined" style="font-size:1.125rem;">event</span>
+                    Ver Canchas y Horarios
+                </h:link>
+            </h:panelGroup>
+        </div>
 
         <!-- ═══ FLUJO DE RESERVA ═══ -->
         <h:panelGroup rendered="#{authBean.authenticated and not empty reservaBean.activeCourt}" layout="block">
@@ -106,7 +108,7 @@
                         </div>
                     </div>
 
-                    <div class="fp-card fp-card-padded" style="margin-top:1.5rem;" id="scheduleWrap">
+                    <div class="fp-card fp-card-padded" id="scheduleWrap" style="margin-top:1.5rem">
                         <div class="fp-flex fp-justify-between fp-items-center fp-mb-4" style="flex-wrap:wrap;gap:.5rem;">
                             <h4 style="font-family:'DM Sans',sans-serif;font-weight:700;color:var(--fp-text);">Horarios disponibles</h4>
                             <div class="fp-flex fp-gap-3" style="font-size:.75rem;color:var(--fp-text-secondary);">

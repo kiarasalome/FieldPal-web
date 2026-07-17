@@ -41,6 +41,8 @@ public class MisReservasBean implements Serializable {
     private String activeFilter = "all";
     private String search = "";
 
+    private Reservation selectedReservation;
+
     public List<Reservation> getReservations() {
         if (!authBean.isAuthenticated()) return List.of();
 
@@ -92,6 +94,9 @@ public class MisReservasBean implements Serializable {
     }
 
     // Getters y Setters
+    public Reservation getSelectedReservation() { return selectedReservation; }
+    public void setSelectedReservation(Reservation selectedReservation) { this.selectedReservation = selectedReservation; }
+
     public String getActiveFilter() { return activeFilter; }
     public void setActiveFilter(String activeFilter) { this.activeFilter = activeFilter; }
 

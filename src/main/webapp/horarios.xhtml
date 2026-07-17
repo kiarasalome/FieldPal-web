@@ -115,7 +115,7 @@
                     <p class="fp-subtext">
                         Horarios disponibles en la cancha seleccionada:
                     </p>
-                    <div class="fp-form-group" style="max-width:220px;margin-bottom:1.25rem;">
+                    <div class="fp-form-group" style="max-width:330px;margin-bottom:1.25rem;">
                         <label class="fp-form-label">Fecha</label>
                         <h:inputText value="#{horariosBean.date}" styleClass="fp-input">
                             <f:passThroughAttribute name="type" value="date"/>
@@ -127,7 +127,7 @@
                         <ui:repeat value="#{horariosBean.activeSchedule}" var="slot">
                             <span class="fp-slot #{slot.available ? 'fp-slot-free' : 'fp-slot-busy'}">
                                 <span class="material-symbols-outlined">#{slot.available ? 'event_available' : 'event_busy'}</span>
-<!--                                <span>#{slot.hour}</span>-->
+                                <span>#{slot.hour}</span>
                             </span>
                         </ui:repeat>
                     </div>
