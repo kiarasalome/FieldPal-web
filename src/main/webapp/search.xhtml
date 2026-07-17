@@ -6,9 +6,8 @@
                 xmlns:p="primefaces"
                 xmlns:fn="jakarta.tags.functions"
                 template="/WEB-INF/templates/fragments/layout.xhtml">
-    <ui:define name="title">
-        FieldPal — Tu Cancha al Instante
-    </ui:define>
+
+    <ui:define name="titulo">FieldPal | Buscar Organización</ui:define>
 
     <ui:define name="content">
 
@@ -17,44 +16,32 @@
             <div class="fp-hero-content">
                 <div class="fp-eyebrow" style="justify-content:center;color:rgba(255,255,255,.85);">
                     <span class="material-symbols-outlined" style="font-size:1rem;">bolt</span>
-                    Reservas instantáneas en Loja
+                    Canchas Deportivas
                 </div>
-                <h1 class="fp-hero-title">¡Encuentra y Reserva tu Cancha Ideal!</h1>
-                <p class="fp-hero-subtitle">Elige tu deporte favorito, selecciona la zona de Loja y asegura tu juego al instante sin llamadas.</p>
+                <h1 class="fp-hero-title">Encuentra tu próximo desafío</h1>
+                <p class="fp-hero-subtitle">Reserva canchas, únete a torneos y gestiona tu equipo en las mejores organizaciones deportivas de tu ciudad.</p>
 
-                <p:button value="Reservar Ahora"
-                          icon="pi pi-calendar-plus"
-                          outcome="/reserva"
-                          styleClass="fp-btn fp-btn-accent fp-btn-lg"
-                          rendered="#{authBean.authenticated}" />
+                <div class="fp-input-icon-wrapper" style="max-width:600px; margin:0 auto;">
+                    <span class="material-symbols-outlined fp-input-icon">search</span>
+                    <p:inputText id="searchInput" value="#{organizationBean.searchTerm}"
+                                 styleClass="fp-input fp-input-icon-field"
+                                 placeholder="¿Qué deporte buscas hoy?" style="height:3rem;">
+                        <!-- Búsqueda en vivo mientras el jugador escribe -->
+                        <p:ajax event="keyup" delay="400" listener="#{organizationBean.search}" update="orgGrid"/>
+                    </p:inputText>
+                </div>
 
-                <p:button value="Comenzar - Iniciar Sesión"
-                          icon="pi pi-user"
-                          outcome="/login"
-                          styleClass="fp-btn fp-btn-accent fp-btn-lg"
-                          rendered="#{not authBean.authenticated}" />
-            </div>
-        </div>
-
-        <!-- ═══ ESTADÍSTICAS ═══ -->
-        <div class="fp-stats-bar">
-            <div class="fp-stats-grid">
-                <div class="fp-text-center">
-                    <div class="fp-stat-value">+#{homeBean.totalReservas}</div>
-                    <div class="fp-stat-label">Reservas realizadas</div>
-                </div>
-                <div class="fp-text-center">
-                    <div class="fp-stat-value">#{homeBean.totalCanchas}</div>
-                    <div class="fp-stat-label">Canchas disponibles</div>
-                </div>
-                <div class="fp-text-center">
-                    <div class="fp-stat-value">#{homeBean.satisfaccion}%</div>
-                    <div class="fp-stat-label">Satisfacción</div>
-                </div>
-                <div class="fp-text-center">
-                    <div class="fp-stat-value">#{homeBean.atencion}</div>
-                    <div class="fp-stat-label">Atención al cliente</div>
-                </div>
+                    <!-- Chips de filtro rápido, usando el label en español de cada CourtType -->
+                    <div class="fp-flex fp-gap-2 fp-justify-between" style="justify-content:center; margin-top:1rem;">
+                        <p:commandButton value="Fútbol" styleClass="fp-chip #{organizationBean.selectedSport eq 'Fútbol' ? 'fp-chip-active' : ''}"
+                                         action="#{organizationBean.filterBySport('Fútbol')}" update="orgGrid"/>
+                        <p:commandButton value="Tenis" styleClass="fp-chip #{organizationBean.selectedSport eq 'Tenis' ? 'fp-chip-active' : ''}"
+                                         action="#{organizationBean.filterBySport('Tenis')}" update="orgGrid"/>
+                        <p:commandButton value="Pádel" styleClass="fp-chip #{organizationBean.selectedSport eq 'Pádel' ? 'fp-chip-active' : ''}"
+                                         action="#{organizationBean.filterBySport('Pádel')}" update="orgGrid"/>
+                        <p:commandButton value="Vóley" styleClass="fp-chip #{organizationBean.selectedSport eq 'Vóley' ? 'fp-chip-active' : ''}"
+                                         action="#{organizationBean.filterBySport('Vóley')}" update="orgGrid"/>
+                    </div>
             </div>
         </div>
 
@@ -113,29 +100,6 @@
                     </ui:repeat>
                 </div>
             </h:panelGroup>
-        </div>
-
-        <!-- ═══ POR QUÉ FIELDPAL ═══ -->
-        <div class="fp-section" style="padding-top:0;">
-            <div class="fp-grid fp-grid-3">
-                <div class="fp-card fp-card-padded fp-text-center">
-                    <i class="pi pi-bolt" style="font-size:2.5rem;color:var(--fp-primary-text);margin-bottom:.75rem;display:block;"></i>
-                    <h5 style="font-family:'DM Sans',sans-serif;font-weight:700;font-size:1.1rem;margin-bottom:.5rem;">Reservas al Instante</h5>
-                    <p class="fp-text-sm" style="color:var(--fp-text-secondary);">Olvídate de las llamadas telefónicas. Agenda tu partido en segundos.</p>
-                </div>
-
-                <div class="fp-card fp-card-padded fp-text-center">
-                    <i class="pi pi-shield" style="font-size:2.5rem;color:var(--fp-primary-text);margin-bottom:.75rem;display:block;"></i>
-                    <h5 style="font-family:'DM Sans',sans-serif;font-weight:700;font-size:1.1rem;margin-bottom:.5rem;">Soporte de Confianza</h5>
-                    <p class="fp-text-sm" style="color:var(--fp-text-secondary);">Respaldo directo de administradores y complejos verificados en Loja.</p>
-                </div>
-
-                <div class="fp-card fp-card-padded fp-text-center">
-                    <i class="pi pi-map-marker" style="font-size:2.5rem;color:var(--fp-primary-text);margin-bottom:.75rem;display:block;"></i>
-                    <h5 style="font-family:'DM Sans',sans-serif;font-weight:700;font-size:1.1rem;margin-bottom:.5rem;">Cerca de Ti</h5>
-                    <p class="fp-text-sm" style="color:var(--fp-text-secondary);">Encuentra canchas en cualquier zona de Loja, a minutos de tu ubicación.</p>
-                </div>
-            </div>
         </div>
     </ui:define>
 </ui:composition>

@@ -9,9 +9,9 @@
     Contrato esperado de AuthBean:
       - boolean            isAuthenticated()
       - User               getCurrentUser()   -> getName(), getRole() (PLAYER/ADMIN)
-      - void               openLogin()        -> abre modal en modo login
-      - void               openRegister()     -> abre modal en modo registro
       - String             logout()
+
+    Login (/login) y Registro (/registro) son páginas completas, sin AJAX.
 
     Enlaces de navegación (GET, sin submit) según el rol:
       - Público   : Inicio, Canchas
@@ -28,7 +28,7 @@
     <nav class="fp-glass-nav" id="fpNav">
         <div class="fp-nav-container">
 
-            <h:link outcome="/home" styleClass="fp-logo-link">
+            <h:link outcome="/homepage" styleClass="fp-logo-link">
                 <span class="fp-logo-icon">
                     <span class="material-symbols-outlined fp-logo-symbol" style="font-variation-settings:'FILL' 1">sports_soccer</span>
                 </span>
@@ -41,7 +41,7 @@
             </h:link>
 
             <div class="fp-nav-links">
-                <h:link outcome="/home" styleClass="fp-nav-link" value="Inicio"/>
+                <h:link outcome="/homepage" styleClass="fp-nav-link" value="Inicio"/>
                 <h:link outcome="/horarios" styleClass="fp-nav-link" value="Canchas"/>
                 <h:link outcome="/reserva" styleClass="fp-nav-link" value="Reservar" rendered="#{authBean.authenticated and authBean.currentUser.role != 'ADMIN'}"/>
                 <h:link outcome="/mis-reservas" styleClass="fp-nav-link" value="Mis Reservas" rendered="#{authBean.authenticated and authBean.currentUser.role != 'ADMIN'}"/>
@@ -69,14 +69,9 @@
                                      update="appForm"/>
                 </h:panelGroup>
 
-                <p:commandButton rendered="#{not authBean.authenticated}"
-                                 value="Iniciar Sesión"
-                                 icon="pi pi-user"
-                                 styleClass="fp-btn fp-btn-accent fp-btn-sm"
-                                 action="#{authBean.openLogin()}"
-                                 process="@this"
-                                 update="@(.fp-auth-modal-dialog)"
-                                 oncomplete="PF('authModal').show();"/>
+                <h:link outcome="/login" styleClass="fp-btn fp-btn-accent fp-btn-sm" rendered="#{not authBean.authenticated}">
+                    <span class="material-symbols-outlined" style="font-size:1.125rem;">person</span> Iniciar Sesión
+                </h:link>
             </div>
         </div>
     </nav>

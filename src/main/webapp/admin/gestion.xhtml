@@ -1,0 +1,196 @@
+<!--
+    admin/gestion.xhtml — panel de administración (una sola página con tabs AJAX)
+    ═══════════════════════════════════════════════════════════
+    Protegida por rol: si el usuario no es admin autenticado, se
+    muestra un aviso en vez del panel (no se listan datos de negocio).
+
+    Contrato esperado de GestionBean: ver controller/GestionBean.java
+    (dashboard stats, CRUD de organizaciones/canchas, lista+cancelación
+    de reservas). Todos los métodos usados aquí ya existían en el bean.
+-->
+<ui:composition template="/WEB-INF/templates/fragments/layout.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="jakarta.faces.html"
+                xmlns:f="jakarta.faces.core"
+                xmlns:ui="jakarta.faces.facelets"
+                xmlns:p="primefaces"
+                xmlns:fn="jakarta.tags.functions">
+
+    <ui:define name="title">Panel de Administración</ui:define>
+
+    <ui:define name="content">
+
+        <div class="fp-page-header">
+            <div class="fp-page-header-title">
+                <span class="material-symbols-outlined">admin_panel_settings</span>
+                <h1>Panel de Administración</h1>
+            </div>
+            <p>Gestiona organizaciones, canchas y reservas de toda la plataforma.</p>
+        </div>
+
+        <!-- ═══ ACCESO DENEGADO ═══ -->
+        <h:panelGroup rendered="#{not authBean.authenticated or not authBean.admin}" layout="block" styleClass="fp-text-center" style="padding:2rem 1rem 6rem;">
+            <span class="material-symbols-outlined" style="font-size:4rem;color:var(--fp-text-muted);opacity:.25;">lock</span>
+            <h2 style="font-family:'DM Sans',sans-serif;font-weight:700;font-size:1.375rem;color:var(--fp-text);margin:1rem 0 .5rem;">Acceso solo para administradores</h2>
+            <p style="color:var(--fp-text-secondary);margin-bottom:1.5rem;">Esta sección es exclusiva para cuentas de administrador.</p>
+            <h:link outcome="/homepage" styleClass="fp-btn fp-btn-primary">Volver al inicio</h:link>
+        </h:panelGroup>
+
+        <!-- ═══ PANEL ═══ -->
+        <h:panelGroup rendered="#{authBean.authenticated and authBean.admin}" layout="block" style="max-width:80rem;margin:0 auto;padding:0 1rem 4rem;">
+
+            <div class="fp-flex fp-gap-2" style="flex-wrap:wrap;border-bottom:1px solid var(--fp-border);margin-bottom:1.5rem;">
+                <p:commandLink styleClass="fp-admin-tab #{gestionBean.activeTab == 'dashboard' ? 'active' : ''}"
+                               action="#{gestionBean.setActiveTab('dashboard')}" process="@this" update="tabContent tabsNav">
+                    <span class="material-symbols-outlined">dashboard</span> Dashboard
+                </p:commandLink>
+                <p:commandLink styleClass="fp-admin-tab #{gestionBean.activeTab == 'orgs' ? 'active' : ''}"
+                               action="#{gestionBean.setActiveTab('orgs')}" process="@this" update="tabContent tabsNav">
+                    <span class="material-symbols-outlined">business</span> Organizaciones
+                </p:commandLink>
+                <p:commandLink styleClass="fp-admin-tab #{gestionBean.activeTab == 'courts' ? 'active' : ''}"
+                               action="#{gestionBean.setActiveTab('courts')}" process="@this" update="tabContent tabsNav">
+                    <span class="material-symbols-outlined">stadium</span> Canchas
+                </p:commandLink>
+                <p:commandLink styleClass="fp-admin-tab #{gestionBean.activeTab == 'reservations' ? 'active' : ''}"
+                               action="#{gestionBean.setActiveTab('reservations')}" process="@this" update="tabContent tabsNav">
+                    <span class="material-symbols-outlined">event_note</span> Reservas
+                </p:commandLink>
+            </div>
+
+            <h:panelGroup id="tabContent" layout="block">
+
+                <!-- ═══ DASHBOARD ═══ -->
+                <h:panelGroup rendered="#{gestionBean.activeTab == 'dashboard'}" layout="block">
+                    <div class="fp-grid fp-grid-4">
+                        <div class="fp-card fp-card-padded fp-text-center">
+                            <div class="fp-stat-value">#{gestionBean.totalCanchas}</div>
+                            <div class="fp-stat-label">Canchas totales</div>
+                        </div>
+                        <div class="fp-card fp-card-padded fp-text-center">
+                            <div class="fp-stat-value">#{gestionBean.reservasActivas}</div>
+                            <div class="fp-stat-label">Reservas activas</div>
+                        </div>
+                        <div class="fp-card fp-card-padded fp-text-center">
+                            <div class="fp-stat-value">#{gestionBean.usuarios}</div>
+                            <div class="fp-stat-label">Usuarios registrados</div>
+                        </div>
+                        <div class="fp-card fp-card-padded fp-text-center">
+                            <div class="fp-stat-value">$#{gestionBean.ingresosMes}</div>
+                            <div class="fp-stat-label">Ingresos del mes</div>
+                        </div>
+                    </div>
+                </h:panelGroup>
+
+                <!-- ═══ ORGANIZACIONES ═══ -->
+                <h:panelGroup rendered="#{gestionBean.activeTab == 'orgs'}" layout="block">
+                    <div class="fp-card fp-card-padded" style="margin-bottom:1.5rem;">
+                        <span class="fp-eyebrow">Nueva organización</span>
+                        <div class="fp-grid fp-grid-3">
+                            <div class="fp-form-group"><label class="fp-form-label">Nombre</label>
+                                <p:inputText value="#{gestionBean.newOrgName}" styleClass="fp-input"/></div>
+                            <div class="fp-form-group"><label class="fp-form-label">Zona</label>
+                                <p:selectOneMenu value="#{gestionBean.newOrgZone}" styleClass="fp-input" style="width:100%">
+                                    <f:selectItems value="#{gestionBean.zones}" var="z" itemLabel="#{z.label}" itemValue="#{z}"/>
+                                </p:selectOneMenu></div>
+                            <div class="fp-form-group"><label class="fp-form-label">Teléfono</label>
+                                <p:inputText value="#{gestionBean.newOrgPhone}" styleClass="fp-input"/></div>
+                            <div class="fp-form-group" style="grid-column:span 2;"><label class="fp-form-label">Dirección</label>
+                                <p:inputText value="#{gestionBean.newOrgAddress}" styleClass="fp-input"/></div>
+                            <div class="fp-form-group"><label class="fp-form-label">Descripción</label>
+                                <p:inputText value="#{gestionBean.newOrgDesc}" styleClass="fp-input"/></div>
+                        </div>
+                        <p:commandButton value="Registrar Organización" icon="pi pi-plus" styleClass="fp-btn fp-btn-primary"
+                                         action="#{gestionBean.doAddOrganization()}" process="@parent" update="tabContent growl"/>
+                    </div>
+
+                    <div class="fp-grid fp-grid-2">
+                        <ui:repeat value="#{gestionBean.allOrganizations}" var="org">
+                            <div class="fp-card fp-card-padded">
+                                <div class="fp-flex fp-justify-between">
+                                    <h4 style="font-family:'DM Sans',sans-serif;font-weight:700;">#{org.name}</h4>
+                                    <span class="fp-chip">#{org.zone.label}</span>
+                                </div>
+                                <p class="fp-text-sm" style="color:var(--fp-text-secondary);margin:.5rem 0;">#{org.address} · #{org.phone}</p>
+                                <p:commandButton value="Eliminar" icon="pi pi-trash" styleClass="fp-btn fp-btn-outline fp-btn-sm"
+                                                 action="#{gestionBean.removeOrganization(org.id)}" process="@this" update="tabContent growl"
+                                                 onclick="if(!confirm('¿Eliminar esta organización?')) return false;"/>
+                            </div>
+                        </ui:repeat>
+                    </div>
+                </h:panelGroup>
+
+                <!-- ═══ CANCHAS ═══ -->
+                <h:panelGroup rendered="#{gestionBean.activeTab == 'courts'}" layout="block">
+                    <div class="fp-card fp-card-padded" style="margin-bottom:1.5rem;">
+                        <span class="fp-eyebrow">Nueva cancha</span>
+                        <div class="fp-grid fp-grid-3">
+                            <div class="fp-form-group"><label class="fp-form-label">Organización</label>
+                                <p:selectOneMenu value="#{gestionBean.newCourtOrg}" styleClass="fp-input" style="width:100%">
+                                    <f:selectItem itemLabel="Seleccionar..." itemValue="" noSelectionOption="true"/>
+                                    <f:selectItems value="#{gestionBean.allOrganizations}" var="o" itemLabel="#{o.name}" itemValue="#{o.id}"/>
+                                </p:selectOneMenu></div>
+                            <div class="fp-form-group"><label class="fp-form-label">Nombre</label>
+                                <p:inputText value="#{gestionBean.newCourtName}" styleClass="fp-input"/></div>
+                            <div class="fp-form-group"><label class="fp-form-label">Tipo</label>
+                                <p:selectOneMenu value="#{gestionBean.newCourtType}" styleClass="fp-input" style="width:100%">
+                                    <f:selectItems value="#{gestionBean.courtTypes}" var="t" itemLabel="#{t.label}" itemValue="#{t}"/>
+                                </p:selectOneMenu></div>
+                            <div class="fp-form-group"><label class="fp-form-label">Precio/hora ($)</label>
+                                <p:inputText value="#{gestionBean.newCourtPrice}" styleClass="fp-input"/></div>
+                            <div class="fp-form-group"><label class="fp-form-label">Superficie</label>
+                                <p:inputText value="#{gestionBean.newCourtSurface}" styleClass="fp-input"/></div>
+                        </div>
+                        <p:commandButton value="Registrar Cancha" icon="pi pi-plus" styleClass="fp-btn fp-btn-primary"
+                                         action="#{gestionBean.doAddCourt()}" process="@parent" update="tabContent growl"/>
+                    </div>
+
+                    <div class="fp-grid fp-grid-3">
+                        <ui:repeat value="#{gestionBean.allCourts}" var="court">
+                            <div class="fp-card fp-card-padded">
+                                <h4 style="font-family:'DM Sans',sans-serif;font-weight:700;">#{court.name}</h4>
+                                <p class="fp-text-sm" style="color:var(--fp-text-secondary);margin:.4rem 0;">#{court.type.label} · $#{court.pricePerHour}/h · #{gestionBean.getOrgName(court.orgId)}</p>
+                                <p:commandButton value="Eliminar" icon="pi pi-trash" styleClass="fp-btn fp-btn-outline fp-btn-sm"
+                                                 action="#{gestionBean.removeCourt(court.id)}" process="@this" update="tabContent growl"
+                                                 onclick="if(!confirm('¿Eliminar esta cancha?')) return false;"/>
+                            </div>
+                        </ui:repeat>
+                    </div>
+                </h:panelGroup>
+
+                <!-- ═══ RESERVAS ═══ -->
+                <h:panelGroup rendered="#{gestionBean.activeTab == 'reservations'}" layout="block">
+                    <span class="fp-input-icon-wrapper" style="max-width:300px;display:block;margin-bottom:1rem;">
+                        <span class="material-symbols-outlined fp-input-icon">search</span>
+                        <p:inputText value="#{gestionBean.search}" styleClass="fp-input fp-input-icon-field" placeholder="Buscar por cliente, cancha u organización...">
+                            <p:ajax event="keyup" delay="400" process="@this" update="tabContent"/>
+                        </p:inputText>
+                    </span>
+
+                    <div class="fp-grid fp-grid-2">
+                        <ui:repeat value="#{gestionBean.allReservations}" var="res">
+                            <div class="fp-card fp-card-padded">
+                                <div class="fp-flex fp-justify-between">
+                                    <h4 style="font-family:'DM Sans',sans-serif;font-weight:700;">#{res.contactName}</h4>
+                                    <span class="fp-status fp-status-#{fn:toLowerCase(res.status)}">#{res.status.label}</span>
+                                </div>
+                                <p class="fp-text-sm" style="color:var(--fp-text-secondary);margin:.4rem 0;">
+                                    #{gestionBean.getCourtName(res.courtId)} · #{gestionBean.getOrgName(res.orgId)}
+                                </p>
+                                <p class="fp-text-sm" style="color:var(--fp-text-secondary);">#{res.date} · #{res.hour} · $#{res.totalPrice}</p>
+                                <p:commandButton value="Cancelar" icon="pi pi-times" styleClass="fp-btn fp-btn-outline fp-btn-sm" style="margin-top:.75rem;"
+                                                 rendered="#{res.status == 'UPCOMING'}"
+                                                 action="#{gestionBean.cancelReservation(res.id)}" process="@this" update="tabContent growl"
+                                                 onclick="if(!confirm('¿Cancelar esta reserva?')) return false;"/>
+                            </div>
+                        </ui:repeat>
+                    </div>
+                </h:panelGroup>
+
+            </h:panelGroup>
+
+        </h:panelGroup>
+
+    </ui:define>
+
+</ui:composition>

@@ -104,10 +104,13 @@ public class ReservaBean implements Serializable {
     }
 
     public String doReserve() {
-        // TODO: Implementar reserva real con BD y validación de sesión
+        // TODO: Implementar reserva real con BD
+        // Respaldo de seguridad: la página reserva.xhtml ya bloquea el acceso
+        // sin sesión, pero por si se invoca este método de otra forma:
         if (!authBean.isAuthenticated()) {
-            authBean.openLogin();
-            return null;
+            FacesContext.getCurrentInstance().addMessage(null,
+                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "Debes iniciar sesión para reservar.", ""));
+            return "/login.xhtml?faces-redirect=true";
         }
 
         // Validaciones básicas

@@ -2,7 +2,7 @@ package unl.edu.ec.fieldPal.controller;
 
 import jakarta.faces.application.FacesMessage;
 import jakarta.faces.context.FacesContext;
-import jakarta.faces.view.ViewScoped;
+import jakarta.enterprise.context.SessionScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import unl.edu.ec.fieldPal.model.User;
@@ -11,19 +11,16 @@ import unl.edu.ec.fieldPal.service.UserService;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.util.regex.Pattern;
 
 @Named
-@ViewScoped
+@SessionScoped
 public class AuthBean implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
 
     @Inject
     private UserService userService;
-
-    // Estado del modal
-    private boolean showAuthModal = false;
-    private String authMode = "login"; // "login" o "register"
 
     // Campos del formulario
     private String loginEmail = "";
@@ -32,58 +29,103 @@ public class AuthBean implements Serializable {
     private String registerEmail = "";
     private String registerPhone = "";
     private String registerPassword = "";
+    private String registerConfirmPassword = "";
     private String registerRole = "PLAYER";
+
+    // === Validación ===
+    private static final Pattern EMAIL_PATTERN =
+            Pattern.compile("^[\\w.+-]+@[\\w-]+\\.[a-zA-Z]{2,}$");
+    private static final int MIN_PASSWORD_LENGTH = 6;
 
     // Usuario actual en sesión
     private User currentUser;
 
     // === Método de Login ===
     public String submitLogin() {
-        User user = userService.login(loginEmail, loginPassword);
-        if (user != null) {
-            currentUser = user;
-            showAuthModal = false;
-            clearLoginForm();
-            FacesContext.getCurrentInstance().addMessage(null,
-                    new FacesMessage(FacesMessage.SEVERITY_INFO,
-                            "¡Bienvenido, " + user.getName() + "!", ""));
+        loginEmail = trim(loginEmail);
 
-            // Retornamos navegación explícita con redirección limpia
-            return user.isAdmin() ? "/admin/gestion.xhtml?faces-redirect=true"
-                    : "/home.xhtml?faces-redirect=true";
+        if (isBlank(loginEmail) || isBlank(loginPassword)) {
+            addError("Ingresa tu correo y contraseña.");
+            return null;
         }
-        FacesContext.getCurrentInstance().addMessage(null,
-                new FacesMessage(FacesMessage.SEVERITY_ERROR,
-                        "Correo o contraseña incorrectos.", ""));
-        return null;
+
+        User user = userService.login(loginEmail, loginPassword);
+        if (user == null) {
+            addError("Correo o contraseña incorrectos.");
+            return null;
+        }
+
+        loginSuccess(user, "¡Bienvenido, " + user.getName() + "!");
+        clearLoginForm();
+        // Por ahora, tanto admin como jugador aterrizan en el inicio;
+        // el menú superior ya se adapta según el rol (ver header.xhtml).
+        return "/homepage.xhtml?faces-redirect=true";
     }
 
     // === Método de Registro ===
     public String submitRegister() {
+        registerName = trim(registerName);
+        registerEmail = trim(registerEmail);
+        registerPhone = trim(registerPhone);
+
+        if (isBlank(registerName) || registerName.length() < 2) {
+            addError("Ingresa tu nombre completo.");
+            return null;
+        }
+        if (isBlank(registerEmail) || !EMAIL_PATTERN.matcher(registerEmail).matches()) {
+            addError("Ingresa un correo electrónico válido.");
+            return null;
+        }
+        if (isBlank(registerPhone) || registerPhone.replaceAll("\\D", "").length() < 7) {
+            addError("Ingresa un número de teléfono válido.");
+            return null;
+        }
+        if (isBlank(registerPassword) || registerPassword.length() < MIN_PASSWORD_LENGTH) {
+            addError("La contraseña debe tener al menos " + MIN_PASSWORD_LENGTH + " caracteres.");
+            return null;
+        }
+        if (!registerPassword.equals(registerConfirmPassword)) {
+            addError("Las contraseñas no coinciden.");
+            return null;
+        }
+
         UserRole role = "ADMIN".equals(registerRole) ? UserRole.ADMIN : UserRole.PLAYER;
         User user = userService.register(registerName, registerEmail,
                 registerPhone, registerPassword, role);
-        if (user != null) {
-            currentUser = user;
-            showAuthModal = false;
-            clearRegisterForm();
-            FacesContext.getCurrentInstance().addMessage(null,
-                    new FacesMessage(FacesMessage.SEVERITY_INFO,
-                            "Cuenta creada exitosamente. ¡Bienvenido, " + user.getName() + "!", ""));
-
-            return user.isAdmin() ? "/admin/gestion.xhtml?faces-redirect=true"
-                    : "/home.xhtml?faces-redirect=true";
+        if (user == null) {
+            addError("Ya existe una cuenta con este correo electrónico.");
+            return null;
         }
+
+        loginSuccess(user, "Cuenta creada exitosamente. ¡Bienvenido, " + user.getName() + "!");
+        clearRegisterForm();
+        return "/homepage.xhtml?faces-redirect=true";
+    }
+
+    // === Helpers de validación (evitan repetir la misma lógica en login/registro) ===
+    private void loginSuccess(User user, String welcomeMessage) {
+        currentUser = user;
         FacesContext.getCurrentInstance().addMessage(null,
-                new FacesMessage(FacesMessage.SEVERITY_ERROR,
-                        "Ya existe una cuenta con este correo electrónico.", ""));
-        return null;
+                new FacesMessage(FacesMessage.SEVERITY_INFO, welcomeMessage, ""));
+    }
+
+    private void addError(String detail) {
+        FacesContext.getCurrentInstance().addMessage(null,
+                new FacesMessage(FacesMessage.SEVERITY_ERROR, detail, ""));
+    }
+
+    private static boolean isBlank(String s) {
+        return s == null || s.trim().isEmpty();
+    }
+
+    private static String trim(String s) {
+        return s == null ? "" : s.trim();
     }
 
     // === Métodos de sesión ===
     public String doLogout() {
         currentUser = null;
-        return "/home.xhtml?faces-redirect=true";
+        return "/homepage.xhtml?faces-redirect=true";
     }
 
     // Alias para coincidir exactamente con el action de header.xhtml
@@ -103,33 +145,6 @@ public class AuthBean implements Serializable {
         return currentUser != null && currentUser.isPlayer();
     }
 
-    // === Modal control ===
-    public void openLogin() {
-        authMode = "login";
-        showAuthModal = true;
-    }
-
-    public void openRegister() {
-        authMode = "register";
-        showAuthModal = true;
-    }
-
-    public void closeAuth() {
-        showAuthModal = false;
-        clearLoginForm();
-        clearRegisterForm();
-    }
-
-    public void switchToRegister() {
-        authMode = "register";
-        clearLoginForm();
-    }
-
-    public void switchToLogin() {
-        authMode = "login";
-        clearRegisterForm();
-    }
-
     // === Limpiar formularios ===
     private void clearLoginForm() {
         loginEmail = "";
@@ -141,16 +156,11 @@ public class AuthBean implements Serializable {
         registerEmail = "";
         registerPhone = "";
         registerPassword = "";
+        registerConfirmPassword = "";
         registerRole = "PLAYER";
     }
 
     // === Getters y Setters ===
-    public boolean isShowAuthModal() { return showAuthModal; }
-    public void setShowAuthModal(boolean showAuthModal) { this.showAuthModal = showAuthModal; }
-
-    public String getAuthMode() { return authMode; }
-    public void setAuthMode(String authMode) { this.authMode = authMode; }
-
     public String getLoginEmail() { return loginEmail; }
     public void setLoginEmail(String loginEmail) { this.loginEmail = loginEmail; }
 
@@ -168,6 +178,9 @@ public class AuthBean implements Serializable {
 
     public String getRegisterPassword() { return registerPassword; }
     public void setRegisterPassword(String registerPassword) { this.registerPassword = registerPassword; }
+
+    public String getRegisterConfirmPassword() { return registerConfirmPassword; }
+    public void setRegisterConfirmPassword(String registerConfirmPassword) { this.registerConfirmPassword = registerConfirmPassword; }
 
     public String getRegisterRole() { return registerRole; }
     public void setRegisterRole(String registerRole) { this.registerRole = registerRole; }

@@ -79,6 +79,10 @@ public class GestionBean implements Serializable {
     // === Reportes ===
     private String reportDate = "2026-07-14";
 
+    // === Listas para combos del formulario ===
+    public Zone[] getZones() { return Zone.values(); }
+    public CourtType[] getCourtTypes() { return CourtType.values(); }
+
     // === Dashboard stats ===
     public int getTotalCanchas() { return courtService.getCourtCount(); }
     public int getReservasActivas() { return reservationService.getActiveCount(); }

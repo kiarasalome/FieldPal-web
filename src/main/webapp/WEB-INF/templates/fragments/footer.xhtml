@@ -1,5 +1,5 @@
 <!-- ================= FOOTER ================= -->
-<footer>
+<footer xmlns="http://www.w3.org/1999/xhtml" xmlns:h="jakarta.faces.html" xmlns:ui="jakarta.faces.facelets">
     <div class="footer-inner">
         <div>
             <h4>
@@ -12,19 +12,23 @@
         <div class="footer-col">
             <h5>Navegación</h5>
             <ul>
-                <li><a href="#horarios">Consultar Horarios</a></li>
-                <li><a href="#reservar">Hacer Reserva</a></li>
-                <li><a href="#mis-reservas">Mis Reservas</a></li>
-                <li><a href="#mis-reservas">Gestión de Canchas</a></li>
+                <li><h:link outcome="/horarios" value="Consultar Horarios"/></li>
+                <li><h:link outcome="/horarios" value="Hacer Reserva"/></li>
+                <ui:fragment rendered="#{authBean.authenticated}">
+                    <li><h:link outcome="/mis-reservas" value="Mis Reservas"/></li>
+                </ui:fragment>
+                <ui:fragment rendered="#{authBean.authenticated and authBean.admin}">
+                    <li><h:link outcome="/admin/gestion" value="Panel de Administración"/></li>
+                </ui:fragment>
             </ul>
         </div>
 
         <div class="footer-col">
             <h5>Legal</h5>
             <ul>
-                <li><a href="#" onclick="mockAlert('Términos y condiciones — próximamente'); return false;">Términos y Condiciones</a></li>
-                <li><a href="#" onclick="mockAlert('Política de privacidad — próximamente'); return false;">Política de Privacidad</a></li>
-                <li><a href="#" onclick="mockAlert('Cookies — próximamente'); return false;">Cookies</a></li>
+                <li><a href="#" onclick="alert('Términos y condiciones — próximamente'); return false;">Términos y Condiciones</a></li>
+                <li><a href="#" onclick="alert('Política de privacidad — próximamente'); return false;">Política de Privacidad</a></li>
+                <li><a href="#" onclick="alert('Cookies — próximamente'); return false;">Cookies</a></li>
             </ul>
         </div>
 
