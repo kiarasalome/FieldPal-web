@@ -34,7 +34,7 @@
                 <span class="material-symbols-outlined">schedule</span>
                 <h1>Consultar Horarios</h1>
             </div>
-            <p>Elige la zona, la organización y la cancha para ver la disponibilidad en tiempo real.</p>
+            <p>Elige la zona, la organización y la cancha para ver la disponibilidad en tiempo real.</p><br/>
         </div>
 
         <div style="max-width:80rem;margin:0 auto;padding:0 1rem 5rem;">
@@ -112,7 +112,9 @@
                             <span class="fp-flex fp-items-center fp-gap-1"><span class="fp-slot-dot fp-slot-dot-busy"></span>Ocupado</span>
                         </div>
                     </div>
-
+                    <p class="fp-subtext">
+                        Horarios disponibles en la cancha seleccionada:
+                    </p>
                     <div class="fp-form-group" style="max-width:220px;margin-bottom:1.25rem;">
                         <label class="fp-form-label">Fecha</label>
                         <h:inputText value="#{horariosBean.date}" styleClass="fp-input">
@@ -125,7 +127,7 @@
                         <ui:repeat value="#{horariosBean.activeSchedule}" var="slot">
                             <span class="fp-slot #{slot.available ? 'fp-slot-free' : 'fp-slot-busy'}">
                                 <span class="material-symbols-outlined">#{slot.available ? 'event_available' : 'event_busy'}</span>
-                                <span>#{slot.hour}</span>
+<!--                                <span>#{slot.hour}</span>-->
                             </span>
                         </ui:repeat>
                     </div>
