@@ -17,7 +17,7 @@
     --fp-accent-hover: #C4B590;
     --fp-accent-text: #1B5E3B;
     --fp-text: #111827;
-    --fp-text-secondary: #4B5563;
+    --fp-text-secondary: #90969f;
     --fp-text-muted: #9CA3AF;
     --fp-border: #E5E7EB;
     --fp-border-light: #F3F4F6;
@@ -229,7 +229,7 @@ body:has(#fpDarkToggle:checked) .fp-input:focus { box-shadow: 0 0 0 3px rgba(183
 
 .fp-form-group { margin-bottom: 1rem; }
 .fp-form-label {
-    display: block; font-size: 0.6875rem; font-weight: 700;
+    display: block; font-size: 0.999rem; font-weight: 700;
     text-transform: uppercase; letter-spacing: 0.06em;
     color: var(--fp-text-muted); margin-bottom: 0.5rem;
 }
@@ -701,6 +701,28 @@ body:has(#fpDarkToggle:checked) .fp-slot-selected { color:#0A0A0A !important; }
     background: rgba(0, 0, 0, 0.6) !important;
     backdrop-filter: blur(8px);
 }
+
+/* ═══ PRIMEFACES DIALOG (mis-reservas.xhtml) ═══ */
+.ui-dialog {
+    background: var(--fp-bg-card) !important;
+    border: 1px solid var(--fp-border) !important;
+    border-radius: 1.5rem !important;
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.25) !important;
+    padding: 2rem !important;
+    max-width: calc(100vw - 2rem);
+}
+.ui-dialog .ui-dialog-content { padding: 0 !important; background: transparent !important; overflow: visible !important; }
+.ui-widget-overlay { background: rgba(0, 0, 0, 0.6) !important; backdrop-filter: blur(8px); }
+
+/* Filas de detalle de solo lectura */
+.fp-detail-row {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 0.625rem 0; border-bottom: 1px dashed var(--fp-border-light);
+    font-size: 0.875rem;
+}
+.fp-detail-row:last-child { border-bottom: none; }
+.fp-detail-row span:first-child { color: var(--fp-text-muted); font-weight: 600; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.04em; }
+.fp-detail-row span:last-child { color: var(--fp-text); font-weight: 600; }
 
 /* ═══ DARK MODE — interruptor 100% CSS/HTML (sin JavaScript) ═══
    Un <input type="checkbox" id="fpDarkToggle"> oculto, seguido de un

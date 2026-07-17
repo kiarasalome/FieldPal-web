@@ -4,11 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="397752e2-5086-4bbb-ba6f-1586b885d986" name="Changes" comment="Arreglos de los archivos horarios.xhtml y mis-reservas.xhtml">
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+    <list default="true" id="397752e2-5086-4bbb-ba6f-1586b885d986" name="Changes" comment="Cambios de ,la vista y creación de mis-reservas.xhtml separado de reserva.xhtml">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/unl/edu/ec/fieldPal/controller/MisReservasBean.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/unl/edu/ec/fieldPal/controller/MisReservasBean.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/horarios.xhtml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/horarios.xhtml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/unl/edu/ec/fieldPal/service/ReservationService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/unl/edu/ec/fieldPal/service/ReservationService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/webapp/mis-reservas.xhtml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/mis-reservas.xhtml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/webapp/reserva.xhtml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/reserva.xhtml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/webapp/resources/css/fieldpal.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/resources/css/fieldpal.css" afterDir="false" />
@@ -31,6 +30,7 @@
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
     "Maven.fieldPal [clean].executor": "Run",
+    "Maven.fieldPal [io.openliberty.tools:liberty-maven-plugin:3.12.0:dev].executor": "Run",
     "Maven.fieldPal [io.openliberty.tools:liberty-maven-plugin:3.12.0:run].executor": "Run",
     "Maven.fieldPal [package].executor": "Run",
     "dart.analysis.tool.window.visible": "false",
@@ -104,11 +104,20 @@
       <option name="project" value="LOCAL" />
       <updated>1784305155127</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="Cambios de ,la vista y creación de mis-reservas.xhtml separado de reserva.xhtml">
+      <option name="closed" value="true" />
+      <created>1784314413291</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1784314413291</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Arreglos de los archivos horarios.xhtml y mis-reservas.xhtml" />
-    <option name="LAST_COMMIT_MESSAGE" value="Arreglos de los archivos horarios.xhtml y mis-reservas.xhtml" />
+    <MESSAGE value="Cambios de ,la vista y creación de mis-reservas.xhtml separado de reserva.xhtml" />
+    <option name="LAST_COMMIT_MESSAGE" value="Cambios de ,la vista y creación de mis-reservas.xhtml separado de reserva.xhtml" />
   </component>
 </project>

@@ -54,17 +54,17 @@
         </h:panelGroup>
 
         <!-- ═══ SIN CANCHA SELECCIONADA ═══ -->
-        <div class="center">
-            <h:panelGroup rendered="#{empty reservaBean.activeCourt}" layout="block" styleClass="fp-text-center" style="padding:4rem 1rem 6rem;">
-                <span class="material-symbols-outlined" style="font-size:4rem;color:var(--fp-text-muted);opacity:.25;">sports_soccer</span>
-                <h2 style="font-family:'DM Sans',sans-serif;font-weight:700;font-size:1.375rem;color:var(--fp-text);margin:1rem 0 .5rem;">Selecciona una cancha primero</h2>
-                <p style="color:var(--fp-text-secondary);margin-bottom:1.5rem;">Elige una cancha para continuar con tu reserva.</p>
-                <h:link outcome="/horarios.xhtml" styleClass="fp-btn fp-btn-primary">
-                    <span class="material-symbols-outlined" style="font-size:1.125rem;">event</span>
-                    Ver Canchas y Horarios
-                </h:link>
-            </h:panelGroup>
-        </div>
+        <h:panelGroup rendered="#{empty reservaBean.activeCourt}" layout="block" styleClass="fp-text-center"
+                      style="padding:4rem 1rem 6rem;">
+            <span class="material-symbols-outlined"
+                  style="font-size:4rem;color:var(--fp-text-muted);opacity:.25;">sports_soccer</span>
+            <h2 style="font-family:'DM Sans',sans-serif;font-weight:700;font-size:1.375rem;color:var(--fp-text);margin:1rem 0 .5rem;">Selecciona una cancha primero</h2>
+            <p style="color:var(--fp-text-secondary);margin-bottom:1.5rem;">Elige una cancha para continuar con tu reserva.</p>
+            <h:link outcome="/horarios.xhtml" styleClass="fp-btn fp-btn-primary">
+                <span class="material-symbols-outlined" style="font-size:1.125rem;">event</span>
+                Ver Canchas y Horarios
+            </h:link>
+        </h:panelGroup>
 
         <!-- ═══ FLUJO DE RESERVA ═══ -->
         <h:panelGroup rendered="#{authBean.authenticated and not empty reservaBean.activeCourt}" layout="block">
@@ -108,7 +108,7 @@
                         </div>
                     </div>
 
-                    <div class="fp-card fp-card-padded" id="scheduleWrap" style="margin-top:1.5rem">
+                    <h:panelGroup id="scheduleWrap" layout="block" styleClass="fp-card fp-card-padded" style="margin-top:1.5rem">
                         <div class="fp-flex fp-justify-between fp-items-center fp-mb-4" style="flex-wrap:wrap;gap:.5rem;">
                             <h4 style="font-family:'DM Sans',sans-serif;font-weight:700;color:var(--fp-text);">Horarios disponibles</h4>
                             <div class="fp-flex fp-gap-3" style="font-size:.75rem;color:var(--fp-text-secondary);">
@@ -128,7 +128,7 @@
                                 </p:commandLink>
                             </ui:repeat>
                         </div>
-                    </div>
+                    </h:panelGroup>
                 </div>
 
                 <!-- ═══ COLUMNA DERECHA: detalles de reserva ═══ -->
@@ -193,7 +193,7 @@
                         </div>
                     </div>
 
-                    <div class="fp-price-summary" id="priceSummary" style="margin:1.25rem 0;">
+                    <h:panelGroup id="priceSummary" layout="block" styleClass="fp-price-summary" style="margin:1.25rem 0;">
                         <span class="fp-eyebrow" style="margin-bottom:0;">
                             <span class="material-symbols-outlined" style="font-size:1rem;">receipt_long</span> Resumen de Precio
                         </span>
@@ -206,7 +206,7 @@
                         <div class="fp-flex fp-justify-between fp-text-xs">
                             <span>Precio por jugador</span><span>$#{reservaBean.pricePerPlayer}</span>
                         </div>
-                    </div>
+                    </h:panelGroup>
 
                     <div class="fp-flex fp-gap-3">
                         <p:commandButton value="Confirmar Reserva" icon="pi pi-calendar-plus"

@@ -67,6 +67,15 @@ public class ReservationService {
         }
     }
 
+    public void updateReservation(Reservation reservation) {
+        for (int i = 0; i < reservations.size(); i++) {
+            if (reservations.get(i).getId().equals(reservation.getId())) {
+                reservations.set(i, reservation);
+                return;
+            }
+        }
+    }
+
     public int getActiveCount() {
         return (int) reservations.stream()
                 .filter(r -> r.getStatus() == ReservationStatus.UPCOMING)

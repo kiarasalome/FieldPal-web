@@ -1,120 +1,220 @@
 <!--
-    reserva.xhtml — página de Reserva
+    mis-reservas.xhtml
     ═══════════════════════════════════════════════════════════
-    Contrato esperado de ReservaBean:
-      - String   selectedCourtId               -> bindeado desde f:viewParam "courtId"
-      - Court    getActiveCourt()               -> name, surface, pricePerHour,
-                                                    hasLighting, isCovered, imageUrl,
-                                                    type.label / type.emoji / type.icon
-      - String   date / hour                    -> get/set
-      - int      duration / playerCount         -> get/set
-      - String   contactName / contactPhone     -> get/set (autorellenado en @PostConstruct
-                                                    desde authBean.currentUser si está logueado)
-      - String[] getAvailableHours()
-      - double   getTotalPrice() / getPricePerPlayer()
-      - String   doReserve()                    -> action, agrega FacesMessage si falla
-
-    Contrato esperado de AuthBean:
-      - boolean  isAuthenticated()
-      - void     openLogin()
-
-    Contrato esperado de CourtService (bean @Named ya disponible por CDI):
-      - List<TimeSlot> getSchedule(String courtId, String date) -> hour, available
+    Depende únicamente de misReservasBean (+ authBean para el
+    estado de sesión, ya inyectado dentro de misReservasBean).
 -->
 <ui:composition template="WEB-INF/templates/fragments/layout.xhtml"
                 xmlns="http://www.w3.org/1999/xhtml"
                 xmlns:h="jakarta.faces.html"
-                xmlns:f="jakarta.faces.core"
                 xmlns:ui="jakarta.faces.facelets"
                 xmlns:p="primefaces">
 
-    <f:metadata>
-        <f:viewParam name="courtId" value="#{reservaBean.selectedCourtId}"/>
-    </f:metadata>
-
-    <ui:define name="title">Hacer una Reserva</ui:define>
-
+    <ui:define name="title">Mis Reservas</ui:define>
     <ui:define name="content">
 
-        <div class="fp-page-header">
-            <div class="fp-page-header-title">
-                <span class="material-symbols-outlined">calendar_add_on</span>
-                <h1>Mis Reservas</h1>
+        <section class="fp-section">
+
+            <!-- ═══ HEADER DE PÁGINA ═══ -->
+            <div class="fp-flex fp-justify-between fp-items-center fp-mb-6" style="flex-wrap:wrap;gap:1rem;">
+                <div>
+                    <h1 class="fp-section-title fp-flex fp-items-center fp-gap-2" style="margin-bottom:.35rem;">
+                        <span class="material-symbols-outlined fp-text-primary" style="font-size:1.75rem;">event_note</span>
+                        Mis Reservas
+                    </h1>
+                    <p class="fp-section-subtitle" style="margin:0;">Consulta tu historial y administra tus próximos turnos.</p>
+                </div>
+                <h:link outcome="/reserva" styleClass="fp-btn fp-btn-primary">
+                    <span class="material-symbols-outlined" style="font-size:1.125rem;">add_circle</span>
+                    Nueva Reserva
+                </h:link>
             </div>
-            <p>Visualiza las reservas realizadas</p>
-        </div>
+            <!-- Filtros -->
+            <div class="fp-card fp-card-padded fp-mb-6">
+                <div class="fp-flex fp-items-center fp-gap-4" style="flex-wrap:wrap;">
+                    <div class="fp-input-icon-wrapper" style="flex:1;min-width:220px;">
+                        <span class="material-symbols-outlined fp-input-icon">search</span>
+                        <p:inputText value="#{misReservasBean.search}" styleClass="fp-input fp-input-icon-field"
+                                     placeholder="Buscar por cancha, sede o código...">
+                            <p:ajax event="keyup" update="reservasPanel" process="@this" delay="300"/>
+                        </p:inputText>
+                    </div>
+                    <div class="fp-flex fp-gap-2" style="flex-wrap:wrap;">
+                        <p:commandButton value="Todas" action="#{misReservasBean.setActiveFilter('all')}"
+                                         process="@this" update="reservasPanel"
+                                         styleClass="fp-chip #{misReservasBean.activeFilter == 'all' ? 'fp-chip-active' : ''}"/>
+                        <p:commandButton value="Próximas" action="#{misReservasBean.setActiveFilter('upcoming')}"
+                                         process="@this" update="reservasPanel"
+                                         styleClass="fp-chip #{misReservasBean.activeFilter == 'upcoming' ? 'fp-chip-active' : ''}"/>
+                        <p:commandButton value="Completadas" action="#{misReservasBean.setActiveFilter('completed')}"
+                                         process="@this" update="reservasPanel"
+                                         styleClass="fp-chip #{misReservasBean.activeFilter == 'completed' ? 'fp-chip-active' : ''}"/>
+                        <p:commandButton value="Canceladas" action="#{misReservasBean.setActiveFilter('cancelled')}"
+                                         process="@this" update="reservasPanel"
+                                         styleClass="fp-chip #{misReservasBean.activeFilter == 'cancelled' ? 'fp-chip-active' : ''}"/>
+                    </div>
+                </div>
+            </div>
 
-        <!-- ═══ SIN SESIÓN: no se puede observar las reservas realizadas sin haber iniciado sesión ═══ -->
-        <h:panelGroup rendered="#{not authBean.authenticated}" layout="block" styleClass="fp-text-center" style="padding:4rem 1rem 6rem;">
-            <span class="material-symbols-outlined" style="font-size:4rem;color:var(--fp-text-muted);opacity:.25;">lock</span>
-            <h2 style="font-family:'DM Sans',sans-serif;font-weight:700;font-size:1.375rem;color:var(--fp-text);margin:1rem 0 .5rem;">Inicia sesión para observar tus reservas</h2>
-            <p style="color:var(--fp-text-secondary);margin-bottom:1.5rem;">Necesitas una cuenta para hacer una reserva.</p>
-            <h:link outcome="/login" styleClass="fp-btn fp-btn-primary">
-                <span class="material-symbols-outlined" style="font-size:1.125rem;">person</span> Iniciar Sesión
-            </h:link>
-        </h:panelGroup>
+            <!-- Tabla -->
+            <h:panelGroup id="reservasPanel" layout="block">
+                <div class="fp-card" style="overflow:hidden;">
+                    <p:dataTable id="tablaReservas" var="res" value="#{misReservasBean.reservations}"
+                                 rows="8" paginator="true"
+                                 paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}"
+                                 currentPageReportTemplate="{startRecord}-{endRecord} de {totalRecords}"
+                                 rowKey="#{res.id}" emptyMessage="No se encontraron reservas con los filtros aplicados."
+                                 styleClass="fp-datatable">
 
+                        <p:column headerText="Código" style="width:8rem">
+                            <span style="font-family:'JetBrains Mono',monospace;font-size:.8rem;color:var(--fp-text-secondary)">#{res.id}</span>
+                        </p:column>
 
-        <!-- ═══ MENU: ═══ -->
-       <div class="card">
-           <h5>Basic</h5>
-           <p:dataTable id="tablaMisReservas" var="reserva" value="#{misReservasBean.reservations}"
-                        widgetVar="misreservas" multiViewState="true" rows="10" paginator="true"
-                        paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-                        rowsPerPageTemplate="5,10,15" selectionMode="single"
-                        selection="#{misReservasBean.selectedReservation}" rowKey="#{misReservasBean.selectedReservation.id}"
-                        emptyMessage="No se encontaron reservas">
+                        <p:column headerText="Cancha">
+                            <div class="fp-flex fp-items-center fp-gap-2">
+                                <span class="material-symbols-outlined"
+                                      style="font-size:1.1rem;color:var(--fp-primary-text);">#{misReservasBean.getCourtIcon(res.courtId)}</span>
+                                <div>
+                                    <div style="font-weight:600;color:var(--fp-text);">#{misReservasBean.getCourtName(res.courtId)}</div>
+                                    <div class="fp-text-xs"
+                                         style="color:var(--fp-text-muted);">#{misReservasBean.getOrgName(res.orgId)}</div>
+                                </div>
+                            </div>
+                        </p:column>
 
-               <f:facet name="header">
-                   <p:outputPanel>
-                       <h:outputText value="Buscar en todos los campos:"/>
-                       <p:inputText id="globalFilter" onkeyup="PrimeFaces.debounce(() => PF('misReservas').filter())"
-                                    style="width:150px"
-                                    placeholder="Buscar"/>
-                   </p:outputPanel>
-               </f:facet>
+                        <p:column headerText="Fecha y hora">
+                            #{misReservasBean.formatDate(res.date)} · #{res.hour} (#{res.duration}h)
+                        </p:column>
 
-               <p:ajax event="rowSelect" update=":form:reservaInfo" oncomplete="PF('reserva').show()"/>
+                        <p:column headerText="Jugadores" style="width:6rem">
+                            #{res.playerCount}
+                        </p:column>
 
-               <p:column headerText="Name" filterBy="#{misReservasBean.getCourtName(misReservasBean.selectedReservation.id)}" sortBy="#{misReservasBean.}"
-                         filterMatchMode="contains">
-                   <h:outputText value="#{customer.name}"/>
-               </p:column>
+                        <p:column headerText="Total" style="width:6rem">
+                            $#{res.totalPrice}
+                        </p:column>
 
-               <p:column headerText="Country" filterBy="#{customer.country.name}" sortBy="#{customer.country.name}"
-                         filterMatchMode="startsWith">
-                   <span class="flag flag-#{customer.country.code}" style="width: 30px; height: 20px"/>
-                   <h:outputText style="vertical-align: middle; margin-left: .5rem"
-                                 value="#{customer.country.name}"/>
-               </p:column>
+                        <p:column headerText="Estado" style="width:9rem">
+                                <span class="fp-chip #{misReservasBean.getStatusClass(res)}" style="cursor:default;">
+                                    #{res.status.label}
+                                </span>
+                        </p:column>
 
-               <p:column headerText="Representative" filterBy="#{customer.representative.name}"
-                         sortBy="#{customer.representative.name}" filterMatchMode="startsWith">
-                   <p:graphicImage name="images/avatar/#{customer.representative.image}" library="demo"
-                                   width="32" style="vertical-align: middle"/>
-                   <h:outputText style="vertical-align: middle; margin-left: .5rem"
-                                 value="#{customer.representative.name}"/>
-               </p:column>
+                        <p:column headerText="Acciones" style="width:9.5rem">
+                            <div class="fp-flex fp-gap-2">
+                                <p:commandButton icon="pi pi-eye" styleClass="fp-btn fp-btn-outline fp-btn-sm"
+                                                 title="Ver / Editar"
+                                                 action="#{misReservasBean.selectReservation(res)}" process="@this"
+                                                 update="editDialog" oncomplete="PF('editReservaDialog').show()"/>
+                                <p:commandButton icon="pi pi-check" styleClass="fp-btn fp-btn-primary fp-btn-sm"
+                                                 title="Confirmar asistencia"
+                                                 action="#{misReservasBean.confirmAttendance(res.id)}"
+                                                 process="@this" update="reservasPanel growl"
+                                                 rendered="#{res.status.name() == 'UPCOMING' and !res.confirmed}"/>
+                                <p:commandButton icon="pi pi-times" styleClass="fp-btn fp-btn-error fp-btn-sm"
+                                                 title="Cancelar reserva"
+                                                 action="#{misReservasBean.cancelReservation(res.id)}"
+                                                 process="@this" update="reservasPanel growl"
+                                                 rendered="#{res.status.name() == 'UPCOMING'}"
+                                                 onclick="return confirm('¿Confirmas cancelar esta reserva?')"/>
+                            </div>
+                        </p:column>
 
-               <p:column headerText="Status" filterBy="#{customer.status}" sortBy="#{customer.status}"
-                         filterMatchMode="exact">
-                   <f:facet name="filter">
-                       <p:selectOneMenu onchange="PF('customersTable').filter()"
-                                        style="width:100%; box-sizing: border-box;">
-                           <f:selectItem itemLabel="Select One" itemValue="#{null}" noSelectionOption="true"/>
-                           <f:selectItems value="#{dtMultiViewStateView.customerStatus}"/>
-                       </p:selectOneMenu>
-                   </f:facet>
-                   <span class="customer-badge status-#{customer.status.name().toLowerCase()}">#{customer.status}</span>
-               </p:column>
+                    </p:dataTable>
+                </div>
+            </h:panelGroup>
+        </section>
+    <!-- ═══ MODAL DE DETALLE / EDICIÓN ═══ -->
+    <p:dialog id="editDialog" widgetVar="editReservaDialog" visible="#{misReservasBean.showEditModal}"
+              modal="true" resizable="false" draggable="false" closable="true" showHeader="false"
+              styleClass="fp-auth-modal" width="480" onHide="misReservasBean.showEditModal=false" closeOnEscape="true">
 
-               <f:facet name="paginatorTopLeft">
-                   <p:commandButton value="Clear table state" action="#{dtMultiViewStateView.clearMultiViewState}"
-                                    update="@form"/>
-               </f:facet>
-           </p:dataTable>
-       </div>
+        <h:panelGroup rendered="#{misReservasBean.selectedReservation != null}" layout="block">
 
-   </ui:define>
+            <p:commandButton icon="pi pi-times" styleClass="fp-modal-close" process="@this"
+                             action="#{misReservasBean.closeEditModal}" update="editDialog"
+                             oncomplete="PF('editReservaDialog').hide()"/>
 
+            <div class="fp-auth-head" style="margin-bottom:1.25rem;">
+                <div class="fp-auth-icon">
+                        <span class="material-symbols-outlined" style="font-variation-settings:'FILL' 1">
+                            #{misReservasBean.getCourtIcon(misReservasBean.selectedReservation.courtId)}
+                        </span>
+                </div>
+                <h2>#{misReservasBean.getCourtName(misReservasBean.selectedReservation.courtId)}</h2>
+                <p>#{misReservasBean.getOrgName(misReservasBean.selectedReservation.orgId)}</p>
+            </div>
+
+            <div class="fp-text-center fp-mb-4">
+                    <span class="fp-chip #{misReservasBean.getStatusClass(misReservasBean.selectedReservation)}"
+                          style="cursor:default;">
+                        #{misReservasBean.selectedReservation.status.label}
+                    </span>
+            </div>
+
+            <!-- ═══ EDITABLE: solo si es una reserva próxima ═══ -->
+            <h:panelGroup rendered="#{misReservasBean.selectedReservation.status.name() == 'UPCOMING'}" layout="block">
+
+                <div class="fp-form-group">
+                    <label class="fp-form-label">Fecha</label>
+                    <p:inputText value="#{misReservasBean.selectedReservation.date}" styleClass="fp-input"/>
+                </div>
+                <div class="fp-form-group">
+                    <label class="fp-form-label">Hora</label>
+                    <p:inputText value="#{misReservasBean.selectedReservation.hour}" styleClass="fp-input"/>
+                </div>
+                <div class="fp-form-group">
+                    <label class="fp-form-label">Duración (horas)</label>
+                    <p:inputText value="#{misReservasBean.selectedReservation.duration}" styleClass="fp-input"/>
+                </div>
+                <div class="fp-form-group">
+                    <label class="fp-form-label">Número de jugadores</label>
+                    <p:inputText value="#{misReservasBean.selectedReservation.playerCount}" styleClass="fp-input"/>
+                </div>
+                <div class="fp-form-group">
+                    <label class="fp-form-label">Nombre de contacto</label>
+                    <p:inputText value="#{misReservasBean.selectedReservation.contactName}" styleClass="fp-input"/>
+                </div>
+                <div class="fp-form-group">
+                    <label class="fp-form-label">Teléfono de contacto</label>
+                    <p:inputText value="#{misReservasBean.selectedReservation.contactPhone}" styleClass="fp-input"/>
+                </div>
+
+                <p:commandButton value="Guardar cambios" icon="pi pi-save"
+                                 styleClass="fp-btn fp-btn-primary fp-btn-full"
+                                 style="margin-top:.25rem;" action="#{misReservasBean.saveEditedReservation}"
+                                 process="editDialog" update="reservasPanel editDialog growl"
+                                 oncomplete="if(!args.validationFailed){PF('editReservaDialog').hide();}"/>
+
+                <div class="fp-flex fp-gap-2" style="margin-top:.6rem;">
+                    <p:commandButton value="Confirmar asistencia" icon="pi pi-check"
+                                     styleClass="fp-btn fp-btn-outline fp-btn-sm fp-w-full"
+                                     rendered="#{!misReservasBean.selectedReservation.confirmed}"
+                                     action="#{misReservasBean.confirmSelectedReservation}"
+                                     process="@this" update="reservasPanel editDialog growl"
+                                     oncomplete="PF('editReservaDialog').hide()"/>
+                    <p:commandButton value="Cancelar reserva" icon="pi pi-ban"
+                                     styleClass="fp-btn fp-btn-error fp-btn-sm fp-w-full"
+                                     action="#{misReservasBean.cancelSelectedReservation}"
+                                     process="@this" update="reservasPanel editDialog growl"
+                                     onclick="return confirm('¿Confirmas cancelar esta reserva?')"
+                                     oncomplete="PF('editReservaDialog').hide()"/>
+                </div>
+            </h:panelGroup>
+
+                <!-- ═══ SOLO LECTURA: completadas / canceladas ═══ -->
+                <h:panelGroup rendered="#{misReservasBean.selectedReservation.status.name() != 'UPCOMING'}" layout="block">
+                    <div class="fp-detail-row"><span>Fecha</span><span>#{misReservasBean.formatDate(misReservasBean.selectedReservation.date)}</span></div>
+                    <div class="fp-detail-row"><span>Hora</span><span>#{misReservasBean.selectedReservation.hour}</span></div>
+                    <div class="fp-detail-row"><span>Duración</span><span>#{misReservasBean.selectedReservation.duration}h</span></div>
+                    <div class="fp-detail-row"><span>Jugadores</span><span>#{misReservasBean.selectedReservation.playerCount}</span></div>
+                    <div class="fp-detail-row"><span>Contacto</span><span>#{misReservasBean.selectedReservation.contactName}</span></div>
+                    <div class="fp-detail-row"><span>Teléfono</span><span>#{misReservasBean.selectedReservation.contactPhone}</span></div>
+                    <div class="fp-detail-row"><span>Total</span><span>$#{misReservasBean.selectedReservation.totalPrice}</span></div>
+                </h:panelGroup>
+
+            </h:panelGroup>
+        </p:dialog>
+
+    </ui:define>
 </ui:composition>
