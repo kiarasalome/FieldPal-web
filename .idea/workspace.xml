@@ -4,13 +4,23 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="397752e2-5086-4bbb-ba6f-1586b885d986" name="Changes" comment="Cambios de ,la vista y creación de mis-reservas.xhtml separado de reserva.xhtml">
+    <list default="true" id="397752e2-5086-4bbb-ba6f-1586b885d986" name="Changes" comment="Corrección del archivo reserva.xhtml por el error Error 500: jakarta.servlet.ServletException">
+      <change afterPath="$PROJECT_DIR$/src/main/webapp/resources/images/FieldPal-Logo.jpeg" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/unl/edu/ec/fieldPal/controller/MisReservasBean.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/unl/edu/ec/fieldPal/controller/MisReservasBean.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/unl/edu/ec/fieldPal/service/ReservationService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/unl/edu/ec/fieldPal/service/ReservationService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/mis-reservas.xhtml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/mis-reservas.xhtml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/unl/edu/ec/fieldPal/domain/people/Company.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/unl/edu/ec/fieldPal/domain/people/CompanyType.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/unl/edu/ec/fieldPal/domain/people/IdentificationType.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/unl/edu/ec/fieldPal/domain/people/Organization.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/unl/edu/ec/fieldPal/domain/people/Person.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/unl/edu/ec/fieldPal/domain/security/ActionType.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/unl/edu/ec/fieldPal/domain/security/Permission.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/unl/edu/ec/fieldPal/domain/security/Role.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/unl/edu/ec/fieldPal/domain/security/User.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/unl/edu/ec/fieldPal/exception/AlreadyEntityException.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/unl/edu/ec/fieldPal/exception/CredentialInvalidException.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/templates/fragments/header.xhtml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/templates/fragments/header.xhtml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/images/jakartaee_logo.jpg" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/webapp/reserva.xhtml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/reserva.xhtml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/resources/css/fieldpal.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/resources/css/fieldpal.css" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -112,12 +122,21 @@
       <option name="project" value="LOCAL" />
       <updated>1784314413291</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="Corrección del archivo reserva.xhtml por el error Error 500: jakarta.servlet.ServletException">
+      <option name="closed" value="true" />
+      <created>1784317183355</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1784317183355</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Arreglos de los archivos horarios.xhtml y mis-reservas.xhtml" />
     <MESSAGE value="Cambios de ,la vista y creación de mis-reservas.xhtml separado de reserva.xhtml" />
-    <option name="LAST_COMMIT_MESSAGE" value="Cambios de ,la vista y creación de mis-reservas.xhtml separado de reserva.xhtml" />
+    <MESSAGE value="Corrección del archivo reserva.xhtml por el error Error 500: jakarta.servlet.ServletException" />
+    <option name="LAST_COMMIT_MESSAGE" value="Corrección del archivo reserva.xhtml por el error Error 500: jakarta.servlet.ServletException" />
   </component>
 </project>

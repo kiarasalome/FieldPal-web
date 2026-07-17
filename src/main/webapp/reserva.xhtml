@@ -44,27 +44,31 @@
         </div>
 
         <!-- ═══ SIN SESIÓN: no se puede reservar sin haber iniciado sesión ═══ -->
-        <h:panelGroup rendered="#{not authBean.authenticated}" layout="block" styleClass="fp-text-center" style="padding:4rem 1rem 6rem;">
-            <span class="material-symbols-outlined" style="font-size:4rem;color:var(--fp-text-muted);opacity:.25;">lock</span>
-            <h2 style="font-family:'DM Sans',sans-serif;font-weight:700;font-size:1.375rem;color:var(--fp-text);margin:1rem 0 .5rem;">Inicia sesión para reservar</h2>
-            <p style="color:var(--fp-text-secondary);margin-bottom:1.5rem;">Necesitas una cuenta para hacer una reserva.</p>
-            <h:link outcome="/login" styleClass="fp-btn fp-btn-primary">
-                <span class="material-symbols-outlined" style="font-size:1.125rem;">person</span> Iniciar Sesión
-            </h:link>
-        </h:panelGroup>
+        <div class="center">
+            <h:panelGroup rendered="#{not authBean.authenticated}" layout="block" styleClass="fp-text-center" style="padding:4rem 1rem 6rem;">
+                <span class="material-symbols-outlined" style="font-size:4rem;color:var(--fp-text-muted);opacity:.25;">lock</span>
+                <h2 style="font-family:'DM Sans',sans-serif;font-weight:700;font-size:1.375rem;color:var(--fp-text);margin:1rem 0 .5rem;">Inicia sesión para reservar</h2>
+                <p style="color:var(--fp-text-secondary);margin-bottom:1.5rem;">Necesitas una cuenta para hacer una reserva.</p>
+                <h:link outcome="/login" styleClass="fp-btn fp-btn-primary">
+                    <span class="material-symbols-outlined" style="font-size:1.125rem;">person</span> Iniciar Sesión
+                </h:link>
+            </h:panelGroup>
+        </div>
 
         <!-- ═══ SIN CANCHA SELECCIONADA ═══ -->
-        <h:panelGroup rendered="#{empty reservaBean.activeCourt}" layout="block" styleClass="fp-text-center"
-                      style="padding:4rem 1rem 6rem;">
+        <div class="center">
+            <h:panelGroup rendered="#{empty reservaBean.activeCourt} #{authBean.authenticated}" layout="block" styleClass="fp-text-center"
+                          style="padding:4rem 1rem 6rem;">
             <span class="material-symbols-outlined"
                   style="font-size:4rem;color:var(--fp-text-muted);opacity:.25;">sports_soccer</span>
-            <h2 style="font-family:'DM Sans',sans-serif;font-weight:700;font-size:1.375rem;color:var(--fp-text);margin:1rem 0 .5rem;">Selecciona una cancha primero</h2>
-            <p style="color:var(--fp-text-secondary);margin-bottom:1.5rem;">Elige una cancha para continuar con tu reserva.</p>
-            <h:link outcome="/horarios.xhtml" styleClass="fp-btn fp-btn-primary">
-                <span class="material-symbols-outlined" style="font-size:1.125rem;">event</span>
-                Ver Canchas y Horarios
-            </h:link>
-        </h:panelGroup>
+                <h2 style="font-family:'DM Sans',sans-serif;font-weight:700;font-size:1.375rem;color:var(--fp-text);margin:1rem 0 .5rem;">Selecciona una cancha primero</h2>
+                <p style="color:var(--fp-text-secondary);margin-bottom:1.5rem;">Elige una cancha para continuar con tu reserva.</p>
+                <h:link outcome="/horarios.xhtml" styleClass="fp-btn fp-btn-primary">
+                    <span class="material-symbols-outlined" style="font-size:1.125rem;">event</span>
+                    Ver Canchas y Horarios
+                </h:link>
+            </h:panelGroup>
+        </div>
 
         <!-- ═══ FLUJO DE RESERVA ═══ -->
         <h:panelGroup rendered="#{authBean.authenticated and not empty reservaBean.activeCourt}" layout="block">
