@@ -28,15 +28,15 @@
     <nav class="fp-glass-nav" id="fpNav">
         <div class="fp-nav-container">
 
-            <h:link outcome="/home" styleClass="fp-logo-link">
+            <h:link outcome="/homepage" styleClass="fp-logo-link">
                 <span class="fp-logo-icon">
-                    <h:graphicImage library="images" name="FieldPal-Logo.jpeg" styleClass="fp-logo-img"/>
+                    <span class="material-symbols-outlined fp-logo-symbol" style="font-variation-settings:'FILL' 1">sports_soccer</span>
                 </span>
                 <span class="fp-logo-text">FieldPal</span>
                 <h:panelGroup rendered="#{authBean.authenticated}">
-                <span class="fp-role-badge #{authBean.currentUser.role == 'ADMIN' ? 'fp-role-admin' : 'fp-role-player'}">
-                    #{authBean.currentUser.role == 'ADMIN' ? 'Admin' : 'Jugador'}
-                </span>
+                    <span class="fp-role-badge #{authBean.currentUser.role == 'ADMIN' ? 'fp-role-admin' : 'fp-role-player'}">
+                        #{authBean.currentUser.role == 'ADMIN' ? 'Admin' : 'Jugador'}
+                    </span>
                 </h:panelGroup>
             </h:link>
 
