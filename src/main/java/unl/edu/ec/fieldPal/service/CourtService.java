@@ -117,16 +117,6 @@ public class CourtService {
         courts.removeIf(c -> c.getId().equals(id));
     }
 
-    public List<TimeSlot> getSchedule(String courtId, String date) {
-        List<TimeSlot> slots = new ArrayList<>();
-        for (int h = 8; h <= 22; h++) {
-            String hour = String.format("%02d:00", h);
-            boolean available = random.nextDouble() > 0.35;
-            slots.add(new TimeSlot(hour, available, courtId, date));
-        }
-        return slots;
-    }
-
     public int getCourtCount() {
         return courts.size();
     }

@@ -5,14 +5,30 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="397752e2-5086-4bbb-ba6f-1586b885d986" name="Changes" comment="Cambios de ,la vista y creación de mis-reservas.xhtml separado de reserva.xhtml">
-      <change afterPath="$PROJECT_DIR$/.idea/webContexts.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/templates/fragments/profile-modal.xhtml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_15_07_2026_09_49_p_m___Changes_.xml" beforeDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/unl/edu/ec/fieldPal/service/ScheduleService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/unl/edu/ec/fieldPal/controller/HorariosBean.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/unl/edu/ec/fieldPal/controller/HorariosBean.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/unl/edu/ec/fieldPal/controller/ProfileBean.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/unl/edu/ec/fieldPal/controller/ProfileBean.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/templates/fragments/header.xhtml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/templates/fragments/header.xhtml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/templates/fragments/layout.xhtml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/templates/fragments/layout.xhtml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/profile-modal.xhtml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/unl/edu/ec/fieldPal/controller/ReservaBean.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/unl/edu/ec/fieldPal/controller/ReservaBean.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/unl/edu/ec/fieldPal/domain/people/Company.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/unl/edu/ec/fieldPal/domain/people/CompanyType.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/unl/edu/ec/fieldPal/domain/people/IdentificationType.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/unl/edu/ec/fieldPal/domain/people/Organization.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/unl/edu/ec/fieldPal/domain/people/Person.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/unl/edu/ec/fieldPal/domain/security/ActionType.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/unl/edu/ec/fieldPal/domain/security/Permission.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/unl/edu/ec/fieldPal/domain/security/Role.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/unl/edu/ec/fieldPal/domain/security/User.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/unl/edu/ec/fieldPal/exception/AlreadyEntityException.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/unl/edu/ec/fieldPal/exception/CredentialInvalidException.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/unl/edu/ec/fieldPal/exception/EncryptorException.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/unl/edu/ec/fieldPal/exception/EntityNotFoundException.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/unl/edu/ec/fieldPal/service/CourtService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/unl/edu/ec/fieldPal/service/CourtService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/unl/edu/ec/fieldPal/util/EncryptorManager.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/horarios.xhtml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/horarios.xhtml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/reserva.xhtml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/reserva.xhtml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/resources/css/fieldpal.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/resources/css/fieldpal.css" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -20,21 +36,40 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="EmbeddingIndexingInfo">
-    <option name="cachedIndexableFilesCount" value="76" />
+    <option name="cachedIndexableFilesCount" value="88" />
     <option name="fileBasedEmbeddingIndicesEnabled" value="true" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Class" />
+      </list>
+    </option>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
+  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
+  "lastFilter": {
+    "state": "OPEN",
+    "assignee": "kiarasalome"
+  }
+}]]></component>
+  <component name="GithubPullRequestsUISettings"><![CDATA[{
+  "selectedUrlAndAccountId": {
+    "url": "https://github.com/kiarasalome/FieldPal-web.git",
+    "accountId": "815967ce-fa19-403a-82b4-7bbaa743dc60"
+  }
+}]]></component>
   <component name="McpProjectServerCommands">
     <commands />
     <urls />
   </component>
   <component name="ProjectColorInfo"><![CDATA[{
-  "customColor": "",
-  "associatedIndex": 2
+  "associatedIndex": 7,
+  "fromUser": false
 }]]></component>
-  <component name="ProjectId" id="3GeEcUhqy5g6lF1xVKS1lnkaGz2" />
+  <component name="ProjectId" id="3GguBSQEv0w875Rb1n8JM7tvzm8" />
   <component name="ProjectLevelVcsManager">
     <ConfirmationsSetting value="1" id="Add" />
   </component>
@@ -68,11 +103,6 @@
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
-  <component name="RecentsManager">
-    <key name="MoveFile.RECENT_KEYS">
-      <recent name="D:\Información\Escritorio\Ciclo_2\intellidea\FieldPal-web\src\main\webapp\WEB-INF\templates\fragments" />
-    </key>
-  </component>
   <component name="RunManager">
     <configuration default="true" type="JetRunConfigurationType">
       <module name="jbrew-web" />
@@ -140,14 +170,6 @@
       <option name="presentableId" value="LOCAL-00002" />
       <option name="project" value="LOCAL" />
       <updated>1784314413291</updated>
-    </task>
-    <task active="true" id="Default" summary="Default task">
-      <changelist id="397752e2-5086-4bbb-ba6f-1586b885d986" name="Changes" comment="Cambios de ,la vista y creación de mis-reservas.xhtml separado de reserva.xhtml" />
-      <created>1784323719864</created>
-      <option name="number" value="Default" />
-      <option name="presentableId" value="Default" />
-      <updated>1784323719864</updated>
-      <workItem from="1784323728214" duration="14209000" />
     </task>
     <option name="localTasksCounter" value="3" />
     <servers />

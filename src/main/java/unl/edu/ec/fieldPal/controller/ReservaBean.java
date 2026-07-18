@@ -1,9 +1,11 @@
 package unl.edu.ec.fieldPal.controller;
 
 import jakarta.annotation.PostConstruct;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import unl.edu.ec.fieldPal.model.Court;
-import unl.edu.ec.fieldPal.model.Organization;
 import unl.edu.ec.fieldPal.model.Reservation;
+import unl.edu.ec.fieldPal.model.TimeSlot;
 import unl.edu.ec.fieldPal.model.enums.ReservationStatus;
 import unl.edu.ec.fieldPal.model.enums.Zone;
 import unl.edu.ec.fieldPal.service.CourtService;
@@ -14,8 +16,11 @@ import jakarta.faces.context.FacesContext;
 import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
+import unl.edu.ec.fieldPal.service.ScheduleService;
+
 import java.io.Serializable;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Managed Bean para la página de reserva.
@@ -37,6 +42,9 @@ public class ReservaBean implements Serializable {
     private ReservationService reservationService;
 
     @Inject
+    private ScheduleService scheduleService;
+
+    @Inject
     private AuthBean authBean;
 
     @PostConstruct
@@ -53,7 +61,9 @@ public class ReservaBean implements Serializable {
     private String selectedCourtId = "";
 
     // Datos de reserva
+    @NotNull( message = "Selecciona una fecha para reservar") @NotEmpty
     private String date = "";
+    @NotNull( message = "Selecciona una hora para reservar") @NotEmpty
     private String hour = "";
     private int duration = 1;
     private int playerCount = 5;
@@ -62,20 +72,6 @@ public class ReservaBean implements Serializable {
 
     // Estado
     private boolean submitted = false;
-
-    public List<Organization> getFilteredOrgs() {
-        if (selectedZone != null) {
-            return organizationService.getByZone(selectedZone);
-        }
-        return organizationService.getAll();
-    }
-
-    public List<Court> getFilteredCourts() {
-        if (selectedOrgId != null && !selectedOrgId.isEmpty()) {
-            return courtService.getByOrg(selectedOrgId);
-        }
-        return courtService.getAll();
-    }
 
     public Court getActiveCourt() {
         if (selectedCourtId != null && !selectedCourtId.isEmpty()) {
@@ -95,12 +91,19 @@ public class ReservaBean implements Serializable {
         return getTotalPrice() / players;
     }
 
-    public String[] getAvailableHours() {
-        String[] hours = new String[15];
-        for (int i = 0; i < 15; i++) {
-            hours[i] = String.format("%02d:00", i + 8);
+    public List<String> getAvailableHours() {
+        if (selectedCourtId == null || selectedCourtId.isEmpty()
+                || date == null || date.isEmpty()) {
+            return List.of();
         }
-        return hours;
+        return scheduleService.getSchedule(selectedCourtId, date).stream()
+                .filter(TimeSlot::isAvailable)
+                .map(TimeSlot::getHour)
+                .collect(Collectors.toList());
+    }
+
+    public void onDateOrCourtChange() {
+        this.hour = "";
     }
 
     public String doReserve() {
@@ -114,6 +117,12 @@ public class ReservaBean implements Serializable {
         }
 
         // Validaciones básicas
+        if (!getAvailableHours().contains(hour)) {
+            FacesContext.getCurrentInstance().addMessage(null,
+                    new FacesMessage(FacesMessage.SEVERITY_ERROR,
+                            "La hora seleccionada ya no está disponible.", ""));
+            return null;
+        }
         if (selectedCourtId == null || selectedCourtId.isEmpty()) {
             FacesContext.getCurrentInstance().addMessage(null,
                     new FacesMessage(FacesMessage.SEVERITY_ERROR, "Selecciona una cancha.", ""));

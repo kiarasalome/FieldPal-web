@@ -23,6 +23,7 @@
                 xmlns:h="jakarta.faces.html"
                 xmlns:f="jakarta.faces.core"
                 xmlns:ui="jakarta.faces.facelets"
+                xmlns:fn="jakarta.tags.functions"
                 xmlns:p="primefaces">
 
     <ui:define name="title">Consultar Horarios</ui:define>
@@ -64,19 +65,21 @@
             <h:panelGroup rendered="#{not empty horariosBean.filteredOrgs}">
 
                 <!-- ═══ SELECCIÓN DE ORGANIZACIÓN ═══ -->
-                <div class="fp-org-scroll">
+                <div class="fp-org-grid">
                     <ui:repeat value="#{horariosBean.filteredOrgs}" var="org">
-                        <p:commandLink styleClass="fp-org-card #{horariosBean.selectedOrgId == org.id ? 'active' : ''}"
+                        <p:commandLink styleClass="fp-card fp-court-card fp-org-select-card #{horariosBean.selectedOrgId == org.id ? 'fp-org-select-active' : ''}"
                                        action="#{horariosBean.selectOrganization(org.id)}"
                                        process="@this" update="@form">
-                            <div class="fp-org-card-top">
+                            <div class="fp-zone-card-header fp-zone-#{fn:toLowerCase(org.zone)}">
                                 <h4>#{org.name}</h4>
                                 <span class="fp-org-rating">
                                     <span class="material-symbols-outlined">star</span> #{org.rating}
                                 </span>
                             </div>
-                            <p><span class="material-symbols-outlined">#{org.zone.icon}</span> #{org.zone.label}</p>
-                            <p><span class="material-symbols-outlined">location_on</span> #{org.address}</p>
+                            <div class="fp-org-card-body">
+                                <p><span class="material-symbols-outlined">location_on</span> #{org.address}</p>
+                                <p><span class="material-symbols-outlined">stadium</span> #{org.courtCount} canchas</p>
+                            </div>
                         </p:commandLink>
                     </ui:repeat>
                 </div>

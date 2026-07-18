@@ -11,6 +11,8 @@ import jakarta.annotation.PostConstruct;
 import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
+import unl.edu.ec.fieldPal.service.ScheduleService;
+
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.List;
@@ -29,6 +31,9 @@ public class HorariosBean implements Serializable {
 
     @Inject
     private CourtService courtService;
+
+    @Inject
+    private ScheduleService scheduleService;
 
     // Filtros
     private Zone selectedZone;
@@ -72,7 +77,7 @@ public class HorariosBean implements Serializable {
 
     public List<TimeSlot> getActiveSchedule() {
         if (selectedCourtId == null || selectedCourtId.isEmpty()) return List.of();
-        return courtService.getSchedule(selectedCourtId, date);
+        return scheduleService.getSchedule(selectedCourtId, date);
     }
 
     public void filterByZone(Zone zone) {

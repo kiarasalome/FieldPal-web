@@ -9,8 +9,6 @@ import jakarta.inject.Named;
 import java.io.Serializable;
 import unl.edu.ec.fieldPal.model.User;
 import unl.edu.ec.fieldPal.service.UserService;
-import unl.edu.ec.fieldPal.util.EncryptorManager;
-import unl.edu.ec.fieldPal.exception.EncryptorException;
 
 @Named
 @ViewScoped

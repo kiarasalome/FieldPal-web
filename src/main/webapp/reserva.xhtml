@@ -44,31 +44,29 @@
         </div>
 
         <!-- ═══ SIN SESIÓN: no se puede reservar sin haber iniciado sesión ═══ -->
-        <div class="center">
-            <h:panelGroup rendered="#{not authBean.authenticated}" layout="block" styleClass="fp-text-center" style="padding:4rem 1rem 6rem;">
-                <span class="material-symbols-outlined" style="font-size:4rem;color:var(--fp-text-muted);opacity:.25;">lock</span>
-                <h2 style="font-family:'DM Sans',sans-serif;font-weight:700;font-size:1.375rem;color:var(--fp-text);margin:1rem 0 .5rem;">Inicia sesión para reservar</h2>
-                <p style="color:var(--fp-text-secondary);margin-bottom:1.5rem;">Necesitas una cuenta para hacer una reserva.</p>
-                <h:link outcome="/login" styleClass="fp-btn fp-btn-primary">
-                    <span class="material-symbols-outlined" style="font-size:1.125rem;">person</span> Iniciar Sesión
-                </h:link>
-            </h:panelGroup>
-        </div>
+        <h:panelGroup rendered="#{not authBean.authenticated}" layout="block" styleClass="fp-text-center"
+                      style="padding:4rem 1rem 6rem;">
+            <span class="material-symbols-outlined"
+                  style="font-size:4rem;color:var(--fp-text-muted);opacity:.25;">lock</span>
+            <h2 style="font-family:'DM Sans',sans-serif;font-weight:700;font-size:1.375rem;color:var(--fp-text);margin:1rem 0 .5rem;">Inicia sesión para reservar</h2>
+            <p style="color:var(--fp-text-secondary);margin-bottom:1.5rem;">Necesitas una cuenta para hacer una reserva.</p>
+            <h:link outcome="/login" styleClass="fp-btn fp-btn-primary">
+                <span class="material-symbols-outlined" style="font-size:1.125rem;">person</span> Iniciar Sesión
+            </h:link>
+        </h:panelGroup>
 
         <!-- ═══ SIN CANCHA SELECCIONADA ═══ -->
-        <div class="center">
-            <h:panelGroup rendered="#{empty reservaBean.activeCourt}" layout="block" styleClass="fp-text-center"
-                          style="padding:4rem 1rem 6rem;">
+        <h:panelGroup rendered="#{empty reservaBean.activeCourt}" layout="block" styleClass="fp-text-center"
+                      style="padding:4rem 1rem 6rem;">
             <span class="material-symbols-outlined"
                   style="font-size:4rem;color:var(--fp-text-muted);opacity:.25;">sports_soccer</span>
-                <h2 style="font-family:'DM Sans',sans-serif;font-weight:700;font-size:1.375rem;color:var(--fp-text);margin:1rem 0 .5rem;">Selecciona una cancha primero</h2>
-                <p style="color:var(--fp-text-secondary);margin-bottom:1.5rem;">Elige una cancha para continuar con tu reserva.</p>
-                <h:link outcome="/horarios.xhtml" styleClass="fp-btn fp-btn-primary">
-                    <span class="material-symbols-outlined" style="font-size:1.125rem;">event</span>
-                    Ver Canchas y Horarios
-                </h:link>
-            </h:panelGroup>
-        </div>
+            <h2 style="font-family:'DM Sans',sans-serif;font-weight:700;font-size:1.375rem;color:var(--fp-text);margin:1rem 0 .5rem;">Selecciona una cancha primero</h2>
+            <p style="color:var(--fp-text-secondary);margin-bottom:1.5rem;">Elige una cancha para continuar con tu reserva.</p>
+            <h:link outcome="/horarios.xhtml" styleClass="fp-btn fp-btn-primary">
+                <span class="material-symbols-outlined" style="font-size:1.125rem;">event</span>
+                Ver Canchas y Horarios
+            </h:link>
+        </h:panelGroup>
 
         <!-- ═══ FLUJO DE RESERVA ═══ -->
         <h:panelGroup rendered="#{authBean.authenticated and not empty reservaBean.activeCourt}" layout="block">
@@ -122,14 +120,11 @@
                         </div>
 
                         <div class="fp-slots-grid">
-                            <ui:repeat value="#{courtService.getSchedule(reservaBean.selectedCourtId, reservaBean.date)}" var="slot">
-                                <p:commandLink styleClass="fp-slot #{slot.available ? 'fp-slot-free' : 'fp-slot-busy'} #{reservaBean.hour == slot.hour ? 'fp-slot-selected' : ''}"
-                                               action="#{reservaBean.setHour(slot.hour)}"
-                                               disabled="#{!slot.available}"
-                                               process="@this" update="@form">
-                                    <span class="material-symbols-outlined">#{slot.available ? 'event_available' : 'event_busy'}</span>
-                                    <span>#{slot.hour}</span>
-                                </p:commandLink>
+                            <ui:repeat value="#{horariosBean.activeSchedule}" var="slot">
+                            <span class="fp-slot #{slot.available ? 'fp-slot-free' : 'fp-slot-busy'}">
+                                <span class="material-symbols-outlined">#{slot.available ? 'event_available' : 'event_busy'}</span>
+                                <span>#{slot.hour}</span>
+                            </span>
                             </ui:repeat>
                         </div>
                     </h:panelGroup>
@@ -146,12 +141,12 @@
                             <label class="fp-form-label">Fecha</label>
                             <h:inputText value="#{reservaBean.date}" styleClass="fp-input">
                                 <f:passThroughAttribute name="type" value="date"/>
-                                <p:ajax event="change" process="@this" update="scheduleWrap"/>
+                                <p:ajax event="change" process="@this" listener="#{reservaBean.onDateOrCourtChange}" update="scheduleWrap hourMenu"/>
                             </h:inputText>
                         </div>
                         <div class="fp-form-group" style="margin-bottom:0;">
                             <label class="fp-form-label">Hora</label>
-                            <p:selectOneMenu value="#{reservaBean.hour}" styleClass="fp-input" style="width:100%">
+                            <p:selectOneMenu id="hourMenu" value="#{reservaBean.hour}" styleClass="fp-input" style="width:100%">
                                 <f:selectItem itemLabel="Seleccionar hora" itemValue="" noSelectionOption="true"/>
                                 <f:selectItems value="#{reservaBean.availableHours}"/>
                                 <p:ajax process="@this" update="@this"/>
