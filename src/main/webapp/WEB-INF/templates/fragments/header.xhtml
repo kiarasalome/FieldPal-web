@@ -61,6 +61,16 @@
                         #{fn:toUpperCase(fn:substring(authBean.currentUser.name,0,1))}
                     </span>
                     <span class="fp-user-name">#{authBean.currentUser.name}</span>
+                    <!--Boton de update Profile -->
+                    <p:commandLink onclick="PF('profileModal').show()"
+                                   rendered="#{authBean.player}"
+                                   process="@this"
+                                   styleClass="fp-btn fp-btn-primary fp-btn-sm"
+                                   style="margin-left: 8px; padding: 4px 10px; font-size: 0.75rem; text-transform: none; gap: 4px;">
+                        <span class="material-symbols-outlined" style="font-size: 16px;">settings</span>
+                        Configurar perfil
+                    </p:commandLink>
+
                     <p:commandButton value="Salir"
                                      icon="pi pi-sign-out"
                                      styleClass="fp-btn fp-btn-outline fp-btn-sm"

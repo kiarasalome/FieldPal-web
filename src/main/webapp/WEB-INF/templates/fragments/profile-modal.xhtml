@@ -1,0 +1,63 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="jakarta.faces.html"
+                xmlns:f="jakarta.faces.core"
+                xmlns:ui="jakarta.faces.facelets"
+                xmlns:p="primefaces">
+
+    <p:dialog id="profileDialog" widgetVar="profileModal" modal="true"
+              header="Configuración de Perfil" resizable="false" styleClass="fp-modal">
+
+        <p:messages id="modalMsgs" showDetail="true" closable="true" />
+
+        <div class="fp-modal-form" style="display: flex; flex-direction: column; gap: 1rem; padding: 10px;">
+
+            <!-- NOMBRE: Solo letras -->
+            <div class="fp-form-group">
+                <label class="fp-form-label">Nombre Completo</label>
+                <p:inputText value="#{profileBean.editingUser.name}" styleClass="fp-input"
+                             validatorMessage="No cumple el formato solicitado">
+                    <f:validateRegex pattern="^[a-zA-ZáéíóúÁÉÍÓÚñÑ ]+$" />
+                </p:inputText>
+            </div>
+
+            <!-- TELÉFONO: Solo números -->
+            <div class="fp-form-group">
+                <label class="fp-form-label">Teléfono</label>
+                <p:inputText value="#{profileBean.editingUser.phone}" styleClass="fp-input"
+                             validatorMessage="No cumple el formato solicitado">
+                    <f:validateRegex pattern="^\d+$" />
+                </p:inputText>
+            </div>
+
+            <!-- CORREO: Formato email -->
+            <div class="fp-form-group">
+                <label class="fp-form-label">Correo Electrónico</label>
+                <p:inputText value="#{profileBean.editingUser.email}" styleClass="fp-input"
+                             validatorMessage="No cumple el formato solicitado">
+                    <f:validateRegex pattern="^[^@\s]+@[^@\s]+\.[^@\s]+$" />
+                </p:inputText>
+            </div>
+
+            <!-- CONTRASEÑA  -->
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                <div class="fp-form-group">
+                    <label class="fp-form-label">Nueva Contraseña</label>
+                    <p:password value="#{profileBean.newPassword}" styleClass="fp-input" toggleMask="true" />
+                </div>
+                <div class="fp-form-group">
+                    <label class="fp-form-label">Confirmar</label>
+                    <p:password value="#{profileBean.confirmPassword}" styleClass="fp-input" toggleMask="true" />
+                </div>
+            </div>
+
+            <div class="fp-flex fp-gap-2 fp-mt-4" style="margin-top: 15px;">
+                <p:commandButton value="Guardar Cambios" action="#{profileBean.doUpdateProfile}"
+                                 update="modalMsgs appForm" styleClass="fp-btn fp-btn-primary"
+                                 oncomplete="if (!args.validationFailed) PF('profileModal').hide()" />
+
+                <p:commandButton value="Cancelar" onclick="PF('profileModal').hide()"
+                                 type="button" styleClass="fp-btn fp-btn-outline" />
+            </div>
+        </div>
+    </p:dialog>
+</ui:composition>

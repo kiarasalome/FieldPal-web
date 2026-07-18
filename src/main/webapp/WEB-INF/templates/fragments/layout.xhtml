@@ -64,6 +64,11 @@
         <p:blockUI block="appForm" widgetVar="globalStatus" styleClass="fp-block-ui">
             <span class="material-symbols-outlined fp-spin">progress_activity</span>
         </p:blockUI>
+
+        <h:panelGroup rendered="#{authBean.authenticated}">
+            <ui:include src="/WEB-INF/templates/fragments/profile-modal.xhtml"/>
+        </h:panelGroup>
+        
     </h:form>
 
 </h:body>
