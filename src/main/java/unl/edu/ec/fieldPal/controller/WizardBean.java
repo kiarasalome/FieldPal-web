@@ -34,10 +34,17 @@ public class WizardBean implements Serializable {
     @Inject
     private CourtService courtService;
 
+    @Inject
+    private AuthBean authBean;
+
     // Modelos principales del flujo
     private Organization newOrganization;
     private List<Court> tempCourts;
     private Court currentCourt;
+
+    // true si el admin ya tenía un complejo guardado y estamos editándolo
+    // en vez de crear uno nuevo desde cero.
+    private boolean editMode = false;
 
     // Variables del Paso 4 (Políticas y Horarios)
     private List<ScheduleDay> scheduleDays;
@@ -46,11 +53,31 @@ public class WizardBean implements Serializable {
 
     @PostConstruct
     public void init() {
-        // Inicializar organización vacía
-        newOrganization = new Organization();
+        // ¿El admin ya configuró su complejo antes? (sin BD todavía: se guarda
+        // el id en la sesión vía AuthBean — ver saveAll() más abajo)
+        String existingOrgId = authBean.getOrganizationId();
+        if (existingOrgId != null) {
+            Organization existing = organizationService.findById(existingOrgId);
+            if (existing != null) {
+                newOrganization = existing;
+                editMode = true;
+                // Precargar las canchas que ya había registrado para este complejo
+                tempCourts = new ArrayList<>();
+                for (Court c : courtService.getAll()) {
+                    if (existingOrgId.equals(c.getOrgId())) {
+                        tempCourts.add(c);
+                    }
+                }
+            }
+        }
 
-        // Inicializar lista temporal de canchas
-        tempCourts = new ArrayList<>();
+        // Si no había nada que precargar, se parte de cero como antes
+        if (newOrganization == null) {
+            newOrganization = new Organization();
+        }
+        if (tempCourts == null) {
+            tempCourts = new ArrayList<>();
+        }
         prepareNewCourt();
 
         // Inicializar políticas por defecto
@@ -189,6 +216,10 @@ public class WizardBean implements Serializable {
             // 1. Guardar Organización
             organizationService.save(newOrganization);
 
+            // Anclar el complejo a la sesión del admin (sin BD todavía, así
+            // GestionBean y este mismo wizard saben que ya no está vacío).
+            authBean.setOrganizationId(newOrganization.getId());
+
             // 2. Asociar y guardar canchas
             for (Court court : tempCourts) {
                 court.setOrganizationId(newOrganization.getId());
@@ -197,11 +228,15 @@ public class WizardBean implements Serializable {
 
             FacesContext.getCurrentInstance().addMessage(null,
                     new FacesMessage(FacesMessage.SEVERITY_INFO,
-                            "¡Excelente!", "El complejo '" + newOrganization.getName() + "' ha sido publicado exitosamente."));
+                            "¡Excelente!", editMode
+                            ? "Los cambios de '" + newOrganization.getName() + "' se guardaron exitosamente."
+                            : "El complejo '" + newOrganization.getName() + "' ha sido publicado exitosamente."));
 
             FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true);
 
-            return "/homepage.xhtml?faces-redirect=true";
+            // Vuelve al panel de administración para ver el saludo y el dashboard actualizados.
+            // Ajusta la ruta si gestion.xhtml no vive en /admin/.
+            return "/admin/gestion.xhtml?faces-redirect=true";
 
         } catch (Exception e) {
             showError("Error de Persistencia", "No se pudo guardar la información: " + e.getMessage());
@@ -216,6 +251,8 @@ public class WizardBean implements Serializable {
 
     public Zone[] getZones() { return Zone.values(); }
     public CourtType[] getCourtTypes() { return CourtType.values(); }
+
+    public boolean isEditMode() { return editMode; }
 
     // === Getters y Setters ===
 

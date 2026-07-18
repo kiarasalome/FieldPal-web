@@ -219,6 +219,13 @@ public class GestionBean implements Serializable {
         return o != null ? o.getZone().getLabel() : "—";
     }
 
+    // === Organización del admin logueado (para el saludo del panel) ===
+    public Organization getMyOrganization() {
+        String orgId = authBean.getOrganizationId();
+        if (orgId == null) return null;
+        return organizationService.findById(orgId);
+    }
+
     // === Limpiar formularios ===
     private void clearOrgForm() {
         newOrgName = "";

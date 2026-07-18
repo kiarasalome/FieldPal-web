@@ -16,7 +16,8 @@
             <!-- ENCABEZADO: Sincronizado con las variables CSS de FieldPal -->
             <div style="text-align: center; margin-bottom: 40px;">
                 <h1 style="font-family: 'DM Sans', sans-serif; font-weight: 700; font-size: 2.5rem; color: var(--fp-primary-text); margin-bottom: 10px;">
-                    ⚽ Une tu complejo a FieldPal
+                    <h:outputText value="⚽ Edita tu complejo en FieldPal" rendered="#{wizardBean.editMode}"/>
+                    <h:outputText value="⚽ Une tu complejo a FieldPal" rendered="#{not wizardBean.editMode}"/>
                 </h1>
                 <p style="font-family: 'DM Sans', sans-serif; font-size: 1.1rem; color: var(--fp-text-secondary);">
                     Configura tu establecimiento, registra tus canchas y define tus políticas de reserva.
@@ -39,6 +40,7 @@
                                              validatorMessage="La identificación debe constar exactamente de 13 dígitos numéricos."
                                              placeholder="Ej. 1104567890001"
                                              styleClass="fp-input"
+                                             disabled="#{wizardBean.editMode}"
                                              maxlength="13">
                                     <p:keyFilter regEx="/[\d]/" />
                                     <f:validateRegex pattern="^\d{13}$" />
@@ -263,7 +265,7 @@
                                 Al finalizar, tu complejo deportivo, canchas y políticas de reserva se guardarán en el sistema.
                             </p>
 
-                            <p:commandButton value="Publicar mi Complejo Deportivo"
+                            <p:commandButton value="#{wizardBean.editMode ? 'Guardar Cambios' : 'Publicar mi Complejo Deportivo'}"
                                              action="#{wizardBean.saveAll()}"
                                              process="@form"
                                              styleClass="fp-btn fp-btn-lg fp-btn-primary"

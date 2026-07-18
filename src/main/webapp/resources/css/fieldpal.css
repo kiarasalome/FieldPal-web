@@ -13,8 +13,8 @@
     --fp-primary-light: #2A7A4E;
     --fp-primary-dark: #0F3D25;
     --fp-primary-text: #1B5E3B;
-    --fp-accent: #D4C5A0;
-    --fp-accent-hover: #C4B590;
+    --fp-accent: #ffffff;
+    --fp-accent-hover: #ffffff;
     --fp-accent-text: #1B5E3B;
     --fp-text: #111827;
     --fp-text-secondary: #90969f;
@@ -39,8 +39,8 @@ body:has(#fpDarkToggle:checked) {
     --fp-primary-light: #c8da8a;
     --fp-primary-dark: #96b04f;
     --fp-primary-text: #b7cd71;
-    --fp-accent: #D4C5A0;
-    --fp-accent-hover: #C4B590;
+    --fp-accent: #0a0a0a;
+    --fp-accent-hover: #0a0a0a;
     --fp-accent-text: #0A0A0A;
     --fp-text: #F3F4F6;
     --fp-text-secondary: #9CA3AF;
@@ -515,6 +515,26 @@ body:has(#fpDarkToggle:checked) .fp-status-upcoming { background: rgba(183, 205,
 }
 body:has(#fpDarkToggle:checked) .fp-admin-tab.active { color: #0A0A0A; }
 .fp-admin-tab .material-symbols-outlined { font-size: 1.125rem; }
+
+/* ═══ GRID SYSTEM (paneles de administración: gestion.xhtml) ═══ */
+.fp-grid { display: grid; gap: 1.25rem; }
+.fp-grid-2 { grid-template-columns: repeat(2, 1fr); }
+.fp-grid-3 { grid-template-columns: repeat(3, 1fr); }
+.fp-grid-4 { grid-template-columns: repeat(4, 1fr); }
+@media (max-width: 900px) {
+    .fp-grid-3, .fp-grid-4 { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 640px) {
+    .fp-grid-2, .fp-grid-3, .fp-grid-4 { grid-template-columns: 1fr; }
+}
+
+/* ═══ CABECERA DE PANEL CON ACCIÓN A LA DERECHA (Panel de Administración) ═══ */
+.fp-page-header-row {
+    display: flex; align-items: center; justify-content: space-between;
+    flex-wrap: wrap; gap: 1rem; margin-bottom: .5rem;
+}
+.fp-page-header-row > .fp-btn { flex-shrink: 0; }
+.fp-page-header-row .fp-page-header-title { margin-bottom: .375rem; }
 
 /* Court card with image */
 .fp-court-card {
