@@ -91,9 +91,5 @@ public class Reservation implements Serializable {
 
     public String getContactPhone() { return contactPhone; }
     public void setContactPhone(String contactPhone) { this.contactPhone = contactPhone; }
-
-    public double getPricePerPlayer() {
-        return playerCount > 0 ? totalPrice / playerCount : totalPrice;
-    }
 }
 

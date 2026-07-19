@@ -65,11 +65,6 @@ public class HorariosBean implements Serializable {
         return courtService.getByOrg(selectedOrgId);
     }
 
-    public Organization getActiveOrg() {
-        if (selectedOrgId == null || selectedOrgId.isEmpty()) return null;
-        return organizationService.findById(selectedOrgId);
-    }
-
     public Court getActiveCourt() {
         if (selectedCourtId == null || selectedCourtId.isEmpty()) return null;
         return courtService.findById(selectedCourtId);

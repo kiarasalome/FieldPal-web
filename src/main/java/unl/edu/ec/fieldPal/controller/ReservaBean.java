@@ -188,8 +188,5 @@ public class ReservaBean implements Serializable {
 
     public String getContactPhone() { return contactPhone; }
     public void setContactPhone(String contactPhone) { this.contactPhone = contactPhone; }
-
-    public boolean isSubmitted() { return submitted; }
-    public void setSubmitted(boolean submitted) { this.submitted = submitted; }
 }
 

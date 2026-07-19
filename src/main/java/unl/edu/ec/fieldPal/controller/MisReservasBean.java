@@ -73,11 +73,6 @@ public class MisReservasBean implements Serializable {
         return org != null ? org.getName() : "—";
     }
 
-    public String getCourtTypeName(String courtId) {
-        Court court = courtService.findById(courtId);
-        return court != null ? court.getType().getLabel() : "—";
-    }
-
     /** Ícono Material Symbols asociado al tipo de cancha (para la tabla/modal). */
     public String getCourtIcon(String courtId) {
         Court court = courtService.findById(courtId);

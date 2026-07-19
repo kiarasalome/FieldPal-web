@@ -89,7 +89,4 @@ public class ReservationService {
                 .sum();
     }
 
-    public int getReservationCount() {
-        return reservations.size();
-    }
 }
