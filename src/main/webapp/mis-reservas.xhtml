@@ -35,7 +35,7 @@
                     <div class="fp-input-icon-wrapper" style="flex:1;min-width:220px;">
                         <span class="material-symbols-outlined fp-input-icon">search</span>
                         <p:inputText value="#{misReservasBean.search}" styleClass="fp-input fp-input-icon-field"
-                                     placeholder="Buscar por cancha, sede o código...">
+                                     placeholder="          Buscar por cancha, sede o código...">
                             <p:ajax event="keyup" update="reservasPanel" process="@this" delay="300"/>
                         </p:inputText>
                     </div>
@@ -53,6 +53,9 @@
                                          process="@this" update="reservasPanel"
                                          styleClass="fp-chip #{misReservasBean.activeFilter == 'cancelled' ? 'fp-chip-active' : ''}"/>
                     </div>
+                </div>
+                <div class="pi-align-center">
+                    <p class="fp-section-subtitle" style="margin:0; font-style: italic;">Recuerda confirmar tus futuras reservas </p>
                 </div>
             </div>
 

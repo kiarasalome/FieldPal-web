@@ -45,7 +45,7 @@
 
         <!-- ═══ SIN SESIÓN: no se puede reservar sin haber iniciado sesión ═══ -->
         <h:panelGroup rendered="#{not authBean.authenticated}" layout="block" styleClass="fp-text-center"
-                      style="padding:4rem 1rem 6rem;">
+                      style="min-height:60vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:2rem 1rem;">
             <span class="material-symbols-outlined"
                   style="font-size:4rem;color:var(--fp-text-muted);opacity:.25;">lock</span>
             <h2 style="font-family:'DM Sans',sans-serif;font-weight:700;font-size:1.375rem;color:var(--fp-text);margin:1rem 0 .5rem;">Inicia sesión para reservar</h2>
@@ -57,7 +57,7 @@
 
         <!-- ═══ SIN CANCHA SELECCIONADA ═══ -->
         <h:panelGroup rendered="#{empty reservaBean.activeCourt}" layout="block" styleClass="fp-text-center"
-                      style="padding:4rem 1rem 6rem;">
+                      style="min-height:60vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:2rem 1rem;">
             <span class="material-symbols-outlined"
                   style="font-size:4rem;color:var(--fp-text-muted);opacity:.25;">sports_soccer</span>
             <h2 style="font-family:'DM Sans',sans-serif;font-weight:700;font-size:1.375rem;color:var(--fp-text);margin:1rem 0 .5rem;">Selecciona una cancha primero</h2>
@@ -120,7 +120,7 @@
                         </div>
 
                         <div class="fp-slots-grid">
-                            <ui:repeat value="#{horariosBean.activeSchedule}" var="slot">
+                            <ui:repeat value="#{reservaBean.scheduleSlots}" var="slot">
                             <span class="fp-slot #{slot.available ? 'fp-slot-free' : 'fp-slot-busy'}">
                                 <span class="material-symbols-outlined">#{slot.available ? 'event_available' : 'event_busy'}</span>
                                 <span>#{slot.hour}</span>
@@ -134,19 +134,21 @@
                 <div class="fp-card fp-card-padded">
                     <span class="fp-eyebrow">Detalles de Reserva</span>
 
-                    <p:messages id="reservaMessages" showDetail="true" closable="false" globalOnly="true" styleClass="fp-form-error"/>
+                    <p:messages id="reservaMessages" showDetail="true" closable="false" styleClass="fp-form-error"/>
 
                     <div class="fp-grid fp-grid-3" style="margin-bottom:1rem;">
                         <div class="fp-form-group" style="margin-bottom:0;">
                             <label class="fp-form-label">Fecha</label>
-                            <h:inputText value="#{reservaBean.date}" styleClass="fp-input">
+                            <h:inputText id="dateInput" value="#{reservaBean.date}" styleClass="fp-input"
+                                         required="true" requiredMessage="Selecciona una fecha para reservar">
                                 <f:passThroughAttribute name="type" value="date"/>
                                 <p:ajax event="change" process="@this" listener="#{reservaBean.onDateOrCourtChange}" update="scheduleWrap hourMenu"/>
                             </h:inputText>
                         </div>
                         <div class="fp-form-group" style="margin-bottom:0;">
                             <label class="fp-form-label">Hora</label>
-                            <p:selectOneMenu id="hourMenu" value="#{reservaBean.hour}" styleClass="fp-input" style="width:100%">
+                            <p:selectOneMenu id="hourMenu" value="#{reservaBean.hour}" styleClass="fp-input" style="width:100%"
+                                             required="true" requiredMessage="Selecciona una hora para reservar">
                                 <f:selectItem itemLabel="Seleccionar hora" itemValue="" noSelectionOption="true"/>
                                 <f:selectItems value="#{reservaBean.availableHours}"/>
                                 <p:ajax process="@this" update="@this"/>
@@ -154,7 +156,7 @@
                         </div>
                         <div class="fp-form-group" style="margin-bottom:0;">
                             <label class="fp-form-label">Duración</label>
-                            <p:selectOneMenu value="#{reservaBean.duration}" styleClass="fp-input" style="width:100%">
+                            <p:selectOneMenu id="durationMenu" value="#{reservaBean.duration}" styleClass="fp-input" style="width:100%">
                                 <f:selectItem itemValue="1" itemLabel="1 hora"/>
                                 <f:selectItem itemValue="2" itemLabel="2 horas"/>
                                 <f:selectItem itemValue="3" itemLabel="3 horas"/>
@@ -167,7 +169,7 @@
                         <label class="fp-form-label">Número de Jugadores</label>
                         <span class="fp-input-icon-wrapper">
                             <span class="material-symbols-outlined fp-input-icon">groups</span>
-                            <h:inputText value="#{reservaBean.playerCount}" styleClass="fp-input fp-input-icon-field">
+                            <h:inputText id="playerCountInput" value="#{reservaBean.playerCount}" styleClass="fp-input fp-input-icon-field">
                                 <f:passThroughAttribute name="type" value="number"/>
                                 <f:passThroughAttribute name="min" value="1"/>
                                 <p:ajax event="change" process="@this" update="priceSummary"/>
@@ -180,14 +182,14 @@
                             <label class="fp-form-label">Nombre de Contacto</label>
                             <span class="fp-input-icon-wrapper">
                                 <span class="material-symbols-outlined fp-input-icon">person</span>
-                                <h:inputText value="#{reservaBean.contactName}" styleClass="fp-input fp-input-icon-field"/>
+                                <h:inputText id="contactNameInput" value="#{reservaBean.contactName}" styleClass="fp-input fp-input-icon-field"/>
                             </span>
                         </div>
                         <div class="fp-form-group">
                             <label class="fp-form-label">Teléfono</label>
                             <span class="fp-input-icon-wrapper">
                                 <span class="material-symbols-outlined fp-input-icon">call</span>
-                                <h:inputText value="#{reservaBean.contactPhone}" styleClass="fp-input fp-input-icon-field"/>
+                                <h:inputText id="contactPhoneInput" value="#{reservaBean.contactPhone}" styleClass="fp-input fp-input-icon-field"/>
                             </span>
                         </div>
                     </div>
@@ -210,7 +212,8 @@
                     <div class="fp-flex fp-gap-3">
                         <p:commandButton value="Confirmar Reserva" icon="pi pi-calendar-plus"
                                          action="#{reservaBean.doReserve}"
-                                         process="@form" update="@form growl"
+                                         process="@this dateInput hourMenu durationMenu playerCountInput contactNameInput contactPhoneInput"
+                                         update="@form growl"
                                          styleClass="fp-btn fp-btn-primary" style="flex:1"/>
                         <h:link outcome="/horarios.xhtml" styleClass="fp-btn fp-btn-outline">Cancelar</h:link>
                     </div>

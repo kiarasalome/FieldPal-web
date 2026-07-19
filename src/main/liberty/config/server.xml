@@ -1,11 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <server description="defaultServer">
+    <!--The Liberty Maven Plugin has generated Liberty features necessary for your application in configDropins/overrides/generated-features.xml-->
     <featureManager>
         <feature>webProfile-10.0</feature>
     </featureManager>
     <basicRegistry id="defaultBasicRegistry" realm="BasicRealm">
-        <user name="username" password="password" />
+        <user name="username" password="password"/>
     </basicRegistry>
-    <keyStore id="defaultKeyStore" password="password" />
-    <httpEndpoint id="defaultHttpEndpoint" host="*" httpPort="9082" httpsPort="9444" />
-    <webApplication location="fieldPal.war" contextRoot="/"/>
+    <keyStore id="defaultKeyStore" password="password"/>
+    <httpEndpoint host="*" httpPort="9082" httpsPort="9444" id="defaultHttpEndpoint"/>
+    <webApplication contextRoot="/" location="fieldPal.war"/>
 </server>

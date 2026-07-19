@@ -51,4 +51,8 @@ public class ScheduleService {
         }
         return slots;
     }
+
+    public void reserve(String courtId, String date, String hour) {
+        schedule.add(new TimeSlot(hour, false, courtId, date));
+    }
 }

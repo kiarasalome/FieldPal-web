@@ -33,9 +33,6 @@ public class ReservaBean implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Inject
-    private OrganizationService organizationService;
-
-    @Inject
     private CourtService courtService;
 
     @Inject
@@ -56,14 +53,10 @@ public class ReservaBean implements Serializable {
     }
 
     // Filtros
-    private Zone selectedZone;
-    private String selectedOrgId = "";
     private String selectedCourtId = "";
 
     // Datos de reserva
-    @NotNull( message = "Selecciona una fecha para reservar") @NotEmpty
     private String date = "";
-    @NotNull( message = "Selecciona una hora para reservar") @NotEmpty
     private String hour = "";
     private int duration = 1;
     private int playerCount = 5;
@@ -100,6 +93,14 @@ public class ReservaBean implements Serializable {
                 .filter(TimeSlot::isAvailable)
                 .map(TimeSlot::getHour)
                 .collect(Collectors.toList());
+    }
+
+    public List<TimeSlot> getScheduleSlots() {
+        if (selectedCourtId == null || selectedCourtId.isEmpty()
+                || date == null || date.isEmpty()) {
+            return List.of();
+        }
+        return scheduleService.getSchedule(selectedCourtId, date);
     }
 
     public void onDateOrCourtChange() {
@@ -155,6 +156,7 @@ public class ReservaBean implements Serializable {
         res.setContactPhone(contactPhone);
 
         reservationService.addReservation(res);
+        scheduleService.reserve(selectedCourtId, date, hour);
         submitted = true;
 
         FacesContext.getCurrentInstance().addMessage(null,
@@ -166,12 +168,6 @@ public class ReservaBean implements Serializable {
     }
 
     // Getters y Setters
-    public Zone getSelectedZone() { return selectedZone; }
-    public void setSelectedZone(Zone selectedZone) { this.selectedZone = selectedZone; }
-
-    public String getSelectedOrgId() { return selectedOrgId; }
-    public void setSelectedOrgId(String selectedOrgId) { this.selectedOrgId = selectedOrgId; }
-
     public String getSelectedCourtId() { return selectedCourtId; }
     public void setSelectedCourtId(String selectedCourtId) { this.selectedCourtId = selectedCourtId; }
 
