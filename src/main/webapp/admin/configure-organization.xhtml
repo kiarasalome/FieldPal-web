@@ -11,8 +11,6 @@
     <ui:define name="content">
         <div style="max-width: 950px; margin: 40px auto; padding: 0 15px;">
 
-            <!-- SE ELIMINÓ EL <p:growl> DE AQUÍ YA QUE TU PLANTILLA BASE LAYOUT.XHTML YA LO TIENE -->
-
             <!-- ENCABEZADO: Sincronizado con las variables CSS de FieldPal -->
             <div style="text-align: center; margin-bottom: 40px;">
                 <h1 style="font-family: 'DM Sans', sans-serif; font-weight: 700; font-size: 2.5rem; color: var(--fp-primary-text); margin-bottom: 10px;">
@@ -25,7 +23,7 @@
             </div>
 
             <!-- El componente Wizard usa el flowListener para validar en Java antes de pasar de pestaña -->
-            <p:wizard backLabel="Atrás" nextLabel="Siguiente" styleClass="fp-wizard-custom"
+            <p:wizard id="complexWizard" backLabel="Atrás" nextLabel="Siguiente" styleClass="fp-wizard-custom"
                       flowListener="#{wizardBean.onFlowProcess}">
 
                 <!-- PASO 1: DATOS DE LA ORGANIZACIÓN -->
@@ -267,7 +265,7 @@
 
                             <p:commandButton value="#{wizardBean.editMode ? 'Guardar Cambios' : 'Publicar mi Complejo Deportivo'}"
                                              action="#{wizardBean.saveAll()}"
-                                             process="@form"
+                                             process="@this complexWizard"
                                              styleClass="fp-btn fp-btn-lg fp-btn-primary"
                                              style="width: auto;" />
                         </div>

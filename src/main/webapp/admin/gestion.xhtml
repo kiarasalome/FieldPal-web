@@ -33,9 +33,17 @@
                 <div>
                     <div class="fp-page-header-title">
                         <span class="material-symbols-outlined">admin_panel_settings</span>
-                        <h1>Panel de Administración</h1>
+                        <h1>
+                            <!-- Si el admin ya registró su complejo, se le saluda por nombre.
+                                 Requiere gestionBean.getMyOrganization() (nullable) -->
+                            <h:outputText value="Hola, #{gestionBean.myOrganization.name} 👋" rendered="#{gestionBean.myOrganization != null}"/>
+                            <h:outputText value="Panel de Administración" rendered="#{gestionBean.myOrganization == null}"/>
+                        </h1>
                     </div>
-                    <p>Controla las reservas de los clientes y visualiza las métricas de tu negocio.</p>
+                    <p>
+                        <h:outputText value="Controla las reservas de tus clientes y visualiza las métricas de tu negocio." rendered="#{gestionBean.myOrganization != null}"/>
+                        <h:outputText value="Configura tu complejo para empezar a recibir reservas de tus clientes." rendered="#{gestionBean.myOrganization == null}"/>
+                    </p>
                 </div>
 
                 <!-- Acceso directo al wizard propio (configure-organization.xhtml).
@@ -43,7 +51,8 @@
                 <h:link outcome="configure-organization" styleClass="fp-btn fp-btn-primary"
                         rendered="#{authBean.authenticated and authBean.admin}">
                     <span class="material-symbols-outlined">settings</span>
-                    Configurar Complejo y Canchas
+                    <h:outputText value="Configurar Complejo y Canchas" rendered="#{gestionBean.myOrganization == null}"/>
+                    <h:outputText value="Editar Complejo y Canchas" rendered="#{gestionBean.myOrganization != null}"/>
                 </h:link>
             </div>
         </div>
@@ -104,7 +113,7 @@
                         Canchas registradas en la plataforma. Para añadir o quitar canchas usa "Configurar Complejo y Canchas".
                     </p>
 
-                    <h:panelGroup rendered="#{empty gestionBean.allCourts}" layout="block" class="fp-card fp-card-padded fp-text-center" style="color:var(--fp-text-muted);">
+                    <h:panelGroup rendered="#{empty gestionBean.allCourts}" layout="block" styleClass="fp-card fp-card-padded fp-text-center" style="color:var(--fp-text-muted);">
                         Todavía no hay canchas registradas.
                     </h:panelGroup>
 
