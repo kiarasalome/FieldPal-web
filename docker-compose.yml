@@ -1,0 +1,52 @@
+services:
+  # Base de datos PostgreSQL
+  pg-db:
+    image: postgres:${POSTGRES_VERSION}
+    restart: unless-stopped
+    container_name: pg-db-container
+    environment:
+      POSTGRES_DB: ${BD_NAME}
+      POSTGRES_USER: ${BD_USER}
+      POSTGRES_PASSWORD: ${BD_PASSWORD}
+    ports:
+      - ${DB_PGSQL_PORT_PUBLIC}:5432
+    volumes:
+      # VOLUMEN GESTIONADO POR DOCKER
+      - pg-data:/var/lib/postgresql/data
+      # Para ejecutar un script SQL al iniciar (crear tablas), descomenta esto:
+      # - ./init_db/init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+            - pg-network
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -d ${POSTGRES_DB} -U ${POSTGRES_USER}" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+  # Interfaz gráfica para ver la BD
+  pgadmin4:
+    container_name: pgadmin4-container
+    image: dpage/pgadmin4
+    restart: unless-stopped
+    environment:
+      PGADMIN_DEFAULT_EMAIL: "adminBD@postgres.org"
+      PGADMIN_DEFAULT_PASSWORD: "admin123"
+    ports:
+      - 81:80
+    depends_on:
+      - pg-db
+    networks:
+      - pg-network
+
+networks:
+  pg-network:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.21.0.0/24
+
+volumes:
+  pg-data:
+    name: pg-data-local
