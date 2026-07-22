@@ -5,8 +5,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="397752e2-5086-4bbb-ba6f-1586b885d986" name="Changes" comment="Implementacion de ScheduleService para datos quemados de horarios. Eliminación de exceptions no usadas y arreglos en la vista de horarios.xhtml">
+<<<<<<< HEAD
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/docker-compose.yml" beforeDir="false" afterPath="$PROJECT_DIR$/docker-compose-dev-pg.yml" afterDir="false" />
+=======
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+>>>>>>> 11b5e6d3a117146dbef4b96dbe9c9cbf0bba8fff
       <change beforePath="$PROJECT_DIR$/docker-env" beforeDir="false" afterPath="$PROJECT_DIR$/docker-env" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -175,6 +179,17 @@
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Arreglos de los archivos horarios.xhtml y mis-reservas.xhtml" />
