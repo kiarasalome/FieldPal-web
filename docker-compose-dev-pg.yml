@@ -1,22 +1,20 @@
 services:
-  # Base de datos PostgreSQL
-  pg-db:
+  # Base de datos PostgreSQL para FieldPal
+  fieldpal-pg-db:
     image: postgres:${POSTGRES_VERSION}
     restart: unless-stopped
-    container_name: pg-db-container
+    container_name: fieldpal-pg-db-container
     environment:
       POSTGRES_DB: ${BD_NAME}
       POSTGRES_USER: ${BD_USER}
       POSTGRES_PASSWORD: ${BD_PASSWORD}
     ports:
-      - ${DB_PGSQL_PORT_PUBLIC}:5434
+      - ${DB_PGSQL_PORT_PUBLIC}:5432  # ¡CORREGIDO! El interno SIEMPRE es 5432
     volumes:
-      # VOLUMEN GESTIONADO POR DOCKER
-      - pg-data:/var/lib/postgresql/data
-      # Para ejecutar un script SQL al iniciar (crear tablas), descomenta esto:
+      - fieldpal-pg-data:/var/lib/postgresql/data
       # - ./init_db/init.sql:/docker-entrypoint-initdb.d/init.sql
     networks:
-            - pg-network
+      - fieldpal-network
     healthcheck:
       test: [ "CMD-SHELL", "pg_isready -d ${BD_NAME} -U ${BD_USER}" ]
       interval: 10s
@@ -24,7 +22,7 @@ services:
       retries: 5
       start_period: 30s
 
-  # Interfaz gráfica para ver la BD
+  # Interfaz gráfica pgAdmin4
   pgadmin4:
     container_name: pgadmin4-container
     image: dpage/pgadmin4
@@ -35,12 +33,12 @@ services:
     ports:
       - 82:80
     depends_on:
-      - pg-db
+      - fieldpal-pg-db  # Nombre actualizado
     networks:
-      - pg-network
+      - fieldpal-network
 
 networks:
-  pg-network:
+  fieldpal-network:
     driver: bridge
     ipam:
       driver: default
@@ -48,8 +46,8 @@ networks:
         - subnet: 172.22.0.0/24
 
 volumes:
-  pg-data:
-    name: pg-data-local
+  fieldpal-pg-data:
+    name: fieldpal-pg-data-local
     driver: local
     driver_opts:
       type: none

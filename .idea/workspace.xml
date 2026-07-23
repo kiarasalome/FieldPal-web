@@ -6,7 +6,7 @@
   <component name="ChangeListManager">
     <list default="true" id="397752e2-5086-4bbb-ba6f-1586b885d986" name="Changes" comment="Implementacion de ScheduleService para datos quemados de horarios. Eliminación de exceptions no usadas y arreglos en la vista de horarios.xhtml">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docker-env" beforeDir="false" afterPath="$PROJECT_DIR$/docker-env" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docker-compose-dev-pg.yml" beforeDir="false" afterPath="$PROJECT_DIR$/docker-compose-dev-pg.yml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -83,17 +83,6 @@
   }
 }</component>
   <component name="RunManager">
-    <configuration default="true" type="JetRunConfigurationType">
-      <module name="jbrew-web" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration default="true" type="KotlinStandaloneScriptRunConfigurationType">
-      <module name="jbrew-web" />
-      <option name="filePath" />
-      <method v="2" />
-    </configuration>
     <configuration default="true" type="PythonConfigurationType" factoryName="Python">
       <module name="jbrew-web" />
       <option name="ENV_FILES" value="" />
@@ -130,6 +119,17 @@
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <option name="DEBUG_JUST_MY_CODE" value="false" />
       <option name="RUN_TOOL" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration default="true" type="JetRunConfigurationType">
+      <module name="jbrew-web" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="KotlinStandaloneScriptRunConfigurationType">
+      <module name="jbrew-web" />
+      <option name="filePath" />
       <method v="2" />
     </configuration>
   </component>
