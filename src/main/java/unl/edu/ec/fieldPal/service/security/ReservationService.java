@@ -1,4 +1,4 @@
-package unl.edu.ec.fieldPal.service;
+package unl.edu.ec.fieldPal.service.security;
 
 
 import unl.edu.ec.fieldPal.model.Reservation;
@@ -16,19 +16,7 @@ public class ReservationService {
     private final List<Reservation> reservations = new ArrayList<>();
 
     public ReservationService() {
-        // Datos quemados - editar después para conectar a BD
-        reservations.add(new Reservation("r1", "2", "o1", "c1", "2026-07-14",
-                "19:00", 2, 10, 50, ReservationStatus.UPCOMING, true,
-                "Carlos Mendoza", "+593 99 123 4567"));
-        reservations.add(new Reservation("r2", "2", "o5", "c16", "2026-07-12",
-                "09:00", 1, 5, 28, ReservationStatus.COMPLETED, true,
-                "Carlos Mendoza", "+593 99 123 4567"));
-        reservations.add(new Reservation("r3", "2", "o3", "c8", "2026-07-10",
-                "15:00", 1, 2, 20, ReservationStatus.COMPLETED, true,
-                "Carlos Mendoza", "+593 99 123 4567"));
-        reservations.add(new Reservation("r4", "2", "o2", "c6", "2026-07-08",
-                "17:00", 2, 6, 28, ReservationStatus.CANCELLED, false,
-                "Carlos Mendoza", "+593 99 123 4567"));
+
     }
 
     public List<Reservation> getAll() {

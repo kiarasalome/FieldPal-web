@@ -7,7 +7,7 @@ import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import unl.edu.ec.fieldPal.model.User;
 import unl.edu.ec.fieldPal.model.enums.UserRole;
-import unl.edu.ec.fieldPal.service.UserService;
+import unl.edu.ec.fieldPal.service.security.UserService;
 
 import java.io.Serial;
 import java.io.Serializable;

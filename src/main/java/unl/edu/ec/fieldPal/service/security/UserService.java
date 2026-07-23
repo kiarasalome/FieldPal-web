@@ -1,4 +1,4 @@
-package unl.edu.ec.fieldPal.service;
+package unl.edu.ec.fieldPal.service.security;
 
 import unl.edu.ec.fieldPal.model.User;
 import unl.edu.ec.fieldPal.model.enums.UserRole;
@@ -14,11 +14,11 @@ public class UserService {
     private final List<User> users = new ArrayList<>();
 
     public UserService() {
-        // Datos quemados - editar después para conectar a BD
-        users.add(new User("1", "Admin FieldPal", "admin@fieldpal.com",
-                "+593 99 000 0001", "admin123", UserRole.ADMIN));
-        users.add(new User("2", "Carlos Mendoza", "jugador@fieldpal.com",
-                "+593 99 123 4567", "jugador123", UserRole.PLAYER));
+//        Datos quemados - editar después para conectar a BD
+//        users.add(new User("1", "Admin FieldPal", "admin@fieldpal.com",
+//                "+593 99 000 0001", "admin123", UserRole.ADMIN));
+//        users.add(new User("2", "Carlos Mendoza", "jugador@fieldpal.com",
+//                "+593 99 123 4567", "jugador123", UserRole.PLAYER));
     }
 
     public User login(String email, String password) {
