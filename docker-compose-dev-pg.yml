@@ -7,11 +7,11 @@ services:
     environment:
       POSTGRES_DB: ${BD_NAME}
       POSTGRES_USER: ${BD_USER}
-      POSTGRES_PASSWORD: ${BD_PASSWORD}
+      POSTGRES_PASSWORD: ${BD_PWD}
     ports:
-      - ${DB_PGSQL_PORT_PUBLIC}:5432  # ¡CORREGIDO! El interno SIEMPRE es 5432
+      - ${DB_PGSQL_PORT_PUBLIC}:5432
     volumes:
-      - fieldpal-pg-data:/var/lib/postgresql/data
+      - fieldpal-pg-data:/var/lib/postgresql
       # - ./init_db/init.sql:/docker-entrypoint-initdb.d/init.sql
     networks:
       - fieldpal-network
@@ -33,7 +33,7 @@ services:
     ports:
       - 82:80
     depends_on:
-      - fieldpal-pg-db  # Nombre actualizado
+      - fieldpal-pg-db
     networks:
       - fieldpal-network
 
