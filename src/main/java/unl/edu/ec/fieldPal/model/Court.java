@@ -14,11 +14,9 @@ import java.util.Objects;
 @Table(name = "courts")
 public class Court implements Serializable {
 
-    @Serial
-    private static final long serialVersionUID = 1L;
-
     @Id
-    @Column(name = "id", nullable = false, length = 50)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", nullable = false)
     private Long id;
 
     // Relación ManyToOne con PostgreSQL (Foreign Key: org_id)

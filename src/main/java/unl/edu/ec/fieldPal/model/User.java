@@ -16,12 +16,10 @@ import java.util.Objects;
 @Table(name = "users") // Usamos "users" en plural porque "user" es palabra reservada en PostgreSQL
 public class User implements Serializable {
 
-    @Serial
-    private static final long serialVersionUID = 1L;
-
     @Id
-    @Column(name = "id", nullable = false, length = 50)
-    private String id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", nullable = false)
+    private Long id;
 
     @Column(name = "name", nullable = false, length = 150)
     @NotBlank(message = "El nombre de usuario es obligatorio")
@@ -72,8 +70,8 @@ public class User implements Serializable {
 
     // === Getters y Setters ===
 
-    public String getId() { return id; }
-    public void setId(String id) { this.id = id; }
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
 
     public String getName() { return name; }
     public void setName(String name) { this.name = name; }

@@ -13,12 +13,10 @@ import java.util.Objects;
 @Table(name = "time_slots")
 public class TimeSlot implements Serializable {
 
-    @Serial
-    private static final long serialVersionUID = 1L;
-
     @Id
-    @Column(name = "id", nullable = false, length = 50)
-    private String id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", nullable = false)
+    private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "court_id", referencedColumnName = "id", nullable = false)
@@ -61,8 +59,8 @@ public class TimeSlot implements Serializable {
 
     // === Getters y Setters ===
 
-    public String getId() { return id; }
-    public void setId(String id) { this.id = id; }
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
 
     public Court getCourt() { return court; }
     public void setCourt(Court court) { this.court = court; }

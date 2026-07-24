@@ -17,13 +17,11 @@ import java.util.Objects;
 @Table(name = "organizations")
 public class Organization implements Serializable {
 
-    @Serial
-    private static final long serialVersionUID = 1L;
-
     @Id
-    @Column(name = "id", nullable = false, length = 50)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", nullable = false)
     @NotBlank(message = "El RUC o Identificador de la organización es obligatorio")
-    private String id;
+    private Long id;
 
     @Column(name = "name", nullable = false, length = 150)
     @NotBlank(message = "Ingrese el nombre del complejo deportivo")
@@ -103,8 +101,8 @@ public class Organization implements Serializable {
 
     // === Getters y Setters ===
 
-    public String getId() { return id; }
-    public void setId(String id) { this.id = id; }
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
 
     public String getName() { return name; }
     public void setName(String name) { this.name = name; }

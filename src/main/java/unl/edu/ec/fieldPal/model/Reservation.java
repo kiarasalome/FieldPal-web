@@ -17,12 +17,9 @@ import java.util.Objects;
 @Table(name = "reservations")
 public class Reservation implements Serializable {
 
-    @Serial
-    private static final long serialVersionUID = 1L;
-
     @Id
-    @Column(name = "id", nullable = false, length = 50)
-    private String id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     // Antes era solo un String suelto; ahora es una relación con User
     @ManyToOne(fetch = FetchType.LAZY)
@@ -134,8 +131,8 @@ public class Reservation implements Serializable {
 
     // === Getters y Setters Estándar ===
 
-    public String getId() { return id; }
-    public void setId(String id) { this.id = id; }
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
 
     public Organization getOrganization() { return organization; }
     public void setOrganization(Organization organization) { this.organization = organization; }
