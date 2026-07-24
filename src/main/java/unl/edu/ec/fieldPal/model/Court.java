@@ -19,7 +19,7 @@ public class Court implements Serializable {
 
     @Id
     @Column(name = "id", nullable = false, length = 50)
-    private String id;
+    private Long id;
 
     // Relación ManyToOne con PostgreSQL (Foreign Key: org_id)
     @ManyToOne(fetch = FetchType.LAZY)
@@ -53,7 +53,7 @@ public class Court implements Serializable {
 
     public Court() {}
 
-    public Court(String id, Organization organization, String name, CourtType type,
+    public Court(Long id, Organization organization, String name, CourtType type,
                  double pricePerHour, boolean hasLighting, boolean covered,
                  String surface, String imageUrl) {
         this.id = id;

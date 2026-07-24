@@ -8,6 +8,8 @@ import unl.edu.ec.fieldPal.model.enums.UserRole;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -41,6 +43,11 @@ public class User implements Serializable {
     @Column(name = "role", nullable = false, length = 30)
     @NotNull(message = "Debe asignar un rol al usuario")
     private UserRole role;
+
+    // Relación OneToMany: Mapeada por el atributo 'user' en la clase Reservation
+    // Esto permite obtener el historial de reservas de un usuario con user.getReservations()
+    @OneToMany(mappedBy = "user", cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
+    private List<Reservation> reservations = new ArrayList<>();
 
     public User() {}
 
@@ -82,6 +89,9 @@ public class User implements Serializable {
 
     public UserRole getRole() { return role; }
     public void setRole(UserRole role) { this.role = role; }
+
+    public List<Reservation> getReservations() { return reservations; }
+    public void setReservations(List<Reservation> reservations) { this.reservations = reservations; }
 
     // === Equals & HashCode ===
 
