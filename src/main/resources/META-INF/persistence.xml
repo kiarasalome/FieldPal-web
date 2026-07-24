@@ -5,12 +5,12 @@
                                  https://jakarta.ee/xml/ns/persistence/persistence_3_0.xsd"
              version="3.0">
 
-    <persistence-unit name="fieldpalPU" transaction-type="JTA">
+    <persistence-unit name="fieldPalPU" transaction-type="JTA">
         <jta-data-source>jdbc/fieldpalDS</jta-data-source>
 
         <properties>
             <!-- 1. Configuración de generación / actualización de tablas (esquema de BD) -->
-            <!-- Configuración de Jakarta persistence puede ser: none, create, drop-and-create, drop --><--none-->
+            <!-- Configuración de Jakarta persistence puede ser: none, create, drop-and-create, drop -->
             <property name="jakarta.persistence.schema-generation.database.action" value="drop-and-create"/>
 
             <!-- Configuración de EclipseLink values: none, drop-and-create-tables, create-tables, create-or-extend-tables -->

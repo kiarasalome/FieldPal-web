@@ -24,8 +24,10 @@ public class Reservation implements Serializable {
     @Column(name = "id", nullable = false, length = 50)
     private String id;
 
-    @Column(name = "user_id", length = 50)
-    private String userId;
+    // Antes era solo un String suelto; ahora es una relación con User
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
+    private User user;
 
     // Relación con Organización (FK: org_id)
     @ManyToOne(fetch = FetchType.LAZY)
@@ -74,12 +76,12 @@ public class Reservation implements Serializable {
 
     public Reservation() {}
 
-    public Reservation(String id, String userId, Organization organization, Court court,
+    public Reservation(String id, User user, Organization organization, Court court,
                        LocalDate date, LocalTime hour, int duration, int playerCount,
                        double totalPrice, ReservationStatus status, boolean confirmed,
                        String contactName, String contactPhone) {
         this.id = id;
-        this.userId = userId;
+        this.user = user;
         this.organization = organization;
         this.court = court;
         this.date = date;
@@ -117,13 +119,23 @@ public class Reservation implements Serializable {
         this.court.setId(courtId);
     }
 
+    // === Método Puente de Compatibilidad con userId (String) ===
+
+    public String getUserId() {
+        return user != null ? user.getId() : null;
+    }
+
+    public void setUserId(String userId) {
+        if (this.user == null) {
+            this.user = new User();
+        }
+        this.user.setId(userId);
+    }
+
     // === Getters y Setters Estándar ===
 
     public String getId() { return id; }
     public void setId(String id) { this.id = id; }
-
-    public String getUserId() { return userId; }
-    public void setUserId(String userId) { this.userId = userId; }
 
     public Organization getOrganization() { return organization; }
     public void setOrganization(Organization organization) { this.organization = organization; }

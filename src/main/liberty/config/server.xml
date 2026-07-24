@@ -1,13 +1,59 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <server description="defaultServer">
-    <!--The Liberty Maven Plugin has generated Liberty features necessary for your application in configDropins/overrides/generated-features.xml-->
-    <featureManager>
-        <feature>webProfile-10.0</feature>
-    </featureManager>
-    <basicRegistry id="defaultBasicRegistry" realm="BasicRealm">
-        <user name="username" password="password"/>
-    </basicRegistry>
-    <keyStore id="defaultKeyStore" password="password"/>
-    <httpEndpoint host="*" httpPort="9082" httpsPort="9444" id="defaultHttpEndpoint"/>
-    <webApplication contextRoot="/" location="fieldPal.war"/>
+<featureManager>
+    <feature>webProfile-10.0</feature>
+</featureManager>
+<basicRegistry id="defaultBasicRegistry" realm="BasicRealm">
+    <user name="username" password="password" />
+</basicRegistry>
+<keyStore id="defaultKeyStore" password="password" />
+<httpEndpoint id="defaultHttpEndpoint" host="*" httpPort="9082" httpsPort="9444" />
+<webApplication location="fieldPal.war" contextRoot="/"/>
+
+<!-- Configuración de salidas de log del server -->
+<!-- Configuración de logging -->
+<logging
+        consoleFormat="SIMPLE"
+        consoleLogLevel="INFO"
+        messageFormat="SIMPLE"
+        messageSource="message,trace,accessLog"
+        isoDateFormat="true"
+        maxFileSize="100"
+        maxFiles="5"
+        traceSpecification="*=info:unl.edu.*=fine,eclipselink.sql=all"
+/>
+
+<!--
+    DataSource PostgreSQL
+    Las credenciales se leen desde las variables de entorno para no comprometer secretos:
+        DB_HOST, DB_PORT, BD_NAME, BD_USER, BD_PASSWORD
+    El driver JDBC (postgresql-*.jar) se copia al directorio de recursos compartidos
+    de Liberty durante el build (ver configuración de maven-dependency-plugin si se agrega).
+    Para desarrollo local se puede usar el valor por defecto definido aquí.
+-->
+<!-- Variables sobreescritas por env vars de Docker: DB_HOST, DB_PORT, DB_NAME, DB_USER, DB_PASSWORD -->
+<variable name="db.host"     defaultValue="localhost"      envVarName="DB_HOST"/>
+<variable name="db.port"     defaultValue="5432"           envVarName="DB_PORT"/>
+<variable name="db.name"     defaultValue="fieldpal"          envVarName="BD_NAME"/>
+<variable name="db.user"     defaultValue="fieldpaluser"      envVarName="BD_USER"/>
+<variable name="db.pwd" defaultValue="fieldpal12"  envVarName="BD_PWD"/>
+
+<library id="postgresLib">
+    <fileset dir="${shared.resource.dir}/postgres/" include="postgresql-*.jar"/>
+</library>
+
+<dataSource id="fieldPalDS"
+            jndiName="jdbc/fieldPalDS"
+            type="javax.sql.ConnectionPoolDataSource">
+    <jdbcDriver libraryRef="postgresLib"/>
+    <properties.postgresql
+            url="jdbc:postgresql://${db.host}:${db.port}/${db.name}?stringtype=unspecified"
+            user="${db.user}"
+            password="${db.pwd}"/>
+    <connectionManager
+            minPoolSize="2"
+            maxPoolSize="20"
+            connectionTimeout="30s"
+            maxIdleTime="10m"/>
+</dataSource>
 </server>
