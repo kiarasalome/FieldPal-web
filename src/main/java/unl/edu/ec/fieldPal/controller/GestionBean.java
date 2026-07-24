@@ -128,8 +128,8 @@ public class GestionBean implements Serializable {
         return null;
     }
 
-    public void removeOrganization(String orgId) {
-        organizationService.removeOrganization(orgId);
+    public void removeOrganization(Organization org) {
+        organizationService.removeOrganization(org);
         FacesContext.getCurrentInstance().addMessage(null,
                 new FacesMessage(FacesMessage.SEVERITY_INFO, "Organización eliminada.", ""));
     }

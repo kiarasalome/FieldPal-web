@@ -1,44 +1,47 @@
 package unl.edu.ec.fieldPal.service.security;
 
 
+import jakarta.persistence.EntityNotFoundException;
 import unl.edu.ec.fieldPal.model.Reservation;
 import unl.edu.ec.fieldPal.model.enums.ReservationStatus;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Named;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
+import unl.edu.ec.fieldPal.service.CrudGenericService;
+
+import java.util.*;
 
 @Named
 @ApplicationScoped
 public class ReservationService {
 
-    private final List<Reservation> reservations = new ArrayList<>();
-
     public ReservationService() {
-
     }
+
+    private CrudGenericService crudService = new CrudGenericService();
 
     public List<Reservation> getAll() {
-        return new ArrayList<>(reservations);
+        String jpql = "SELECT DISTINCT o.reservations FROM Organization o";
+        return crudService.findWithQuery(jpql, Collections.emptyMap());
     }
 
-    public List<Reservation> getByUser(String userId) {
-        return reservations.stream()
-                .filter(r -> r.getUserId().equals(userId))
-                .collect(Collectors.toList());
+    public List<Reservation> getByUser(String userId){
+        Map<String, Object> params = new HashMap<>();
+        params.put("user", userId);
+        return crudService.findWithNamedQuery("Reservation.getByUser", params);
     }
 
-    public Reservation findById(String id) {
-        return reservations.stream()
-                .filter(r -> r.getId().equals(id))
-                .findFirst().orElse(null);
+    public Reservation findById(String id) throws EntityNotFoundException {
+        Reservation reservation = crudService.find(Reservation.class, id);
+        if (reservation == null){
+            throw new EntityNotFoundException("Organization no encontrada con [" + id + "]");
+        }
+        return reservation;
     }
 
-    public void addReservation(Reservation res) {
-        String id = "r" + (reservations.size() + 1);
-        res.setId(id);
-        reservations.add(res);
+    public void addRervation(Reservation res) {
+        if (res == null) return;
+        crudService.create(res);
+
     }
 
     public void cancelReservation(String id) {
@@ -56,25 +59,27 @@ public class ReservationService {
     }
 
     public void updateReservation(Reservation reservation) {
-        for (int i = 0; i < reservations.size(); i++) {
-            if (reservations.get(i).getId().equals(reservation.getId())) {
-                reservations.set(i, reservation);
-                return;
-            }
-        }
+        if (reservation == null || reservation.getId() == null) return;
+        crudService.update(reservation);
     }
 
     public int getActiveCount() {
-        return (int) reservations.stream()
-                .filter(r -> r.getStatus() == ReservationStatus.UPCOMING)
-                .count();
+        String jpql = "SELECT COUNT(r) FROM Reservation r WHERE r.status = :status";
+        Map<String, Object> params = new HashMap<>();
+        params.put("status", ReservationStatus.UPCOMING);
+
+        List<Long> result = crudService.findWithQuery(jpql, params);
+        return result.get(0).intValue();
     }
 
     public double getMonthlyIncome() {
-        return reservations.stream()
-                .filter(r -> r.getStatus() != ReservationStatus.CANCELLED)
-                .mapToDouble(Reservation::getTotalPrice)
-                .sum();
+        String jpql = "SELECT SUM(r.totalPrice) FROM Reservation r WHERE r.status != :status";
+        Map<String, Object> params = new HashMap<>();
+        params.put("status", ReservationStatus.CANCELLED);
+
+        List<Double> result = crudService.findWithQuery(jpql, params);
+        Double sum = result.get(0);
+        return sum != null ? sum : 0.0;
     }
 
 }

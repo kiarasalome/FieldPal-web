@@ -1,47 +1,47 @@
 package unl.edu.ec.fieldPal.service.security;
 
+import jakarta.persistence.EntityNotFoundException;
 import unl.edu.ec.fieldPal.model.Court;
 import unl.edu.ec.fieldPal.model.enums.CourtType;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Named;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-import java.util.stream.Collectors;
+import unl.edu.ec.fieldPal.service.CrudGenericService;
+
+import java.util.*;
 
 @Named
 @ApplicationScoped
 public class CourtService {
 
-    private final List<Court> courts = new ArrayList<>();
-    private final Random random = new Random();
-
+    private CrudGenericService crudService = new CrudGenericService();
     public CourtService() {
-
     }
 
     public List<Court> getAll() {
-        return new ArrayList<>(courts);
+        String jpql = "SELECT DISTINCT o.courts FROM Organization o";
+        return crudService.findWithQuery(jpql, Collections.emptyMap());
     }
 
-    public List<Court> getByOrg(String orgId) {
+    public List<Court> getByOrg(String orgId){
         if (orgId == null) return new ArrayList<>();
-        return courts.stream()
-                .filter(c -> c.getOrgId().equals(orgId))
-                .collect(Collectors.toList());
+        Map<String, Object> params = new HashMap<>();
+        params.put("orgId", orgId);
+        return crudService.findWithNamedQuery("Court.getByOrg", params);
     }
 
-    public List<Court> getByType(CourtType type) {
-        return courts.stream()
-                .filter(c -> c.getType() == type)
-                .collect(Collectors.toList());
+    public List<Court> getByType(CourtType type){
+        Map<String, Object> params = new HashMap<>();
+        params.put("type", type);
+        return crudService.findWithNamedQuery("Court.getByType", params);
     }
 
     public Court findById(String id) {
         if (id == null) return null;
-        return courts.stream()
-                .filter(c -> c.getId().equals(id))
-                .findFirst().orElse(null);
+        Court court = crudService.find(Court.class, id);
+        if (court == null){
+            throw new EntityNotFoundException("Cancha no encontrada con [" + id + "]");
+        }
+        return court;
     }
 
     /**
@@ -53,40 +53,28 @@ public class CourtService {
         if (court == null) return;
 
         if (court.getId() != null && findById(court.getId()) != null) {
-            updateCourt(court);
+            crudService.update(court);
         } else {
-            addCourt(court);
+            crudService.create(court);
         }
     }
 
     public void addCourt(Court court) {
         if (court == null) return;
-
-        // Autogeneración del identificador secuencial si viene vacío
-        if (court.getId() == null || court.getId().trim().isEmpty()) {
-            String id = "c" + (courts.size() + 1);
-            court.setId(id);
-        }
-        courts.add(court);
+        crudService.create(court);
     }
 
     public void updateCourt(Court court) {
         if (court == null || court.getId() == null) return;
-
-        for (int i = 0; i < courts.size(); i++) {
-            if (courts.get(i).getId().equals(court.getId())) {
-                courts.set(i, court);
-                return;
-            }
-        }
+        crudService.update(court);
     }
 
     public void removeCourt(String id) {
         if (id == null) return;
-        courts.removeIf(c -> c.getId().equals(id));
+        crudService.delete(Court.class, id);
     }
 
     public int getCourtCount() {
-        return courts.size();
+        return getAll().size();
     }
 }
