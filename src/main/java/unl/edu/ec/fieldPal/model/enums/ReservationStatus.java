@@ -18,5 +18,20 @@ public enum ReservationStatus {
     public String getLabel() { return label; }
     public String getIcon() { return icon; }
     public String getCssClass() { return cssClass; }
-}
 
+    /**
+     * Helper para parsear de forma segura desde cadenas recibidas en
+     * componentes JSF, selects o APIs, evitando IllegalArgumentException.
+     */
+    public static ReservationStatus fromString(String value) {
+        if (value == null || value.isBlank()) {
+            return null;
+        }
+        for (ReservationStatus status : ReservationStatus.values()) {
+            if (status.name().equalsIgnoreCase(value) || status.getLabel().equalsIgnoreCase(value)) {
+                return status;
+            }
+        }
+        return null;
+    }
+}

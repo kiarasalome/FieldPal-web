@@ -1,55 +1,44 @@
 services:
+  # Base de datos PostgreSQL para FieldPal
   fieldpal-pg-db:
     image: postgres:${POSTGRES_VERSION}
     restart: unless-stopped
     container_name: fieldpal-pg-db-container
     environment:
-      POSTGRES_DB: ${DB_NAME}
-      POSTGRES_USER: ${DB_USER}
-      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${BD_NAME}
+      POSTGRES_USER: ${BD_USER}
+      POSTGRES_PASSWORD: ${BD_PWD}
     ports:
       - ${DB_PGSQL_PORT_PUBLIC}:5432
     volumes:
       - fieldpal-pg-data:/var/lib/postgresql
+      # - ./init_db/init.sql:/docker-entrypoint-initdb.d/init.sql
     networks:
-      fieldpal-pg-network:
-        ipv4_address: 172.22.0.251
+      - fieldpal-network
     healthcheck:
-      test: [ "CMD-SHELL", "pg_isready -d $${POSTGRES_DB} -U $${POSTGRES_USER}" ]
+      test: [ "CMD-SHELL", "pg_isready -d ${BD_NAME} -U ${BD_USER}" ]
       interval: 10s
       timeout: 5s
       retries: 5
       start_period: 30s
 
-  fieldpal-pg-adminer-db:
-    image: adminer
-    container_name: fieldpal-pg-adminer-db-container
-    restart: unless-stopped
-    ports:
-      - 8181:8080
-    depends_on:
-      - fieldpal-pg-db
-    networks:
-      fieldpal-pg-network:
-        ipv4_address: 172.22.0.253
-
-  fieldpal-pg-pgadmin4:
-    container_name: fieldpal-pgadmin4-container
+  # Interfaz gráfica pgAdmin4
+  pgadmin4:
+    container_name: pgadmin4-container
     image: dpage/pgadmin4
     restart: unless-stopped
     environment:
-      PGADMIN_DEFAULT_EMAIL: "adminDB@fieldpal.org"
+      PGADMIN_DEFAULT_EMAIL: "adminBD@postgres.org"
       PGADMIN_DEFAULT_PASSWORD: "admin123"
     ports:
-      - 8182:80
+      - 82:80
     depends_on:
       - fieldpal-pg-db
     networks:
-      fieldpal-pg-network:
-        ipv4_address: 172.22.0.254
+      - fieldpal-network
 
 networks:
-  fieldpal-pg-network:
+  fieldpal-network:
     driver: bridge
     ipam:
       driver: default
@@ -59,3 +48,8 @@ networks:
 volumes:
   fieldpal-pg-data:
     name: fieldpal-pg-data-local
+    driver: local
+    driver_opts:
+      type: none
+      device: ${LOCAL_DATA_DIR_BD}
+      o: bind

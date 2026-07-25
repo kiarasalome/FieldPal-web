@@ -4,12 +4,11 @@ import unl.edu.ec.fieldPal.model.Court;
 import unl.edu.ec.fieldPal.model.Organization;
 import unl.edu.ec.fieldPal.model.Reservation;
 import unl.edu.ec.fieldPal.model.enums.CourtType;
-import unl.edu.ec.fieldPal.model.enums.ReservationStatus;
 import unl.edu.ec.fieldPal.model.enums.Zone;
-import unl.edu.ec.fieldPal.service.CourtService;
-import unl.edu.ec.fieldPal.service.OrganizationService;
-import unl.edu.ec.fieldPal.service.ReservationService;
-import unl.edu.ec.fieldPal.service.UserService;
+import unl.edu.ec.fieldPal.service.security.CourtService;
+import unl.edu.ec.fieldPal.service.security.OrganizationService;
+import unl.edu.ec.fieldPal.service.security.ReservationService;
+import unl.edu.ec.fieldPal.service.security.UserService;
 
 import jakarta.faces.application.FacesMessage;
 import jakarta.faces.context.FacesContext;
@@ -129,8 +128,8 @@ public class GestionBean implements Serializable {
         return null;
     }
 
-    public void removeOrganization(String orgId) {
-        organizationService.removeOrganization(orgId);
+    public void removeOrganization(Organization org) {
+        organizationService.removeOrganization(org);
         FacesContext.getCurrentInstance().addMessage(null,
                 new FacesMessage(FacesMessage.SEVERITY_INFO, "Organización eliminada.", ""));
     }

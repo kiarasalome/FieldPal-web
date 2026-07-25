@@ -1,36 +1,51 @@
 package unl.edu.ec.fieldPal.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import unl.edu.ec.fieldPal.model.enums.UserRole;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 @Entity
-@Table(name = "users", uniqueConstraints = @UniqueConstraint(name = "uk_users_email", columnNames = "email"))
+@Table(name = "users") // Usamos "users" en plural porque "user" es palabra reservada en PostgreSQL
 public class User implements Serializable {
-    @Serial
-    private static final long serialVersionUID = 1L;
 
     @Id
-    @Column(name = "id", nullable = false, updatable = false)
-    private String id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", nullable = false)
+    private Long id;
 
     @Column(name = "name", nullable = false, length = 150)
+    @NotBlank(message = "El nombre de usuario es obligatorio")
     private String name;
 
-    @Column(name = "email", nullable = false, length = 150)
+    @Column(name = "email", nullable = false, unique = true, length = 100)
+    @NotBlank(message = "El correo electrónico es obligatorio")
+    @Email(message = "Ingrese una dirección de correo válida")
     private String email;
 
     @Column(name = "phone", length = 30)
     private String phone;
 
-    @Column(name = "password", nullable = false, length = 255)
+    @Column(name = "password", nullable = false, length = 255) // Tamaño adecuado para hashes BCrypt / PBKDF2
+    @NotBlank(message = "La contraseña es obligatoria")
     private String password;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "role", nullable = false, length = 20)
+    @Column(name = "role", nullable = false, length = 30)
+    @NotNull(message = "Debe asignar un rol al usuario")
     private UserRole role;
+
+    // Relación OneToMany: Mapeada por el atributo 'user' en la clase Reservation
+    // Esto permite obtener el historial de reservas de un usuario con user.getReservations()
+    @OneToMany(mappedBy = "user", cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
+    private List<Reservation> reservations = new ArrayList<>();
 
     public User() {}
 
@@ -43,9 +58,20 @@ public class User implements Serializable {
         this.role = role;
     }
 
-    // Getters and Setters
-    public String getId() { return id; }
-    public void setId(String id) { this.id = id; }
+    // === Métodos Helper de Roles ===
+
+    public boolean isAdmin() {
+        return role == UserRole.ADMIN;
+    }
+
+    public boolean isPlayer() {
+        return role == UserRole.PLAYER;
+    }
+
+    // === Getters y Setters ===
+
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
 
     public String getName() { return name; }
     public void setName(String name) { this.name = name; }
@@ -62,6 +88,21 @@ public class User implements Serializable {
     public UserRole getRole() { return role; }
     public void setRole(UserRole role) { this.role = role; }
 
-    public boolean isAdmin() { return role == UserRole.ADMIN; }
-    public boolean isPlayer() { return role == UserRole.PLAYER; }
+    public List<Reservation> getReservations() { return reservations; }
+    public void setReservations(List<Reservation> reservations) { this.reservations = reservations; }
+
+    // === Equals & HashCode ===
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof User)) return false;
+        User user = (User) o;
+        return Objects.equals(id, user.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
 }

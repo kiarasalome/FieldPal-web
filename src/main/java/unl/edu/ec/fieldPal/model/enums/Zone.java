@@ -20,4 +20,20 @@ public enum Zone {
     public String getLabel() { return label; }
     public String getEmoji() { return emoji; }
     public String getIcon() { return icon; }
+
+    /**
+     * Helper para parsear de forma segura desde cadenas recibidas en
+     * componentes JSF, selects o APIs, evitando IllegalArgumentException.
+     */
+    public static Zone fromString(String value) {
+        if (value == null || value.isBlank()) {
+            return null;
+        }
+        for (Zone zone : Zone.values()) {
+            if (zone.name().equalsIgnoreCase(value) || zone.getLabel().equalsIgnoreCase(value)) {
+                return zone;
+            }
+        }
+        return null;
+    }
 }
