@@ -24,8 +24,14 @@ public class ProfileBean implements Serializable {
         if (authBean.isAuthenticated()) {
             User current = authBean.getCurrentUser();
             // Clonamos el usuario para no alterar la sesión hasta que se guarde
-            this.editingUser = new User(current.getId(), current.getName(), current.getEmail(),
-                    current.getPhone(), current.getPassword(), current.getRole());
+            this.editingUser = new User(
+                    current.getId(),
+                    current.getName(),
+                    current.getEmail(),
+                    current.getPhone(),
+                    current.getPassword(),
+                    current.getRole()
+            );
         }
     }
 

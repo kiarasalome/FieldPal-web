@@ -1,17 +1,25 @@
 package unl.edu.ec.fieldPal.service.security;
 
+import jakarta.inject.Inject;
 import unl.edu.ec.fieldPal.model.User;
 import unl.edu.ec.fieldPal.model.enums.UserRole;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Named;
+import unl.edu.ec.fieldPal.service.CrudGenericService;
+
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Named
 @ApplicationScoped
 public class UserService {
 
-    private final List<User> users = new ArrayList<>();
+    @Inject
+    private CrudGenericService crudService; // Inyección obligatoria
+
+    //private final List<User> users = new ArrayList<>();
 
     public UserService() {
 //        Datos quemados - editar después para conectar a BD
@@ -22,46 +30,45 @@ public class UserService {
     }
 
     public User login(String email, String password) {
-        for (User user : users) {
-            if (user.getEmail().equalsIgnoreCase(email) && user.getPassword().equals(password)) {
-                return user;
-            }
-        }
-        return null;
+        Map<String, Object> params = new HashMap<>();
+        params.put("email", email);
+        params.put("password", password);
+        // Uso de NamedQuery definida en la entidad User [4, 5]
+        return crudService.findSingleResultOrNullWithNamedQuery("User.login", params);
     }
 
     public User register(String name, String email, String phone, String password, UserRole role) {
-        for (User u : users) {
-            if (u.getEmail().equalsIgnoreCase(email)) {
-                return null; // Ya existe
-            }
-        }
-        String id = String.valueOf(users.size() + 1);
-        User newUser = new User(id, name, email, phone, password, role);
-        users.add(newUser);
-        return newUser;
+        //Se verificaría si el email ya existe en BD
+        User newUser = new User(null, name, email, phone, password, role);
+        return crudService.create(newUser);
     }
 
-    //Metodo conectado al updateUser para modificar data de un player
     public void updateUser(User user) {
         if (user == null || user.getId() == null) return;
-        for (int i = 0; i < users.size(); i++) {
-            if (users.get(i).getId().equals(user.getId())) {
-                users.set(i, user); // Reemplaza el usuario viejo por el editado
-                return;
-            }
-        }
+        crudService.update(user); // Actualización en base de datos
     }
 
     public User findById(String id) {
-        return users.stream().filter(u -> u.getId().equals(id)).findFirst().orElse(null);
-    }
+        return crudService.find(User.class, id);    }
+
+    //ATENCION CON LOS SIGUIENTES METODOS
+
+    /**
+     *"SELECT COUNT(u): pide a la base de datos que cuente, en lugar de
+     * traer todos los datos a la memoria solo para saber cuantos hay
+     * Se evita codigo spaghetti
+     */
 
     public int getUserCount() {
-        return users.size();
+        // Consulta JPQL para contar usuarios directamente en la base de datos
+        String jpql = "SELECT COUNT(u) FROM User u";
+        List<Long> result = crudService.findWithQuery(jpql, new HashMap<>());
+        return result.get(0).intValue();
     }
 
     public List<User> getAllUsers() {
-        return new ArrayList<>(users);
+        // Consulta JPQL para obtener todos los registros de la tabla users
+        String jpql = "SELECT u FROM User u";
+        return crudService.findWithQuery(jpql, new HashMap<>());
     }
 }
