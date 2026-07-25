@@ -1,19 +1,35 @@
 package unl.edu.ec.fieldPal.model;
 
+import jakarta.persistence.*;
 import unl.edu.ec.fieldPal.model.enums.UserRole;
 
 import java.io.Serial;
 import java.io.Serializable;
 
+@Entity
+@Table(name = "users", uniqueConstraints = @UniqueConstraint(name = "uk_users_email", columnNames = "email"))
 public class User implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
 
+    @Id
+    @Column(name = "id", nullable = false, updatable = false)
     private String id;
+
+    @Column(name = "name", nullable = false, length = 150)
     private String name;
+
+    @Column(name = "email", nullable = false, length = 150)
     private String email;
+
+    @Column(name = "phone", length = 30)
     private String phone;
+
+    @Column(name = "password", nullable = false, length = 255)
     private String password;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "role", nullable = false, length = 20)
     private UserRole role;
 
     public User() {}
@@ -49,4 +65,3 @@ public class User implements Serializable {
     public boolean isAdmin() { return role == UserRole.ADMIN; }
     public boolean isPlayer() { return role == UserRole.PLAYER; }
 }
-

@@ -1,34 +1,63 @@
 package unl.edu.ec.fieldPal.model;
 
-
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import unl.edu.ec.fieldPal.model.enums.ReservationStatus;
+
 import java.io.Serializable;
 
+@Entity
+@Table(name = "reservations")
 public class Reservation implements Serializable {
     private static final long serialVersionUID = 1L;
 
+    @Id
+    @Column(name = "id", nullable = false, updatable = false)
     private String id;
+
+    @Column(name = "user_id", nullable = false)
     private String userId;
+
+    @Column(name = "org_id", nullable = false)
     private String orgId;
+
+    @Column(name = "court_id", nullable = false)
     private String courtId;
 
     @NotNull @NotEmpty
+    @Column(name = "reservation_date", nullable = false, length = 20)
     private String date;
 
     @NotNull @NotEmpty
+    @Column(name = "hour", nullable = false, length = 10)
     private String hour;
+
+    @Column(name = "duration")
     private int duration;
+
+    @Column(name = "player_count")
     private int playerCount;
+
+    @Column(name = "total_price")
     private double totalPrice;
 
-    @NotNull @NotEmpty
+    // Nota: @NotEmpty solo aplica a String/Collection; se quitó de status y
+    // confirmed porque en un enum/boolean provocaba un error de validación
+    // inválido (ConstraintDeclarationException) que nunca se había disparado
+    // porque nada llamaba a un Validator sobre este bean todavía.
+    @NotNull
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status", nullable = false, length = 20)
     private ReservationStatus status;
 
-    @NotNull @NotEmpty
+    @Column(name = "confirmed")
     private boolean confirmed;
+
+    @Column(name = "contact_name", length = 150)
     private String contactName;
+
+    @Column(name = "contact_phone", length = 30)
     private String contactPhone;
 
     public Reservation() {}
@@ -92,4 +121,3 @@ public class Reservation implements Serializable {
     public String getContactPhone() { return contactPhone; }
     public void setContactPhone(String contactPhone) { this.contactPhone = contactPhone; }
 }
-

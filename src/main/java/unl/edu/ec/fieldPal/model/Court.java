@@ -1,22 +1,44 @@
 package unl.edu.ec.fieldPal.model;
 
+import jakarta.persistence.*;
 import unl.edu.ec.fieldPal.model.enums.CourtType;
 
 import java.io.Serial;
 import java.io.Serializable;
 
+@Entity
+@Table(name = "courts")
 public class Court implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
 
+    @Id
+    @Column(name = "id", nullable = false, updatable = false)
     private String id;
-    private String orgId; // Mantener la variable original
+
+    @Column(name = "org_id", nullable = false)
+    private String orgId; // FK lógica a organizations.id (sin relación @ManyToOne para no romper los beans/xhtml existentes, que usan orgId como String plano)
+
+    @Column(name = "name", nullable = false, length = 150)
     private String name;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "type", nullable = false, length = 20)
     private CourtType type;
+
+    @Column(name = "price_per_hour", nullable = false)
     private double pricePerHour;
+
+    @Column(name = "has_lighting")
     private boolean hasLighting;
+
+    @Column(name = "covered")
     private boolean covered; // Cambiado a covered para coincidir con la convención de JSF y PrimeFaces
+
+    @Column(name = "surface", length = 100)
     private String surface;
+
+    @Column(name = "image_url", length = 500)
     private String imageUrl;
 
     public Court() {}
@@ -81,4 +103,3 @@ public class Court implements Serializable {
     public String getImageUrl() { return imageUrl; }
     public void setImageUrl(String imageUrl) { this.imageUrl = imageUrl; }
 }
-

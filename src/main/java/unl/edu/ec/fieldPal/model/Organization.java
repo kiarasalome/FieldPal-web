@@ -1,23 +1,52 @@
 package unl.edu.ec.fieldPal.model;
 
+import jakarta.persistence.*;
 import unl.edu.ec.fieldPal.model.enums.Zone;
+
 import java.io.Serializable;
 import java.util.Objects;
 
+@Entity
+@Table(name = "organizations")
 public class Organization implements Serializable {
     private static final long serialVersionUID = 1L;
 
+    @Id
+    @Column(name = "id", nullable = false, updatable = false)
     private String id;
+
+    @Column(name = "name", nullable = false, length = 150)
     private String name;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "zone", nullable = false, length = 20)
     private Zone zone;
+
+    @Column(name = "address", length = 255)
     private String address;
+
+    @Column(name = "phone", length = 30)
     private String phone;
+
+    @Column(name = "image", length = 500)
     private String image;
+
+    @Column(name = "rating")
     private double rating;
+
+    @Column(name = "email", length = 150)
     private String email;
+
+    @Column(name = "description", length = 1000)
     private String description;
+
+    @Column(name = "court_count")
     private int courtCount;
+
+    @Column(name = "latitude")
     private double latitude;
+
+    @Column(name = "longitude")
     private double longitude;
 
     public Organization() {}
@@ -72,13 +101,8 @@ public class Organization implements Serializable {
     public double getLongitude() { return longitude; }
     public void setLongitude(double longitude) { this.longitude = longitude; }
 
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
+    public String getEmail() { return email; }
+    public void setEmail(String email) { this.email = email; }
 
     // Sin esto, dos objetos Organization con el mismo id se tratarían como "distintos".
     @Override
@@ -94,4 +118,3 @@ public class Organization implements Serializable {
         return Objects.hash(id);
     }
 }
-

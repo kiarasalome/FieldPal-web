@@ -1,46 +1,55 @@
 services:
-  # Base de datos PostgreSQL
-  pg-db:
+  fieldpal-pg-db:
     image: postgres:${POSTGRES_VERSION}
     restart: unless-stopped
-    container_name: pg-db-container
+    container_name: fieldpal-pg-db-container
     environment:
-      POSTGRES_DB: ${BD_NAME}
-      POSTGRES_USER: ${BD_USER}
-      POSTGRES_PASSWORD: ${BD_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
     ports:
-      - ${DB_PGSQL_PORT_PUBLIC}:5434
+      - ${DB_PGSQL_PORT_PUBLIC}:5432
     volumes:
-      # VOLUMEN GESTIONADO POR DOCKER
-      - pg-data:/var/lib/postgresql/data
-      # Para ejecutar un script SQL al iniciar (crear tablas), descomenta esto:
-      # - ./init_db/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - fieldpal-pg-data:/var/lib/postgresql
     networks:
-            - pg-network
+      fieldpal-pg-network:
+        ipv4_address: 172.22.0.251
     healthcheck:
-      test: [ "CMD-SHELL", "pg_isready -d ${BD_NAME} -U ${BD_USER}" ]
+      test: [ "CMD-SHELL", "pg_isready -d $${POSTGRES_DB} -U $${POSTGRES_USER}" ]
       interval: 10s
       timeout: 5s
       retries: 5
       start_period: 30s
 
-  # Interfaz gráfica para ver la BD
-  pgadmin4:
-    container_name: pgadmin4-container
+  fieldpal-pg-adminer-db:
+    image: adminer
+    container_name: fieldpal-pg-adminer-db-container
+    restart: unless-stopped
+    ports:
+      - 8181:8080
+    depends_on:
+      - fieldpal-pg-db
+    networks:
+      fieldpal-pg-network:
+        ipv4_address: 172.22.0.253
+
+  fieldpal-pg-pgadmin4:
+    container_name: fieldpal-pgadmin4-container
     image: dpage/pgadmin4
     restart: unless-stopped
     environment:
-      PGADMIN_DEFAULT_EMAIL: "adminBD@postgres.org"
+      PGADMIN_DEFAULT_EMAIL: "adminDB@fieldpal.org"
       PGADMIN_DEFAULT_PASSWORD: "admin123"
     ports:
-      - 82:80
+      - 8182:80
     depends_on:
-      - pg-db
+      - fieldpal-pg-db
     networks:
-      - pg-network
+      fieldpal-pg-network:
+        ipv4_address: 172.22.0.254
 
 networks:
-  pg-network:
+  fieldpal-pg-network:
     driver: bridge
     ipam:
       driver: default
@@ -48,10 +57,5 @@ networks:
         - subnet: 172.22.0.0/24
 
 volumes:
-  pg-data:
-    name: pg-data-local
-    driver: local
-    driver_opts:
-      type: none
-      device: ${LOCAL_DATA_DIR_BD}
-      o: bind
+  fieldpal-pg-data:
+    name: fieldpal-pg-data-local
