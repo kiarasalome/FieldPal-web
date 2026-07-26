@@ -6,27 +6,22 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import unl.edu.ec.fieldPal.model.enums.UserRole;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 
 /**
+ * @author NeoCoreTeam
  * Entidad que representa a un usuario
- * Se utiliza "users" en plural porque "user" es una palabra reservada en PostgreSQL
+ * Se utiliza "users" en plural debido a que "user" es una palabra reservada en PostgreSQL
  */
 @Entity
 @Table(name = "users")
 @NamedQueries({
-        // Consulta para el login: busca un usuario por email y contraseña.
-        // Ventaja: Precompilada por JPA, más segura contra SQL Injection.
         @NamedQuery(name = "User.login",
                 query = "SELECT u FROM User u WHERE u.email = :email AND u.password = :password"),
 
-        // Consulta para obtener todos los usuarios
         @NamedQuery(name = "User.findAll",
                 query = "SELECT u FROM User u"),
 
-        // Consulta para buscar un usuario por su correo único.
         @NamedQuery(name = "User.findByEmail",
                 query = "SELECT u FROM User u WHERE u.email = :email")
 })
@@ -49,7 +44,7 @@ public class User implements Serializable {
     @Column(name = "phone", length = 30)
     private String phone;
 
-    @Column(name = "password", nullable = false, length = 255)
+    @Column(name = "password", nullable = false)
     @NotBlank(message = "La contraseña es obligatoria")
     private String password;
 
@@ -58,20 +53,8 @@ public class User implements Serializable {
     @NotNull(message = "Debe asignar un rol al usuario")
     private UserRole role; // PLAYER o ADMIN. [2]
 
-    /**
-     * Relación con Reservas: Un usuario puede tener muchas reservas.
-     * Mapeada por el atributo 'user' en la clase Reservation.
-     * */
-    @OneToMany(mappedBy = "user", cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
-    private List<Reservation> reservations = new ArrayList<>();
-
-    // Constructor por defecto requerido por JPA
     public User() {}
 
-    /**
-     * Constructor completo para inicialización y clonación de perfiles.
-     * Ajustado para recibir Long como ID.
-     */
     public User(Long id, String name, String email, String phone, String password, UserRole role) {
         this.id = id;
         this.name = name;
@@ -81,7 +64,7 @@ public class User implements Serializable {
         this.role = role;
     }
 
-    // === Métodos de Lógica de Negocio (Helpers) ===
+    // Métodos de Lógica de Negocio
 
     public boolean isAdmin() {
         return role == UserRole.ADMIN;
@@ -91,7 +74,7 @@ public class User implements Serializable {
         return role == UserRole.PLAYER;
     }
 
-    // === Getters y Setters ===
+    // Getters y Setters
 
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
@@ -110,11 +93,6 @@ public class User implements Serializable {
 
     public UserRole getRole() { return role; }
     public void setRole(UserRole role) { this.role = role; }
-
-    public List<Reservation> getReservations() { return reservations; }
-    public void setReservations(List<Reservation> reservations) { this.reservations = reservations; }
-
-    // === Implementación de Equals y HashCode (Comparación por ID) ===
 
     @Override
     public boolean equals(Object o) {

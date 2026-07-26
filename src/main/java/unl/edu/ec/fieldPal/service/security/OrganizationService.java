@@ -10,6 +10,10 @@ import unl.edu.ec.fieldPal.service.CrudGenericService;
 
 import java.util.*;
 
+/**
+ * @author NeoCoreTeam
+ */
+
 @Named
 @ApplicationScoped
 public class OrganizationService {

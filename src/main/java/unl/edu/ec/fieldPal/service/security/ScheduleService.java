@@ -13,6 +13,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * @author NeoCoreTeam
+ */
+
 @Named
 @ApplicationScoped
 public class ScheduleService {
@@ -36,13 +40,13 @@ public class ScheduleService {
         for (int h = 8; h <= 22; h++) {
             LocalTime hour = LocalTime.of(h, 0);
             boolean reserved = reservedHours.contains(hour);
-            slots.add(new TimeSlot(hour, !reserved, courtId, date));
+            slots.add(new TimeSlot());
         }
         return slots;
     }
 
-    public TimeSlot reserve(Long courtId, LocalDate date, LocalTime hour) {
-        TimeSlot slot = new TimeSlot(hour, false, courtId, date);
-        return crudService.create(slot);
+    public void reserve() {
+        TimeSlot slot = new TimeSlot();
+        crudService.create(slot);
     }
 }

@@ -12,6 +12,7 @@ import java.io.Serializable;
 import java.util.List;
 
 /**
+ * @author NeoCoreTeam
  * Managed Bean para la página de inicio.
  */
 @Named

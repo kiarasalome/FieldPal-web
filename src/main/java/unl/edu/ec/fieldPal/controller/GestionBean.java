@@ -21,6 +21,7 @@ import java.io.Serializable;
 import java.util.List;
 
 /**
+ * @author NeoCoreTeam
  * Managed Bean para el panel de administración
  */
 

@@ -12,6 +12,10 @@ import java.io.Serializable;
 import unl.edu.ec.fieldPal.model.User;
 import unl.edu.ec.fieldPal.service.security.UserService;
 
+/**
+ * @author NeoCoreTeam
+ */
+
 @Named
 @ViewScoped
 public class ProfileBean implements Serializable {
@@ -72,7 +76,9 @@ public class ProfileBean implements Serializable {
     private void showMsg(FacesMessage.Severity s, String m) {
         FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(s, m, ""));
     }
-    // Getters y Setters para editingUser, newPassword y confirmPassword...
+
+    // Getters y Setters
+
     public User getEditingUser() { return editingUser; }
     public String getNewPassword() { return newPassword; }
     public void setNewPassword(String p) { this.newPassword = p; }

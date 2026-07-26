@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
+ * @author NeoCoreTeam
  * Managed Bean para la página de reserva.
  * Datos quemados - editar después para conectar a BD real.
  */
@@ -155,7 +156,7 @@ public class ReservaBean implements Serializable {
         res.setContactPhone(contactPhone);
 
         reservationService.addReservation(res);
-        scheduleService.reserve(selectedCourtId, date, hour);
+        scheduleService.reserve();
         submitted = true;
 
         FacesContext.getCurrentInstance().addMessage(null,

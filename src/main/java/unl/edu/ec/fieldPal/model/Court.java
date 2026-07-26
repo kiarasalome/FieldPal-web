@@ -6,9 +6,13 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import unl.edu.ec.fieldPal.model.enums.CourtType;
 
-import java.io.Serial;
 import java.io.Serializable;
 import java.util.Objects;
+
+/**
+ * @author NeoCoreTeam
+ * Entidad que presenta una cancha de cualquier deporte disponible
+ */
 
 @Entity
 @Table(name = "courts")
@@ -65,29 +69,22 @@ public class Court implements Serializable {
         this.imageUrl = imageUrl;
     }
 
-    // === Métodos de Compatibilidad con Tu Código Actual (Getter/Setter de orgId) ===
-
     public Long getOrgId() {
         return organization != null ? organization.getId() : null;
     }
 
     public void setOrgId(Long orgId) {
-        // Mantiene compatibilidad si pasas un String ID directamente
         if (this.organization == null) {
             this.organization = new Organization();
         }
         this.organization.setId(orgId);
     }
 
-    public Long getOrganizationId() {
-        return getOrgId();
-    }
-
     public void setOrganizationId(Long organizationId) {
         setOrgId(organizationId);
     }
 
-    // === Getters y Setters Estándar ===
+    // Getters y Setters Estándar
 
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
@@ -119,8 +116,7 @@ public class Court implements Serializable {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof Court)) return false;
-        Court court = (Court) o;
+        if (!(o instanceof Court court)) return false;
         return Objects.equals(id, court.id);
     }
 

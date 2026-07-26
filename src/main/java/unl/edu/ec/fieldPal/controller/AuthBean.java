@@ -13,6 +13,10 @@ import java.io.Serial;
 import java.io.Serializable;
 import java.util.regex.Pattern;
 
+/**
+ * @author NeoCoreTeam
+ */
+
 @Named
 @SessionScoped
 public class AuthBean implements Serializable {

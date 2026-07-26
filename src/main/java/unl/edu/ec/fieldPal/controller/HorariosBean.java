@@ -19,6 +19,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 /**
+ * @author NeoCoreTeam
  * Managed Bean para la página de consulta de horarios.
  */
 @Named

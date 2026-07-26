@@ -3,11 +3,15 @@ package unl.edu.ec.fieldPal.model;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 
-import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Objects;
+
+/**
+ * @author NeoCoreTeam
+ * Entidad que representa horarios disponibles que se muestran para ser reservados
+ */
 
 @Entity
 @Table(name = "time_slots")
@@ -44,23 +48,7 @@ public class TimeSlot implements Serializable {
         this.available = available;
     }
 
-    public TimeSlot(LocalTime hour, boolean b, Long courtId, LocalDate date) {
-    }
-
-    // === Método Puente para compatibilidad con String courtId ===
-
-    public Long getCourtId() {
-        return court != null ? court.getId() : null;
-    }
-
-    public void setCourtId(Long courtId) {
-        if (this.court == null) {
-            this.court = new Court();
-        }
-        this.court.setId(courtId);
-    }
-
-    // === Getters y Setters ===
+    // Getters y Setters
 
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
@@ -80,8 +68,7 @@ public class TimeSlot implements Serializable {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof TimeSlot)) return false;
-        TimeSlot timeSlot = (TimeSlot) o;
+        if (!(o instanceof TimeSlot timeSlot)) return false;
         return Objects.equals(id, timeSlot.id);
     }
 

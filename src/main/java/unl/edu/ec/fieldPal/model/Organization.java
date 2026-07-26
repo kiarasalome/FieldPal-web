@@ -7,11 +7,15 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import unl.edu.ec.fieldPal.model.enums.Zone;
 
-import java.io.Serial;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+
+/**
+ * @author NeoCoreTeam
+ * Entidad que representa una orgazación/complejo de canchas deportivas
+ */
 
 @Entity
 @Table(name = "organizations")
@@ -32,7 +36,7 @@ public class Organization implements Serializable {
     @NotNull(message = "Debe seleccionar una zona de la ciudad")
     private Zone zone;
 
-    @Column(name = "address", nullable = false, length = 255)
+    @Column(name = "address", nullable = false)
     @NotBlank(message = "La dirección del complejo es requerida")
     private String address;
 
@@ -86,20 +90,7 @@ public class Organization implements Serializable {
         this.longitude = longitude;
     }
 
-    // Método helper para agregar canchas de forma segura
-    public void addCourt(Court court) {
-        courts.add(court);
-        court.setOrganization(this);
-        this.courtCount = courts.size();
-    }
-
-    public void removeCourt(Court court) {
-        courts.remove(court);
-        court.setOrganization(null);
-        this.courtCount = courts.size();
-    }
-
-    // === Getters y Setters ===
+    // Getters y Setters
 
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
@@ -143,8 +134,7 @@ public class Organization implements Serializable {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof Organization)) return false;
-        Organization that = (Organization) o;
+        if (!(o instanceof Organization that)) return false;
         return Objects.equals(id, that.id);
     }
 
