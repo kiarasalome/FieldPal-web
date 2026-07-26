@@ -87,7 +87,7 @@ public class GestionBean implements Serializable {
     public CourtType[] getCourtTypes() { return CourtType.values(); }
 
     // === Dashboard stats ===
-    public int getTotalCanchas() { return courtService.getCourtCount(); }
+    public int getTotalCanchas() { return Math.toIntExact(courtService.getCourtCount()); }
     public int getReservasActivas() { return reservationService.getActiveCount(); }
     public int getUsuarios() { return userService.getUserCount(); }
     public double getIngresosMes() { return reservationService.getMonthlyIncome(); }

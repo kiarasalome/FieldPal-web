@@ -48,6 +48,9 @@ public class TimeSlot implements Serializable {
         this.available = available;
     }
 
+    public TimeSlot(LocalTime hour, boolean b, Long courtId, LocalDate date) {
+    }
+
     // Getters y Setters
 
     public Long getId() { return id; }

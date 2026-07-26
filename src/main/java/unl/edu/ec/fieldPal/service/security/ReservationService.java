@@ -1,6 +1,5 @@
 package unl.edu.ec.fieldPal.service.security;
 
-
 import jakarta.inject.Inject;
 import jakarta.persistence.EntityNotFoundException;
 import unl.edu.ec.fieldPal.model.Reservation;
@@ -10,10 +9,6 @@ import jakarta.inject.Named;
 import unl.edu.ec.fieldPal.service.CrudGenericService;
 
 import java.util.*;
-
-/**
- * @author NeoCoreTeam
- */
 
 @Named
 @ApplicationScoped
@@ -26,20 +21,21 @@ public class ReservationService {
     }
 
     public List<Reservation> getAll() {
-        String jpql = "SELECT DISTINCT o.reservations FROM Organization o";
-        return crudService.findWithQuery(jpql, Collections.emptyMap());
+        return crudService.findWithQuery("SELECT r FROM Reservation r", Collections.emptyMap());
     }
 
-    public List<Reservation> getByUser(Long userId){
+    public List<Reservation> getByUser(Long userId) {
+        if (userId == null) return new ArrayList<>();
         Map<String, Object> params = new HashMap<>();
         params.put("user", userId);
         return crudService.findWithNamedQuery("Reservation.getByUser", params);
     }
 
-    public Reservation findById(Long id) throws EntityNotFoundException {
+    public Reservation findById(Long id) {
+        if (id == null) return null;
         Reservation reservation = crudService.find(Reservation.class, id);
-        if (reservation == null){
-            throw new EntityNotFoundException("Organization no encontrada con [" + id + "]");
+        if (reservation == null) {
+            throw new EntityNotFoundException("Reserva no encontrada con [" + id + "]");
         }
         return reservation;
     }
@@ -47,21 +43,20 @@ public class ReservationService {
     public void addReservation(Reservation res) {
         if (res == null) return;
         crudService.create(res);
-
     }
 
     public void cancelReservation(Long id) {
         Reservation res = findById(id);
-        if (res != null) {
-            res.setStatus(ReservationStatus.CANCELLED);
-        }
+        // findById lanza EntityNotFoundException si no existe, así que aquí
+        // res siempre está garantizado como no-null.
+        res.setStatus(ReservationStatus.CANCELLED);
+        crudService.update(res);
     }
 
     public void confirmReservation(Long id) {
         Reservation res = findById(id);
-        if (res != null) {
-            res.setConfirmed(true);
-        }
+        res.setConfirmed(true);
+        crudService.update(res);
     }
 
     public void updateReservation(Reservation reservation) {
@@ -75,7 +70,7 @@ public class ReservationService {
         params.put("status", ReservationStatus.UPCOMING);
 
         List<Long> result = crudService.findWithQuery(jpql, params);
-        return result.get(0).intValue();
+        return result.isEmpty() ? 0 : result.get(0).intValue();
     }
 
     public double getMonthlyIncome() {
@@ -84,8 +79,7 @@ public class ReservationService {
         params.put("status", ReservationStatus.CANCELLED);
 
         List<Double> result = crudService.findWithQuery(jpql, params);
-        Double sum = result.get(0);
-        return sum != null ? sum : 0.0;
+        if (result.isEmpty() || result.get(0) == null) return 0.0;
+        return result.get(0);
     }
-
 }

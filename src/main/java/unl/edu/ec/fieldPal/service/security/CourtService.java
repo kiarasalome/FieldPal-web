@@ -10,10 +10,6 @@ import unl.edu.ec.fieldPal.service.CrudGenericService;
 
 import java.util.*;
 
-/**
- * @author NeoCoreTeam
- */
-
 @Named
 @ApplicationScoped
 public class CourtService {
@@ -25,18 +21,18 @@ public class CourtService {
     }
 
     public List<Court> getAll() {
-        String jpql = "SELECT DISTINCT o.courts FROM Organization o";
-        return crudService.findWithQuery(jpql, Collections.emptyMap());
+        return crudService.findWithQuery("SELECT c FROM Court c", Collections.emptyMap());
     }
 
-    public List<Court> getByOrg(Long orgId){
+    public List<Court> getByOrg(Long orgId) {
         if (orgId == null) return new ArrayList<>();
         Map<String, Object> params = new HashMap<>();
         params.put("orgId", orgId);
         return crudService.findWithNamedQuery("Court.getByOrg", params);
     }
 
-    public List<Court> getByType(CourtType type){
+    public List<Court> getByType(CourtType type) {
+        if (type == null) return new ArrayList<>();
         Map<String, Object> params = new HashMap<>();
         params.put("type", type);
         return crudService.findWithNamedQuery("Court.getByType", params);
@@ -45,21 +41,21 @@ public class CourtService {
     public Court findById(Long id) {
         if (id == null) return null;
         Court court = crudService.find(Court.class, id);
-        if (court == null){
+        if (court == null) {
             throw new EntityNotFoundException("Cancha no encontrada con [" + id + "]");
         }
         return court;
     }
 
     /**
-     * Guarda una cancha en la lista. Si ya cuenta con ID único registrado, actualiza su información;
-     * de lo contrario, la añade y autogenera su ID de forma segura.
+     * Guarda una cancha. Si ya existe una entidad persistida con ese ID, actualiza;
+     * de lo contrario, la crea.
      * (Este método es el invocado por WizardBean.java)
      */
     public void save(Court court) {
         if (court == null) return;
 
-        if (court.getId() != null && findById(court.getId()) != null) {
+        if (court.getId() != null && crudService.find(Court.class, court.getId()) != null) {
             crudService.update(court);
         } else {
             crudService.create(court);
@@ -81,7 +77,9 @@ public class CourtService {
         crudService.delete(Court.class, id);
     }
 
-    public int getCourtCount() {
-        return getAll().size();
+    public long getCourtCount() {
+        List<Long> result = crudService.findWithQuery(
+                "SELECT COUNT(c) FROM Court c", Collections.emptyMap());
+        return result.isEmpty() ? 0L : result.get(0);
     }
 }

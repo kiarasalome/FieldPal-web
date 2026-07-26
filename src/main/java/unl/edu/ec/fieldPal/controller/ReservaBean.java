@@ -156,7 +156,7 @@ public class ReservaBean implements Serializable {
         res.setContactPhone(contactPhone);
 
         reservationService.addReservation(res);
-        scheduleService.reserve();
+        scheduleService.reserve(selectedCourtId, date, hour);
         submitted = true;
 
         FacesContext.getCurrentInstance().addMessage(null,
