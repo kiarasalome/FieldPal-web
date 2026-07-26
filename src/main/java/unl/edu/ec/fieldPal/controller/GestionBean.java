@@ -15,17 +15,20 @@ import jakarta.faces.context.FacesContext;
 import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
+
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.List;
 
 /**
- * Managed Bean para el panel de administración (una sola página AJAX).
- * Datos quemados - editar después para conectar a BD real.
+ * Managed Bean para el panel de administración
  */
 
 @Named
 @ViewScoped
 public class GestionBean implements Serializable {
+
+    @Serial
     private static final long serialVersionUID = 1L;
 
     @Inject
@@ -59,7 +62,7 @@ public class GestionBean implements Serializable {
     private double newOrgLongitude = 0.0;
 
     // === Formulario nueva cancha ===
-    private String newCourtOrg = "";
+    private Long newCourtOrg = null;
     private String newCourtName = "";
     private CourtType newCourtType = CourtType.FUTBOL;
     private double newCourtPrice = 0;
@@ -183,13 +186,10 @@ public class GestionBean implements Serializable {
         return null;
     }
 
-    public void removeCourt(String courtId) {
-        if (courtId == null || courtId.isEmpty()) return;
-        try {
-            courtService.removeCourt(Long.valueOf(courtId));
-            FacesContext.getCurrentInstance().addMessage(null,
-                    new FacesMessage(FacesMessage.SEVERITY_INFO, "Cancha eliminada.", ""));
-        } catch (NumberFormatException ignored) {}
+    public void removeCourt(Long courtId) {
+        courtService.removeCourt(courtId);
+        FacesContext.getCurrentInstance().addMessage(null,
+                new FacesMessage(FacesMessage.SEVERITY_INFO, "Cancha eliminada.", ""));
     }
 
     // === Reservas ===
@@ -204,30 +204,24 @@ public class GestionBean implements Serializable {
                 .toList();
     }
 
-    public void cancelReservation(String reservationId) {
-        if (reservationId == null || reservationId.isEmpty()) return;
-        try {
-            reservationService.cancelReservation(Long.valueOf(reservationId));
-            FacesContext.getCurrentInstance().addMessage(null,
-                    new FacesMessage(FacesMessage.SEVERITY_INFO, "Reserva cancelada.", ""));
-        } catch (NumberFormatException ignored) {}
+    public void cancelReservation(Long reservationId) {
+        reservationService.cancelReservation(reservationId);
+        FacesContext.getCurrentInstance().addMessage(null,
+                new FacesMessage(FacesMessage.SEVERITY_INFO, "Reserva cancelada.", ""));
     }
 
     // === Helpers ===
     public String getCourtName(Long courtId) {
-        if (courtId == null) return "—";
         Court c = courtService.findById(courtId);
         return c != null ? c.getName() : "—";
     }
 
     public String getOrgName(Long orgId) {
-        if (orgId == null) return "—";
         Organization o = organizationService.findById(orgId);
         return o != null ? o.getName() : "—";
     }
 
     public String getOrgZoneName(Long orgId) {
-        if (orgId == null) return "—";
         Organization o = organizationService.findById(orgId);
         return o != null && o.getZone() != null ? o.getZone().getLabel() : "—";
     }
@@ -251,7 +245,7 @@ public class GestionBean implements Serializable {
     }
 
     private void clearCourtForm() {
-        newCourtOrg = "";
+        newCourtOrg = null;
         newCourtName = "";
         newCourtType = CourtType.FUTBOL;
         newCourtPrice = 0;
@@ -284,8 +278,8 @@ public class GestionBean implements Serializable {
     public void setNewOrgLongitude(double v) { this.newOrgLongitude = v; }
 
     // Court form
-    public String getNewCourtOrg() { return newCourtOrg; }
-    public void setNewCourtOrg(String v) { this.newCourtOrg = v; }
+    public Long getNewCourtOrg() { return newCourtOrg; }
+    public void setNewCourtOrg(Long v) { this.newCourtOrg = v; }
     public String getNewCourtName() { return newCourtName; }
     public void setNewCourtName(String v) { this.newCourtName = v; }
     public CourtType getNewCourtType() { return newCourtType; }

@@ -11,17 +11,20 @@ import jakarta.faces.context.FacesContext;
 import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
+
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.List;
 import java.util.stream.Collectors;
 
 /**
  * Managed Bean para la página de mis reservas.
- * Datos quemados - editar después para conectar a BD real.
  */
 @Named
 @ViewScoped
 public class MisReservasBean implements Serializable {
+
+    @Serial
     private static final long serialVersionUID = 1L;
 
     @Inject
@@ -53,7 +56,7 @@ public class MisReservasBean implements Serializable {
         return all.stream()
                 .filter(r -> {
                     boolean matchesSearch = search.isEmpty()
-                            || (r.getId() != null && r.getId().toString().contains(search))
+                            || String.valueOf(r.getId()).contains(search)
                             || getCourtName(r.getCourtId()).toLowerCase().contains(search.toLowerCase())
                             || getOrgName(r.getOrgId()).toLowerCase().contains(search.toLowerCase());
                     if ("all".equals(activeFilter)) return matchesSearch;
@@ -63,20 +66,17 @@ public class MisReservasBean implements Serializable {
     }
 
     public String getCourtName(Long courtId) {
-        if (courtId == null) return "—";
         Court court = courtService.findById(courtId);
         return court != null ? court.getName() : "—";
     }
 
     public String getOrgName(Long orgId) {
-        if (orgId == null) return "—";
         Organization org = organizationService.findById(orgId);
         return org != null ? org.getName() : "—";
     }
 
     /** Ícono Material Symbols asociado al tipo de cancha (para la tabla/modal). */
     public String getCourtIcon(Long courtId) {
-        if (courtId == null) return "sports_soccer";
         Court court = courtService.findById(courtId);
         return court != null && court.getType() != null ? court.getType().getIcon() : "sports_soccer";
     }

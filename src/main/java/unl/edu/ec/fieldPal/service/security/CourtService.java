@@ -1,5 +1,6 @@
 package unl.edu.ec.fieldPal.service.security;
 
+import jakarta.inject.Inject;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;

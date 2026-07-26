@@ -76,4 +76,5 @@ public class ReservationService {
     public double getMonthlyIncome() {
         return reservationRepository.sumTotalPriceExcluding(ReservationStatus.CANCELLED);
     }
+
 }

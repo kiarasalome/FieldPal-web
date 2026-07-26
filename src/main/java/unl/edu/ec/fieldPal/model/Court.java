@@ -72,6 +72,7 @@ public class Court implements Serializable {
     }
 
     public void setOrgId(Long orgId) {
+        // Mantiene compatibilidad si pasas un String ID directamente
         if (this.organization == null) {
             this.organization = new Organization();
         }

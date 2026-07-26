@@ -13,6 +13,7 @@ import unl.edu.ec.fieldPal.model.enums.CourtType;
 import unl.edu.ec.fieldPal.service.security.OrganizationService;
 import unl.edu.ec.fieldPal.service.security.CourtService;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalTime;
 import java.util.ArrayList;
@@ -26,6 +27,7 @@ import java.util.List;
 @ViewScoped
 public class WizardBean implements Serializable {
 
+    @Serial
     private static final long serialVersionUID = 1L;
 
     @Inject
@@ -285,8 +287,6 @@ public class WizardBean implements Serializable {
         private LocalTime openTime;
         private LocalTime closeTime;
         private boolean active;
-
-        public ScheduleDay() {}
 
         public ScheduleDay(String dayName, LocalTime openTime, LocalTime closeTime, boolean active) {
             this.dayName = dayName;

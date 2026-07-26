@@ -5,15 +5,31 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import unl.edu.ec.fieldPal.model.enums.UserRole;
-
-import java.io.Serial;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+/**
+ * Entidad que representa a un usuario
+ * Se utiliza "users" en plural porque "user" es una palabra reservada en PostgreSQL
+ */
 @Entity
-@Table(name = "users") // Usamos "users" en plural porque "user" es palabra reservada en PostgreSQL
+@Table(name = "users")
+@NamedQueries({
+        // Consulta para el login: busca un usuario por email y contraseña.
+        // Ventaja: Precompilada por JPA, más segura contra SQL Injection.
+        @NamedQuery(name = "User.login",
+                query = "SELECT u FROM User u WHERE u.email = :email AND u.password = :password"),
+
+        // Consulta para obtener todos los usuarios
+        @NamedQuery(name = "User.findAll",
+                query = "SELECT u FROM User u"),
+
+        // Consulta para buscar un usuario por su correo único.
+        @NamedQuery(name = "User.findByEmail",
+                query = "SELECT u FROM User u WHERE u.email = :email")
+})
 public class User implements Serializable {
 
     @Id
@@ -33,22 +49,29 @@ public class User implements Serializable {
     @Column(name = "phone", length = 30)
     private String phone;
 
-    @Column(name = "password", nullable = false, length = 255) // Tamaño adecuado para hashes BCrypt / PBKDF2
+    @Column(name = "password", nullable = false, length = 255)
     @NotBlank(message = "La contraseña es obligatoria")
     private String password;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "role", nullable = false, length = 30)
     @NotNull(message = "Debe asignar un rol al usuario")
-    private UserRole role;
+    private UserRole role; // PLAYER o ADMIN. [2]
 
-    // Relación OneToMany: Mapeada por el atributo 'user' en la clase Reservation
-    // Esto permite obtener el historial de reservas de un usuario con user.getReservations()
+    /**
+     * Relación con Reservas: Un usuario puede tener muchas reservas.
+     * Mapeada por el atributo 'user' en la clase Reservation.
+     * */
     @OneToMany(mappedBy = "user", cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
     private List<Reservation> reservations = new ArrayList<>();
 
+    // Constructor por defecto requerido por JPA
     public User() {}
 
+    /**
+     * Constructor completo para inicialización y clonación de perfiles.
+     * Ajustado para recibir Long como ID.
+     */
     public User(Long id, String name, String email, String phone, String password, UserRole role) {
         this.id = id;
         this.name = name;
@@ -66,7 +89,7 @@ public class User implements Serializable {
         this.role = role;
     }
 
-    // === Métodos Helper de Roles ===
+    // === Métodos de Lógica de Negocio (Helpers) ===
 
     public boolean isAdmin() {
         return role == UserRole.ADMIN;
@@ -99,13 +122,12 @@ public class User implements Serializable {
     public List<Reservation> getReservations() { return reservations; }
     public void setReservations(List<Reservation> reservations) { this.reservations = reservations; }
 
-    // === Equals & HashCode ===
+    // === Implementación de Equals y HashCode (Comparación por ID) ===
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof User)) return false;
-        User user = (User) o;
+        if (!(o instanceof User user)) return false;
         return Objects.equals(id, user.id);
     }
 

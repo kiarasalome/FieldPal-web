@@ -14,7 +14,10 @@ import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import unl.edu.ec.fieldPal.service.security.ScheduleService;
 
+import java.io.Serial;
 import java.io.Serializable;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -26,6 +29,8 @@ import java.util.stream.Collectors;
 @Named
 @ViewScoped
 public class ReservaBean implements Serializable {
+
+    @Serial
     private static final long serialVersionUID = 1L;
 
     @Inject
@@ -49,11 +54,11 @@ public class ReservaBean implements Serializable {
     }
 
     // Filtros
-    private String selectedCourtId = "";
+    private Long selectedCourtId = null;
 
     // Datos de reserva
-    private String date = "";
-    private String hour = "";
+    private LocalDate date = null;
+    private LocalTime hour = null;
     private int duration = 1;
     private int playerCount = 5;
     private String contactName = "";
@@ -63,12 +68,8 @@ public class ReservaBean implements Serializable {
     private boolean submitted = false;
 
     public Court getActiveCourt() {
-        if (selectedCourtId != null && !selectedCourtId.isEmpty()) {
-            try {
-                return courtService.findById(Long.valueOf(selectedCourtId));
-            } catch (NumberFormatException e) {
-                return null;
-            }
+        if (selectedCourtId != null) {
+            return courtService.findById(selectedCourtId);
         }
         return null;
     }
@@ -84,9 +85,8 @@ public class ReservaBean implements Serializable {
         return getTotalPrice() / players;
     }
 
-    public List<String> getAvailableHours() {
-        if (selectedCourtId == null || selectedCourtId.isEmpty()
-                || date == null || date.isEmpty()) {
+    public List<LocalTime> getAvailableHours() {
+        if (selectedCourtId == null || date == null) {
             return List.of();
         }
         return scheduleService.getSchedule(selectedCourtId, date).stream()
@@ -97,15 +97,14 @@ public class ReservaBean implements Serializable {
     }
 
     public List<TimeSlot> getScheduleSlots() {
-        if (selectedCourtId == null || selectedCourtId.isEmpty()
-                || date == null || date.isEmpty()) {
+        if (selectedCourtId == null || date == null) {
             return List.of();
         }
         return scheduleService.getSchedule(selectedCourtId, date);
     }
 
     public void onDateOrCourtChange() {
-        this.hour = "";
+        this.hour = null;
     }
 
     public String doReserve() {
@@ -115,17 +114,24 @@ public class ReservaBean implements Serializable {
             return "/login.xhtml?faces-redirect=true";
         }
 
-        if (selectedCourtId == null || selectedCourtId.isEmpty()) {
+        // Validaciones básicas
+        if (!getAvailableHours().contains(hour)) {
+            FacesContext.getCurrentInstance().addMessage(null,
+                    new FacesMessage(FacesMessage.SEVERITY_ERROR,
+                            "La hora seleccionada ya no está disponible.", ""));
+            return null;
+        }
+        if (selectedCourtId == null) {
             FacesContext.getCurrentInstance().addMessage(null,
                     new FacesMessage(FacesMessage.SEVERITY_ERROR, "Selecciona una cancha.", ""));
             return null;
         }
-        if (date == null || date.isEmpty()) {
+        if (date == null) {
             FacesContext.getCurrentInstance().addMessage(null,
                     new FacesMessage(FacesMessage.SEVERITY_ERROR, "Selecciona una fecha.", ""));
             return null;
         }
-        if (hour == null || hour.isEmpty()) {
+        if (hour == null) {
             FacesContext.getCurrentInstance().addMessage(null,
                     new FacesMessage(FacesMessage.SEVERITY_ERROR, "Selecciona una hora.", ""));
             return null;
@@ -175,14 +181,14 @@ public class ReservaBean implements Serializable {
     }
 
     // Getters y Setters
-    public String getSelectedCourtId() { return selectedCourtId; }
-    public void setSelectedCourtId(String selectedCourtId) { this.selectedCourtId = selectedCourtId; }
+    public Long getSelectedCourtId() { return selectedCourtId; }
+    public void setSelectedCourtId(Long selectedCourtId) { this.selectedCourtId = selectedCourtId; }
 
-    public String getDate() { return date; }
-    public void setDate(String date) { this.date = date; }
+    public LocalDate getDate() { return date; }
+    public void setDate(LocalDate date) { this.date = date; }
 
-    public String getHour() { return hour; }
-    public void setHour(String hour) { this.hour = hour; }
+    public LocalTime getHour() { return hour; }
+    public void setHour(LocalTime hour) { this.hour = hour; }
 
     public int getDuration() { return duration; }
     public void setDuration(int duration) { this.duration = duration; }

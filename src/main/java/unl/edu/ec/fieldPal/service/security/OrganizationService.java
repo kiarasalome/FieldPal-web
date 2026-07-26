@@ -30,10 +30,9 @@ public class OrganizationService {
     }
 
     public Organization findById(Long id) throws EntityNotFoundException {
-        if (id == null) return null;
-        Organization organization = organizationRepository.findById(id);
-        if (organization == null) {
-            throw new EntityNotFoundException("Organización no encontrada con ID [" + id + "]");
+        Organization organization = crudService.find(Organization.class, id);
+        if (organization == null){
+            throw new EntityNotFoundException("Organization no encontrada con [" + id + "]");
         }
         return organization;
     }
@@ -62,3 +61,4 @@ public class OrganizationService {
         return organizationRepository.findDistinctZones();
     }
 }
+

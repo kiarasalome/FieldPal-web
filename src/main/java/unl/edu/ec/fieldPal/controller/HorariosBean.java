@@ -13,17 +13,19 @@ import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import unl.edu.ec.fieldPal.service.security.ScheduleService;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.List;
 
 /**
  * Managed Bean para la página de consulta de horarios.
- * Datos quemados - editar después para conectar a BD real.
  */
 @Named
 @ViewScoped
 public class HorariosBean implements Serializable {
+
+    @Serial
     private static final long serialVersionUID = 1L;
 
     @Inject
@@ -37,9 +39,9 @@ public class HorariosBean implements Serializable {
 
     // Filtros
     private Zone selectedZone;
-    private String selectedOrgId = "";
-    private String selectedCourtId = "";
-    private String date = LocalDate.now().toString();
+    private Long selectedOrgId = null;
+    private Long selectedCourtId = null;
+    private LocalDate date = LocalDate.now();
 
     @PostConstruct
     public void init() {
@@ -61,63 +63,47 @@ public class HorariosBean implements Serializable {
     }
 
     public List<Court> getCourtsForSelectedOrg() {
-        if (selectedOrgId == null || selectedOrgId.isEmpty()) return List.of();
-        try {
-            return courtService.getByOrg(Long.valueOf(selectedOrgId));
-        } catch (NumberFormatException e) {
-            return List.of();
-        }
+        if (selectedOrgId == null) return List.of();
+        return courtService.getByOrg(selectedOrgId);
     }
 
     public Court getActiveCourt() {
-        if (selectedCourtId == null || selectedCourtId.isEmpty()) return null;
-        try {
-            return courtService.findById(Long.valueOf(selectedCourtId));
-        } catch (NumberFormatException e) {
-            return null;
-        }
+        if (selectedCourtId == null) return null;
+        return courtService.findById(selectedCourtId);
     }
 
     public List<TimeSlot> getActiveSchedule() {
-        if (selectedCourtId == null || selectedCourtId.isEmpty()) return List.of();
+        if (selectedCourtId == null) return List.of();
         return scheduleService.getSchedule(selectedCourtId, date);
     }
 
     public void filterByZone(Zone zone) {
         this.selectedZone = zone;
         List<Organization> filtered = getFilteredOrgs();
-        selectedOrgId = "";
-        selectedCourtId = "";
-        if (!filtered.isEmpty() && filtered.get(0).getId() != null) {
-            selectOrganization(filtered.get(0).getId().toString());
+        selectedOrgId = null;
+        selectedCourtId = null;
+        if (!filtered.isEmpty()) {
+            selectOrganization(filtered.get(0).getId());
         }
     }
 
     public void clearZoneFilter() {
         this.selectedZone = null;
         List<Organization> orgs = organizationService.getAll();
-        selectedOrgId = "";
-        selectedCourtId = "";
-        if (!orgs.isEmpty() && orgs.get(0).getId() != null) {
-            selectOrganization(orgs.get(0).getId().toString());
+        selectedOrgId = null;
+        selectedCourtId = null;
+        if (!orgs.isEmpty()) {
+            selectOrganization(orgs.get(0).getId());
         }
     }
 
-    public void selectOrganization(String orgId) {
+    public void selectOrganization(Long orgId) {
         this.selectedOrgId = orgId;
-        if (orgId == null || orgId.isEmpty()) {
-            this.selectedCourtId = "";
-            return;
-        }
-        try {
-            List<Court> courts = courtService.getByOrg(Long.valueOf(orgId));
-            this.selectedCourtId = courts.isEmpty() || courts.get(0).getId() == null ? "" : courts.get(0).getId().toString();
-        } catch (NumberFormatException e) {
-            this.selectedCourtId = "";
-        }
+        List<Court> courts = courtService.getByOrg(orgId);
+        this.selectedCourtId = courts.isEmpty() ? null : courts.get(0).getId();
     }
 
-    public void selectCourt(String courtId) {
+    public void selectCourt(Long courtId) {
         this.selectedCourtId = courtId;
     }
 
@@ -125,12 +111,12 @@ public class HorariosBean implements Serializable {
     public Zone getSelectedZone() { return selectedZone; }
     public void setSelectedZone(Zone selectedZone) { this.selectedZone = selectedZone; }
 
-    public String getSelectedOrgId() { return selectedOrgId; }
-    public void setSelectedOrgId(String selectedOrgId) { this.selectedOrgId = selectedOrgId; }
+    public Long getSelectedOrgId() { return selectedOrgId; }
+    public void setSelectedOrgId(Long selectedOrgId) { this.selectedOrgId = selectedOrgId; }
 
-    public String getSelectedCourtId() { return selectedCourtId; }
-    public void setSelectedCourtId(String selectedCourtId) { this.selectedCourtId = selectedCourtId; }
+    public Long getSelectedCourtId() { return selectedCourtId; }
+    public void setSelectedCourtId(Long selectedCourtId) { this.selectedCourtId = selectedCourtId; }
 
-    public String getDate() { return date; }
-    public void setDate(String date) { this.date = date; }
+    public LocalDate getDate() { return date; }
+    public void setDate(LocalDate date) { this.date = date; }
 }

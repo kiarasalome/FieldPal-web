@@ -1,7 +1,7 @@
 -- USUARIOS (Admin y Jugador)
 -- ============================================
-INSERT INTO USERS (ID, NAME, EMAIL, PHONE, PASSWORD, ROLE) VALUES (1, 'Admin FieldPal', 'admin@fieldpal.com', '+593990000001', 'admin123', 'ADMIN');
-INSERT INTO USERS (ID, NAME, EMAIL, PHONE, PASSWORD, ROLE) VALUES (2, 'Carlos Mendoza', 'jugador@fieldpal.com', '+593991234567', 'jugador123', 'PLAYER');
+INSERT INTO USERS (ID, NAME, EMAIL, PHONE, PASSWORD, ROLE, ACTIVE) VALUES (1, 'Admin FieldPal', 'admin@fieldpal.com', '+593990000001', 'admin123', 'ADMIN', true);
+INSERT INTO USERS (ID, NAME, EMAIL, PHONE, PASSWORD, ROLE, ACTIVE) VALUES (2, 'Carlos Mendoza', 'jugador@fieldpal.com', '+593991234567', 'jugador123', 'PLAYER', true);
 
 -- ORGANIZACIONES (complejos deportivos)
 -- ============================================
@@ -15,12 +15,12 @@ INSERT INTO COURTS (ID, ORG_ID, NAME, TYPE, PRICE_PER_HOUR, HAS_LIGHTING, COVERE
 
 -- TIME SLOTS (franjas horarias por cancha)
 -- ============================================
-INSERT INTO TIME_SLOTS (ID, COURT_ID, SLOT_DATE, SLOT_HOUR, AVAILABLE) VALUES (1, 1, '2026-07-25', '09:00:00', true);
-INSERT INTO TIME_SLOTS (ID, COURT_ID, SLOT_DATE, SLOT_HOUR, AVAILABLE) VALUES (2, 1, '2026-07-25', '10:00:00', true);
+INSERT INTO TIME_SLOTS (ID, COURT_ID, SLOT_DATE, SLOT_HOUR, AVAILABLE) VALUES (1, 1, DATE '2026-07-25', TIME '09:00:00', true);
+INSERT INTO TIME_SLOTS (ID, COURT_ID, SLOT_DATE, SLOT_HOUR, AVAILABLE) VALUES (2, 1, DATE '2026-07-25', TIME '10:00:00', true);
 
 -- RESERVAS (dependen de users, organizations, courts)
 -- ============================================
 INSERT INTO RESERVATIONS (ID, USER_ID, ORG_ID, COURT_ID, RESERVATION_DATE, RESERVATION_HOUR, DURATION, PLAYER_COUNT, TOTAL_PRICE, STATUS, CONFIRMED, CONTACT_NAME, CONTACT_PHONE) VALUES
-    (1, 2, 1, 1, '2026-07-25', '09:00:00', 2, 10, 30.00, 'UPCOMING', true, 'Carlos Mendoza', '+593991234567');
+    (1, 2, 1, 1, DATE '2026-07-25', TIME '09:00:00', 2, 10, 30.00, 'UPCOMING', true, 'Carlos Mendoza', '+593991234567');
 
 COMMIT;

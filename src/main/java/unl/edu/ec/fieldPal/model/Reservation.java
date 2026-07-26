@@ -92,7 +92,6 @@ public class Reservation implements Serializable {
         this.contactPhone = contactPhone;
     }
 
-    // === Métodos Puente de Compatibilidad con IDs (Long) ===
 
     public Long getOrgId() {
         return organization != null ? organization.getId() : null;
