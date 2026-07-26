@@ -36,7 +36,7 @@ public class TimeSlot implements Serializable {
 
     public TimeSlot() {}
 
-    public TimeSlot(String id, Court court, LocalDate date, LocalTime hour, boolean available) {
+    public TimeSlot(Long id, Court court, LocalDate date, LocalTime hour, boolean available) {
         this.id = id;
         this.court = court;
         this.date = date;
@@ -46,11 +46,11 @@ public class TimeSlot implements Serializable {
 
     // === Método Puente para compatibilidad con String courtId ===
 
-    public String getCourtId() {
+    public Long getCourtId() {
         return court != null ? court.getId() : null;
     }
 
-    public void setCourtId(String courtId) {
+    public void setCourtId(Long courtId) {
         if (this.court == null) {
             this.court = new Court();
         }

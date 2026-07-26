@@ -67,11 +67,11 @@ public class Court implements Serializable {
 
     // === Métodos de Compatibilidad con Tu Código Actual (Getter/Setter de orgId) ===
 
-    public String getOrgId() {
+    public Long getOrgId() {
         return organization != null ? organization.getId() : null;
     }
 
-    public void setOrgId(String orgId) {
+    public void setOrgId(Long orgId) {
         // Mantiene compatibilidad si pasas un String ID directamente
         if (this.organization == null) {
             this.organization = new Organization();
@@ -79,18 +79,18 @@ public class Court implements Serializable {
         this.organization.setId(orgId);
     }
 
-    public String getOrganizationId() {
+    public Long getOrganizationId() {
         return getOrgId();
     }
 
-    public void setOrganizationId(String organizationId) {
+    public void setOrganizationId(Long organizationId) {
         setOrgId(organizationId);
     }
 
     // === Getters y Setters Estándar ===
 
-    public String getId() { return id; }
-    public void setId(String id) { this.id = id; }
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
 
     public Organization getOrganization() { return organization; }
     public void setOrganization(Organization organization) { this.organization = organization; }
