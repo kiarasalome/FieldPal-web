@@ -73,7 +73,7 @@ public class Reservation implements Serializable {
 
     public Reservation() {}
 
-    public Reservation(String id, User user, Organization organization, Court court,
+    public Reservation(Long id, User user, Organization organization, Court court,
                        LocalDate date, LocalTime hour, int duration, int playerCount,
                        double totalPrice, ReservationStatus status, boolean confirmed,
                        String contactName, String contactPhone) {
@@ -92,37 +92,25 @@ public class Reservation implements Serializable {
         this.contactPhone = contactPhone;
     }
 
-    // === Métodos Puente de Compatibilidad con IDs (String) ===
-
-    public String getOrgId() {
-        return organization != null ? organization.getId() : null;
-    }
-
-    public void setOrgId(String orgId) {
+    public void setOrgId(Long orgId) {
         if (this.organization == null) {
             this.organization = new Organization();
         }
         this.organization.setId(orgId);
     }
 
-    public String getCourtId() {
+    public Long getCourtId() {
         return court != null ? court.getId() : null;
     }
 
-    public void setCourtId(String courtId) {
+    public void setCourtId(Long courtId) {
         if (this.court == null) {
             this.court = new Court();
         }
         this.court.setId(courtId);
     }
 
-    // === Método Puente de Compatibilidad con userId (String) ===
-
-    public String getUserId() {
-        return user != null ? user.getId() : null;
-    }
-
-    public void setUserId(String userId) {
+    public void setUserId(Long userId) {
         if (this.user == null) {
             this.user = new User();
         }
