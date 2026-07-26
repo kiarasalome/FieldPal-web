@@ -30,11 +30,11 @@ public class ScheduleService {
         params.put("courtId", courtId);
         params.put("date", date);
 
-        List<String> reservedHours = crudService.findWithQuery(jpql, params);
+        List<LocalTime> reservedHours = crudService.findWithQuery(jpql, params);
 
         List<TimeSlot> slots = new ArrayList<>();
         for (int h = 8; h <= 22; h++) {
-            String hour = String.format("%02d:00", h);
+            LocalTime hour = LocalTime.of(h, 0);
             boolean reserved = reservedHours.contains(hour);
             slots.add(new TimeSlot(hour, !reserved, courtId, date));
         }

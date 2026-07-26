@@ -55,7 +55,7 @@ public class WizardBean implements Serializable {
     public void init() {
         // ¿El admin ya configuró su complejo antes? (sin BD todavía: se guarda
         // el id en la sesión vía AuthBean — ver saveAll() más abajo)
-        String existingOrgId = authBean.getOrganizationId();
+        Long existingOrgId = authBean.getOrganizationId();
         if (existingOrgId != null) {
             Organization existing = organizationService.findById(existingOrgId);
             if (existing != null) {
@@ -285,8 +285,6 @@ public class WizardBean implements Serializable {
         private LocalTime openTime;
         private LocalTime closeTime;
         private boolean active;
-
-        public ScheduleDay() {}
 
         public ScheduleDay(String dayName, LocalTime openTime, LocalTime closeTime, boolean active) {
             this.dayName = dayName;

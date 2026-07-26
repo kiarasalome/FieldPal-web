@@ -19,8 +19,7 @@ import java.io.Serializable;
 import java.util.List;
 
 /**
- * Managed Bean para el panel de administración (una sola página AJAX).
- * Datos quemados - editar después para conectar a BD real.
+ * Managed Bean para el panel de administración
  */
 
 @Named
@@ -59,7 +58,7 @@ public class GestionBean implements Serializable {
     private double newOrgLongitude = 0.0;
 
     // === Formulario nueva cancha ===
-    private String newCourtOrg = "";
+    private Long newCourtOrg = null;
     private String newCourtName = "";
     private CourtType newCourtType = CourtType.FUTBOL;
     private double newCourtPrice = 0;
@@ -141,7 +140,7 @@ public class GestionBean implements Serializable {
 
     public String doAddCourt() {
         // TODO: Implementar registro real con BD
-        if (newCourtOrg == null || newCourtOrg.isEmpty()) {
+        if (newCourtOrg == null) {
             FacesContext.getCurrentInstance().addMessage(null,
                     new FacesMessage(FacesMessage.SEVERITY_ERROR, "Selecciona una organización.", ""));
             return null;
@@ -178,7 +177,7 @@ public class GestionBean implements Serializable {
         return null;
     }
 
-    public void removeCourt(String courtId) {
+    public void removeCourt(Long courtId) {
         courtService.removeCourt(courtId);
         FacesContext.getCurrentInstance().addMessage(null,
                 new FacesMessage(FacesMessage.SEVERITY_INFO, "Cancha eliminada.", ""));
@@ -196,31 +195,31 @@ public class GestionBean implements Serializable {
                 .toList();
     }
 
-    public void cancelReservation(String reservationId) {
+    public void cancelReservation(Long reservationId) {
         reservationService.cancelReservation(reservationId);
         FacesContext.getCurrentInstance().addMessage(null,
                 new FacesMessage(FacesMessage.SEVERITY_INFO, "Reserva cancelada.", ""));
     }
 
     // === Helpers ===
-    public String getCourtName(String courtId) {
+    public String getCourtName(Long courtId) {
         Court c = courtService.findById(courtId);
         return c != null ? c.getName() : "—";
     }
 
-    public String getOrgName(String orgId) {
+    public String getOrgName(Long orgId) {
         Organization o = organizationService.findById(orgId);
         return o != null ? o.getName() : "—";
     }
 
-    public String getOrgZoneName(String orgId) {
+    public String getOrgZoneName(Long orgId) {
         Organization o = organizationService.findById(orgId);
         return o != null ? o.getZone().getLabel() : "—";
     }
 
     // === Organización del admin logueado (para el saludo del panel) ===
     public Organization getMyOrganization() {
-        String orgId = authBean.getOrganizationId();
+        Long orgId = authBean.getOrganizationId();
         if (orgId == null) return null;
         return organizationService.findById(orgId);
     }
@@ -237,7 +236,7 @@ public class GestionBean implements Serializable {
     }
 
     private void clearCourtForm() {
-        newCourtOrg = "";
+        newCourtOrg = null;
         newCourtName = "";
         newCourtType = CourtType.FUTBOL;
         newCourtPrice = 0;
@@ -270,8 +269,8 @@ public class GestionBean implements Serializable {
     public void setNewOrgLongitude(double v) { this.newOrgLongitude = v; }
 
     // Court form
-    public String getNewCourtOrg() { return newCourtOrg; }
-    public void setNewCourtOrg(String v) { this.newCourtOrg = v; }
+    public Long getNewCourtOrg() { return newCourtOrg; }
+    public void setNewCourtOrg(Long v) { this.newCourtOrg = v; }
     public String getNewCourtName() { return newCourtName; }
     public void setNewCourtName(String v) { this.newCourtName = v; }
     public CourtType getNewCourtType() { return newCourtType; }

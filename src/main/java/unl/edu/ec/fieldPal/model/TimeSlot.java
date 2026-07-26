@@ -44,6 +44,9 @@ public class TimeSlot implements Serializable {
         this.available = available;
     }
 
+    public TimeSlot(LocalTime hour, boolean b, Long courtId, LocalDate date) {
+    }
+
     // === Método Puente para compatibilidad con String courtId ===
 
     public Long getCourtId() {

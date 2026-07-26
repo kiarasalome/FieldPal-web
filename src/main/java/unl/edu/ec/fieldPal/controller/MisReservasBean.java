@@ -17,7 +17,6 @@ import java.util.stream.Collectors;
 
 /**
  * Managed Bean para la página de mis reservas.
- * Datos quemados - editar después para conectar a BD real.
  */
 @Named
 @ViewScoped
@@ -47,13 +46,13 @@ public class MisReservasBean implements Serializable {
     public List<Reservation> getReservations() {
         if (!authBean.isAuthenticated()) return List.of();
 
-        String userId = authBean.getCurrentUser().getId();
+        Long userId = authBean.getCurrentUser().getId();
         List<Reservation> all = reservationService.getByUser(userId);
 
         return all.stream()
                 .filter(r -> {
                     boolean matchesSearch = search.isEmpty()
-                            || r.getId().toLowerCase().contains(search.toLowerCase())
+                            || String.valueOf(r.getId()).contains(search)
                             || getCourtName(r.getCourtId()).toLowerCase().contains(search.toLowerCase())
                             || getOrgName(r.getOrgId()).toLowerCase().contains(search.toLowerCase());
                     if ("all".equals(activeFilter)) return matchesSearch;
@@ -62,18 +61,18 @@ public class MisReservasBean implements Serializable {
                 .collect(Collectors.toList());
     }
 
-    public String getCourtName(String courtId) {
+    public String getCourtName(Long courtId) {
         Court court = courtService.findById(courtId);
         return court != null ? court.getName() : "—";
     }
 
-    public String getOrgName(String orgId) {
+    public String getOrgName(Long orgId) {
         Organization org = organizationService.findById(orgId);
         return org != null ? org.getName() : "—";
     }
 
     /** Ícono Material Symbols asociado al tipo de cancha (para la tabla/modal). */
-    public String getCourtIcon(String courtId) {
+    public String getCourtIcon(Long courtId) {
         Court court = courtService.findById(courtId);
         return court != null ? court.getType().getIcon() : "sports_soccer";
     }
@@ -93,13 +92,13 @@ public class MisReservasBean implements Serializable {
         return dateStr;
     }
 
-    public void cancelReservation(String reservationId) {
+    public void cancelReservation(Long reservationId) {
         reservationService.cancelReservation(reservationId);
         FacesContext.getCurrentInstance().addMessage(null,
                 new FacesMessage(FacesMessage.SEVERITY_INFO, "Reserva cancelada exitosamente.", ""));
     }
 
-    public void confirmAttendance(String reservationId) {
+    public void confirmAttendance(Long reservationId) {
         reservationService.confirmReservation(reservationId);
         FacesContext.getCurrentInstance().addMessage(null,
                 new FacesMessage(FacesMessage.SEVERITY_INFO, "Asistencia confirmada.", ""));

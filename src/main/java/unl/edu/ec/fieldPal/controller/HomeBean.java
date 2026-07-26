@@ -6,16 +6,18 @@ import unl.edu.ec.fieldPal.service.security.OrganizationService;
 import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
+
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.List;
 
 /**
  * Managed Bean para la página de inicio.
- * Datos quemados - editar después para conectar a BD real.
  */
 @Named
 @ViewScoped
 public class HomeBean implements Serializable {
+    @Serial
     private static final long serialVersionUID = 1L;
 
     @Inject

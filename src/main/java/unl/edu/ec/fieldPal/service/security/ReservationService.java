@@ -40,7 +40,7 @@ public class ReservationService {
         return reservation;
     }
 
-    public void addRervation(Reservation res) {
+    public void addReservation(Reservation res) {
         if (res == null) return;
         crudService.create(res);
 

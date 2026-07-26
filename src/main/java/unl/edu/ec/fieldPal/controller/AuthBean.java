@@ -43,7 +43,7 @@ public class AuthBean implements Serializable {
     // Organización del admin logueado (sin BD todavía: se ancla a la sesión
     // para que WizardBean/GestionBean sepan si ya configuró su complejo,
     // sin tener que volver a pedir los datos en cada visita mientras dure la sesión).
-    private String organizationId;
+    private Long organizationId;
 
     // === Método de Login ===
     public String submitLogin() {
@@ -194,6 +194,6 @@ public class AuthBean implements Serializable {
     public User getCurrentUser() { return currentUser; }
     public void setCurrentUser(User currentUser) { this.currentUser = currentUser; }
 
-    public String getOrganizationId() { return organizationId; }
-    public void setOrganizationId(String organizationId) { this.organizationId = organizationId; }
+    public Long getOrganizationId() { return organizationId; }
+    public void setOrganizationId(Long organizationId) { this.organizationId = organizationId; }
 }

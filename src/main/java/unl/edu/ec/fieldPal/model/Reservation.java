@@ -92,6 +92,11 @@ public class Reservation implements Serializable {
         this.contactPhone = contactPhone;
     }
 
+
+    public Long getOrgId() {
+        return organization != null ? organization.getId() : null;
+    }
+
     public void setOrgId(Long orgId) {
         if (this.organization == null) {
             this.organization = new Organization();
