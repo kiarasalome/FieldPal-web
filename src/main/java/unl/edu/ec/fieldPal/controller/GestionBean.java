@@ -15,6 +15,8 @@ import jakarta.faces.context.FacesContext;
 import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
+
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.List;
 
@@ -25,6 +27,8 @@ import java.util.List;
 @Named
 @ViewScoped
 public class GestionBean implements Serializable {
+
+    @Serial
     private static final long serialVersionUID = 1L;
 
     @Inject

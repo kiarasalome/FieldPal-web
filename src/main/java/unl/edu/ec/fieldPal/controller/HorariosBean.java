@@ -24,6 +24,7 @@ import java.util.List;
 @Named
 @ViewScoped
 public class HorariosBean implements Serializable {
+
     @Serial
     private static final long serialVersionUID = 1L;
 

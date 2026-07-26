@@ -16,6 +16,7 @@ import java.util.regex.Pattern;
 @Named
 @SessionScoped
 public class AuthBean implements Serializable {
+
     @Serial
     private static final long serialVersionUID = 1L;
 

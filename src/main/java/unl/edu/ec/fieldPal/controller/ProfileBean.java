@@ -6,6 +6,8 @@ import jakarta.faces.context.FacesContext;
 import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
+
+import java.io.Serial;
 import java.io.Serializable;
 import unl.edu.ec.fieldPal.model.User;
 import unl.edu.ec.fieldPal.service.security.UserService;
@@ -18,6 +20,9 @@ public class ProfileBean implements Serializable {
     private User editingUser;
     private String newPassword;
     private String confirmPassword;
+
+    @Serial
+    private static final long serialVersionUID = 1L;
 
     @PostConstruct
     public void init() {

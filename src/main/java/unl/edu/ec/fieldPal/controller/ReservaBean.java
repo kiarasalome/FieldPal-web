@@ -14,6 +14,7 @@ import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import unl.edu.ec.fieldPal.service.security.ScheduleService;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -28,6 +29,8 @@ import java.util.stream.Collectors;
 @Named
 @ViewScoped
 public class ReservaBean implements Serializable {
+
+    @Serial
     private static final long serialVersionUID = 1L;
 
     @Inject
