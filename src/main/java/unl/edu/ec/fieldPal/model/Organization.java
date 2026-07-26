@@ -20,7 +20,6 @@ public class Organization implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
-    @NotBlank(message = "El RUC o Identificador de la organización es obligatorio")
     private Long id;
 
     @Column(name = "name", nullable = false, length = 150)
@@ -69,7 +68,7 @@ public class Organization implements Serializable {
 
     public Organization() {}
 
-    public Organization(String id, String name, Zone zone, String address, String phone,
+    public Organization(Long id, String name, Zone zone, String address, String phone,
                         String email, String image, double rating, String description,
                         int courtCount, double latitude, double longitude) {
         this.id = id;

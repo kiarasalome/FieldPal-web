@@ -19,13 +19,12 @@ public class TimeSlotRepository {
         return crud.create(slot);
     }
 
-    public List<String> findReservedHours(String courtId, String date) {
+    public List<java.time.LocalTime> findReservedHours(Long courtId, java.time.LocalDate date) {
         Map<String, Object> params = new HashMap<>();
         params.put("courtId", courtId);
         params.put("date", date);
         return crud.findWithQuery(
-                "SELECT t.hour FROM TimeSlot t WHERE t.courtId = :courtId AND t.date = :date",
-                String.class, params);
+                "SELECT t.hour FROM TimeSlot t WHERE t.court.id = :courtId AND t.date = :date", params);
     }
 
     public long count() {

@@ -17,33 +17,31 @@ public class ReservationRepository {
     private CrudGenericService crud;
 
     public Reservation save(Reservation reservation) {
-        if (crud.find(Reservation.class, reservation.getId()) == null) {
+        if (reservation.getId() == null || crud.find(Reservation.class, reservation.getId()) == null) {
             return crud.create(reservation);
         }
         return crud.update(reservation);
     }
 
-    public Reservation findById(String id) {
+    public Reservation findById(Long id) {
         if (id == null) return null;
         return crud.find(Reservation.class, id);
     }
 
     public List<Reservation> findAll() {
-        return crud.findWithQuery("SELECT r FROM Reservation r", Reservation.class);
+        return crud.findWithQuery("SELECT r FROM Reservation r");
     }
 
-    public List<Reservation> findByUser(String userId) {
+    public List<Reservation> findByUser(Long userId) {
         Map<String, Object> params = new HashMap<>();
         params.put("userId", userId);
-        return crud.findWithQuery("SELECT r FROM Reservation r WHERE r.userId = :userId", Reservation.class, params);
+        return crud.findWithQuery("SELECT r FROM Reservation r WHERE r.user.id = :userId", params);
     }
 
     public long countByStatus(ReservationStatus status) {
         Map<String, Object> params = new HashMap<>();
         params.put("status", status);
-        List<Reservation> results = crud.findWithQuery(
-                "SELECT r FROM Reservation r WHERE r.status = :status", Reservation.class, params);
-        return results.size();
+        return crud.count("SELECT COUNT(r) FROM Reservation r WHERE r.status = :status", params);
     }
 
     public double sumTotalPriceExcluding(ReservationStatus excludedStatus) {

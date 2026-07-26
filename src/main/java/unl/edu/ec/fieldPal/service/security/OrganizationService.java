@@ -1,79 +1,64 @@
 package unl.edu.ec.fieldPal.service.security;
 
+import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+import jakarta.inject.Named;
 import jakarta.persistence.EntityNotFoundException;
 import unl.edu.ec.fieldPal.model.Organization;
 import unl.edu.ec.fieldPal.model.enums.Zone;
-import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.inject.Named;
-import unl.edu.ec.fieldPal.service.CrudGenericService;
+import unl.edu.ec.fieldPal.service.repository.OrganizationRepository;
 
-import java.util.*;
+import java.util.List;
 
 @Named
 @ApplicationScoped
 public class OrganizationService {
 
     @Inject
-    private CrudGenericService crudService;
+    private OrganizationRepository organizationRepository;
 
     public OrganizationService() {
-
     }
 
     public List<Organization> getAll() {
-        String jpql = "SELECT DISTINCT o.organizations FROM Organization o";
-        return crudService.findWithQuery(jpql, Collections.emptyMap());
+        return organizationRepository.findAll();
     }
 
-    public List<Organization> getByZone(Zone zone){
-        Map<String, Object> params = new HashMap<>();
-        params.put("zone", zone);
-        return crudService.findWithNamedQuery("Organization.getByZone", params);
+    public List<Organization> getByZone(Zone zone) {
+        if (zone == null) return getAll();
+        return organizationRepository.findByZone(zone);
     }
 
-    public Organization findById(String id) throws EntityNotFoundException {
-        Organization organization = crudService.find(Organization.class, id);
-        if (organization == null){
-            throw new EntityNotFoundException("Organization no encontrada con [" + id + "]");
+    public Organization findById(Long id) throws EntityNotFoundException {
+        if (id == null) return null;
+        Organization organization = organizationRepository.findById(id);
+        if (organization == null) {
+            throw new EntityNotFoundException("Organización no encontrada con ID [" + id + "]");
         }
         return organization;
     }
 
-    /**
-     * Guarda una organización. Si ya existe bajo ese ID, actualiza sus campos;
-     * si no existe, la añade como una nueva.
-     * (Este es el método puente que invoca el WizardBean.java)
-     */
-
-    public <T extends Organization> T save(T organization) {
-        if (organization.getId() == null){
-            return crudService.create(organization);
-        } else {
-            return crudService.update(organization);
-        }
+    public Organization save(Organization organization) {
+        if (organization == null) return null;
+        return organizationRepository.save(organization);
     }
 
     public void addOrganization(Organization org) {
         if (org == null) return;
-        crudService.create(org);
-
+        organizationRepository.save(org);
     }
 
     public void updateOrganization(Organization org) {
         if (org == null || org.getId() == null) return;
-        crudService.update(org);
+        organizationRepository.save(org);
     }
 
     public void removeOrganization(Organization org) {
-        if (org == null) return;
-        crudService.delete(Organization.class, org.getId());
+        if (org == null || org.getId() == null) return;
+        organizationRepository.deleteById(org.getId());
     }
-
 
     public List<Zone> getAvailableZones() {
-        String jpql = "SELECT DISTINCT o.zone FROM Organization o";
-        return crudService.findWithQuery(jpql, Collections.emptyMap());
+        return organizationRepository.findDistinctZones();
     }
 }
-

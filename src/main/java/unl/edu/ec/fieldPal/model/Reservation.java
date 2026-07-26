@@ -73,7 +73,7 @@ public class Reservation implements Serializable {
 
     public Reservation() {}
 
-    public Reservation(String id, User user, Organization organization, Court court,
+    public Reservation(Long id, User user, Organization organization, Court court,
                        LocalDate date, LocalTime hour, int duration, int playerCount,
                        double totalPrice, ReservationStatus status, boolean confirmed,
                        String contactName, String contactPhone) {
@@ -92,37 +92,37 @@ public class Reservation implements Serializable {
         this.contactPhone = contactPhone;
     }
 
-    // === Métodos Puente de Compatibilidad con IDs (String) ===
+    // === Métodos Puente de Compatibilidad con IDs (Long) ===
 
-    public String getOrgId() {
+    public Long getOrgId() {
         return organization != null ? organization.getId() : null;
     }
 
-    public void setOrgId(String orgId) {
+    public void setOrgId(Long orgId) {
         if (this.organization == null) {
             this.organization = new Organization();
         }
         this.organization.setId(orgId);
     }
 
-    public String getCourtId() {
+    public Long getCourtId() {
         return court != null ? court.getId() : null;
     }
 
-    public void setCourtId(String courtId) {
+    public void setCourtId(Long courtId) {
         if (this.court == null) {
             this.court = new Court();
         }
         this.court.setId(courtId);
     }
 
-    // === Método Puente de Compatibilidad con userId (String) ===
+    // === Método Puente de Compatibilidad con userId (Long) ===
 
-    public String getUserId() {
+    public Long getUserId() {
         return user != null ? user.getId() : null;
     }
 
-    public void setUserId(String userId) {
+    public void setUserId(Long userId) {
         if (this.user == null) {
             this.user = new User();
         }
@@ -133,6 +133,9 @@ public class Reservation implements Serializable {
 
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
+
+    public User getUser() { return user; }
+    public void setUser(User user) { this.user = user; }
 
     public Organization getOrganization() { return organization; }
     public void setOrganization(Organization organization) { this.organization = organization; }

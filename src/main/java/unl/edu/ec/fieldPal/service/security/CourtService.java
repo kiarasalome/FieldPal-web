@@ -1,80 +1,70 @@
 package unl.edu.ec.fieldPal.service.security;
 
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
 import jakarta.persistence.EntityNotFoundException;
 import unl.edu.ec.fieldPal.model.Court;
 import unl.edu.ec.fieldPal.model.enums.CourtType;
-import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.inject.Named;
-import unl.edu.ec.fieldPal.service.CrudGenericService;
+import unl.edu.ec.fieldPal.service.repository.CourtRepository;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Named
 @ApplicationScoped
 public class CourtService {
 
-    private CrudGenericService crudService = new CrudGenericService();
+    @Inject
+    private CourtRepository courtRepository;
+
     public CourtService() {
     }
 
     public List<Court> getAll() {
-        String jpql = "SELECT DISTINCT o.courts FROM Organization o";
-        return crudService.findWithQuery(jpql, Collections.emptyMap());
+        return courtRepository.findAll();
     }
 
-    public List<Court> getByOrg(String orgId){
+    public List<Court> getByOrg(Long orgId) {
         if (orgId == null) return new ArrayList<>();
-        Map<String, Object> params = new HashMap<>();
-        params.put("orgId", orgId);
-        return crudService.findWithNamedQuery("Court.getByOrg", params);
+        return courtRepository.findByOrg(orgId);
     }
 
-    public List<Court> getByType(CourtType type){
-        Map<String, Object> params = new HashMap<>();
-        params.put("type", type);
-        return crudService.findWithNamedQuery("Court.getByType", params);
+    public List<Court> getByType(CourtType type) {
+        if (type == null) return new ArrayList<>();
+        return courtRepository.findByType(type);
     }
 
-    public Court findById(String id) {
+    public Court findById(Long id) {
         if (id == null) return null;
-        Court court = crudService.find(Court.class, id);
-        if (court == null){
+        Court court = courtRepository.findById(id);
+        if (court == null) {
             throw new EntityNotFoundException("Cancha no encontrada con [" + id + "]");
         }
         return court;
     }
 
-    /**
-     * Guarda una cancha en la lista. Si ya cuenta con ID único registrado, actualiza su información;
-     * de lo contrario, la añade y autogenera su ID de forma segura.
-     * (Este método es el invocado por WizardBean.java)
-     */
     public void save(Court court) {
         if (court == null) return;
-
-        if (court.getId() != null && findById(court.getId()) != null) {
-            crudService.update(court);
-        } else {
-            crudService.create(court);
-        }
+        courtRepository.save(court);
     }
 
     public void addCourt(Court court) {
         if (court == null) return;
-        crudService.create(court);
+        courtRepository.save(court);
     }
 
     public void updateCourt(Court court) {
         if (court == null || court.getId() == null) return;
-        crudService.update(court);
+        courtRepository.save(court);
     }
 
-    public void removeCourt(String id) {
+    public void removeCourt(Long id) {
         if (id == null) return;
-        crudService.delete(Court.class, id);
+        courtRepository.deleteById(id);
     }
 
     public int getCourtCount() {
-        return getAll().size();
+        return (int) courtRepository.count();
     }
 }

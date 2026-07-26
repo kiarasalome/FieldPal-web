@@ -36,7 +36,7 @@
 <variable name="db.port"     defaultValue="5432"           envVarName="DB_PORT"/>
 <variable name="db.name"     defaultValue="fieldpal"          envVarName="BD_NAME"/>
 <variable name="db.user"     defaultValue="fieldpaluser"      envVarName="BD_USER"/>
-<variable name="db.pwd" defaultValue="fieldpal12"  envVarName="BD_PWD"/>
+<variable name="db.pwd" defaultValue="fieldpalUser2626"  envVarName="BD_PWD"/>
 
 <library id="postgresLib">
     <fileset dir="${shared.resource.dir}/postgres/" include="postgresql-*.jar"/>

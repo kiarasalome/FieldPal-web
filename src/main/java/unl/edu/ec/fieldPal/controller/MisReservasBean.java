@@ -45,37 +45,40 @@ public class MisReservasBean implements Serializable {
     private boolean showEditModal = false;
 
     public List<Reservation> getReservations() {
-        if (!authBean.isAuthenticated()) return List.of();
+        if (!authBean.isAuthenticated() || authBean.getCurrentUser().getId() == null) return List.of();
 
-        String userId = authBean.getCurrentUser().getId();
+        Long userId = authBean.getCurrentUser().getId();
         List<Reservation> all = reservationService.getByUser(userId);
 
         return all.stream()
                 .filter(r -> {
                     boolean matchesSearch = search.isEmpty()
-                            || r.getId().toLowerCase().contains(search.toLowerCase())
+                            || (r.getId() != null && r.getId().toString().contains(search))
                             || getCourtName(r.getCourtId()).toLowerCase().contains(search.toLowerCase())
                             || getOrgName(r.getOrgId()).toLowerCase().contains(search.toLowerCase());
                     if ("all".equals(activeFilter)) return matchesSearch;
-                    return matchesSearch && r.getStatus().name().equalsIgnoreCase(activeFilter);
+                    return matchesSearch && r.getStatus() != null && r.getStatus().name().equalsIgnoreCase(activeFilter);
                 })
                 .collect(Collectors.toList());
     }
 
-    public String getCourtName(String courtId) {
+    public String getCourtName(Long courtId) {
+        if (courtId == null) return "—";
         Court court = courtService.findById(courtId);
         return court != null ? court.getName() : "—";
     }
 
-    public String getOrgName(String orgId) {
+    public String getOrgName(Long orgId) {
+        if (orgId == null) return "—";
         Organization org = organizationService.findById(orgId);
         return org != null ? org.getName() : "—";
     }
 
     /** Ícono Material Symbols asociado al tipo de cancha (para la tabla/modal). */
-    public String getCourtIcon(String courtId) {
+    public String getCourtIcon(Long courtId) {
+        if (courtId == null) return "sports_soccer";
         Court court = courtService.findById(courtId);
-        return court != null ? court.getType().getIcon() : "sports_soccer";
+        return court != null && court.getType() != null ? court.getType().getIcon() : "sports_soccer";
     }
 
     /** Mapea el estado de la reserva a las clases ya definidas en fieldpal.css. */
@@ -89,17 +92,18 @@ public class MisReservasBean implements Serializable {
     }
 
     public String formatDate(String dateStr) {
-        // TODO: Formatear fecha con locale español
         return dateStr;
     }
 
-    public void cancelReservation(String reservationId) {
+    public void cancelReservation(Long reservationId) {
+        if (reservationId == null) return;
         reservationService.cancelReservation(reservationId);
         FacesContext.getCurrentInstance().addMessage(null,
                 new FacesMessage(FacesMessage.SEVERITY_INFO, "Reserva cancelada exitosamente.", ""));
     }
 
-    public void confirmAttendance(String reservationId) {
+    public void confirmAttendance(Long reservationId) {
+        if (reservationId == null) return;
         reservationService.confirmReservation(reservationId);
         FacesContext.getCurrentInstance().addMessage(null,
                 new FacesMessage(FacesMessage.SEVERITY_INFO, "Asistencia confirmada.", ""));

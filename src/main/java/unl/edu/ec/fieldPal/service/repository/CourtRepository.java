@@ -17,35 +17,35 @@ public class CourtRepository {
     private CrudGenericService crud;
 
     public Court save(Court court) {
-        if (crud.find(Court.class, court.getId()) == null) {
+        if (court.getId() == null || crud.find(Court.class, court.getId()) == null) {
             return crud.create(court);
         }
         return crud.update(court);
     }
 
-    public Court findById(String id) {
+    public Court findById(Long id) {
         if (id == null) return null;
         return crud.find(Court.class, id);
     }
 
     public List<Court> findAll() {
-        return crud.findWithQuery("SELECT c FROM Court c", Court.class);
+        return crud.findWithQuery("SELECT c FROM Court c");
     }
 
-    public List<Court> findByOrg(String orgId) {
+    public List<Court> findByOrg(Long orgId) {
         if (orgId == null) return List.of();
         Map<String, Object> params = new HashMap<>();
         params.put("orgId", orgId);
-        return crud.findWithQuery("SELECT c FROM Court c WHERE c.orgId = :orgId", Court.class, params);
+        return crud.findWithQuery("SELECT c FROM Court c WHERE c.organization.id = :orgId", params);
     }
 
     public List<Court> findByType(CourtType type) {
         Map<String, Object> params = new HashMap<>();
         params.put("type", type);
-        return crud.findWithQuery("SELECT c FROM Court c WHERE c.type = :type", Court.class, params);
+        return crud.findWithQuery("SELECT c FROM Court c WHERE c.type = :type", params);
     }
 
-    public void deleteById(String id) {
+    public void deleteById(Long id) {
         crud.delete(Court.class, id);
     }
 

@@ -16,13 +16,13 @@ public class UserRepository {
     private CrudGenericService crud;
 
     public User save(User user) {
-        if (crud.find(User.class, user.getId()) == null) {
+        if (user.getId() == null || crud.find(User.class, user.getId()) == null) {
             return crud.create(user);
         }
         return crud.update(user);
     }
 
-    public User findById(String id) {
+    public User findById(Long id) {
         if (id == null) return null;
         return crud.find(User.class, id);
     }
@@ -36,7 +36,7 @@ public class UserRepository {
     }
 
     public List<User> findAll() {
-        return crud.findWithQuery("SELECT u FROM User u", User.class);
+        return crud.findWithQuery("SELECT u FROM User u");
     }
 
     public long count() {

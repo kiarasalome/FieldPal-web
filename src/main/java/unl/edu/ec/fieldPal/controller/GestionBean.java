@@ -140,14 +140,19 @@ public class GestionBean implements Serializable {
     }
 
     public String doAddCourt() {
-        // TODO: Implementar registro real con BD
         if (newCourtOrg == null || newCourtOrg.isEmpty()) {
             FacesContext.getCurrentInstance().addMessage(null,
                     new FacesMessage(FacesMessage.SEVERITY_ERROR, "Selecciona una organización.", ""));
             return null;
         }
         Court court = new Court();
-        court.setOrgId(newCourtOrg);
+        try {
+            court.setOrgId(Long.valueOf(newCourtOrg));
+        } catch (NumberFormatException e) {
+            FacesContext.getCurrentInstance().addMessage(null,
+                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "Organización inválida.", ""));
+            return null;
+        }
         court.setName(newCourtName);
         court.setType(newCourtType);
         court.setPricePerHour(newCourtPrice);
@@ -179,9 +184,12 @@ public class GestionBean implements Serializable {
     }
 
     public void removeCourt(String courtId) {
-        courtService.removeCourt(courtId);
-        FacesContext.getCurrentInstance().addMessage(null,
-                new FacesMessage(FacesMessage.SEVERITY_INFO, "Cancha eliminada.", ""));
+        if (courtId == null || courtId.isEmpty()) return;
+        try {
+            courtService.removeCourt(Long.valueOf(courtId));
+            FacesContext.getCurrentInstance().addMessage(null,
+                    new FacesMessage(FacesMessage.SEVERITY_INFO, "Cancha eliminada.", ""));
+        } catch (NumberFormatException ignored) {}
     }
 
     // === Reservas ===
@@ -190,37 +198,43 @@ public class GestionBean implements Serializable {
         if (search == null || search.isEmpty()) return all;
         String lowerSearch = search.toLowerCase();
         return all.stream()
-                .filter(r -> r.getContactName().toLowerCase().contains(lowerSearch)
+                .filter(r -> (r.getContactName() != null && r.getContactName().toLowerCase().contains(lowerSearch))
                         || getCourtName(r.getCourtId()).toLowerCase().contains(lowerSearch)
                         || getOrgName(r.getOrgId()).toLowerCase().contains(lowerSearch))
                 .toList();
     }
 
     public void cancelReservation(String reservationId) {
-        reservationService.cancelReservation(reservationId);
-        FacesContext.getCurrentInstance().addMessage(null,
-                new FacesMessage(FacesMessage.SEVERITY_INFO, "Reserva cancelada.", ""));
+        if (reservationId == null || reservationId.isEmpty()) return;
+        try {
+            reservationService.cancelReservation(Long.valueOf(reservationId));
+            FacesContext.getCurrentInstance().addMessage(null,
+                    new FacesMessage(FacesMessage.SEVERITY_INFO, "Reserva cancelada.", ""));
+        } catch (NumberFormatException ignored) {}
     }
 
     // === Helpers ===
-    public String getCourtName(String courtId) {
+    public String getCourtName(Long courtId) {
+        if (courtId == null) return "—";
         Court c = courtService.findById(courtId);
         return c != null ? c.getName() : "—";
     }
 
-    public String getOrgName(String orgId) {
+    public String getOrgName(Long orgId) {
+        if (orgId == null) return "—";
         Organization o = organizationService.findById(orgId);
         return o != null ? o.getName() : "—";
     }
 
-    public String getOrgZoneName(String orgId) {
+    public String getOrgZoneName(Long orgId) {
+        if (orgId == null) return "—";
         Organization o = organizationService.findById(orgId);
-        return o != null ? o.getZone().getLabel() : "—";
+        return o != null && o.getZone() != null ? o.getZone().getLabel() : "—";
     }
 
     // === Organización del admin logueado (para el saludo del panel) ===
     public Organization getMyOrganization() {
-        String orgId = authBean.getOrganizationId();
+        Long orgId = authBean.getOrganizationId();
         if (orgId == null) return null;
         return organizationService.findById(orgId);
     }

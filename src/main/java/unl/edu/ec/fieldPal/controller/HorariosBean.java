@@ -44,8 +44,8 @@ public class HorariosBean implements Serializable {
     @PostConstruct
     public void init() {
         List<Organization> orgs = organizationService.getAll();
-        if (!orgs.isEmpty()) {
-            selectOrganization(orgs.get(0).getId());
+        if (!orgs.isEmpty() && orgs.get(0).getId() != null) {
+            selectOrganization(orgs.get(0).getId().toString());
         }
     }
 
@@ -62,12 +62,20 @@ public class HorariosBean implements Serializable {
 
     public List<Court> getCourtsForSelectedOrg() {
         if (selectedOrgId == null || selectedOrgId.isEmpty()) return List.of();
-        return courtService.getByOrg(selectedOrgId);
+        try {
+            return courtService.getByOrg(Long.valueOf(selectedOrgId));
+        } catch (NumberFormatException e) {
+            return List.of();
+        }
     }
 
     public Court getActiveCourt() {
         if (selectedCourtId == null || selectedCourtId.isEmpty()) return null;
-        return courtService.findById(selectedCourtId);
+        try {
+            return courtService.findById(Long.valueOf(selectedCourtId));
+        } catch (NumberFormatException e) {
+            return null;
+        }
     }
 
     public List<TimeSlot> getActiveSchedule() {
@@ -80,8 +88,8 @@ public class HorariosBean implements Serializable {
         List<Organization> filtered = getFilteredOrgs();
         selectedOrgId = "";
         selectedCourtId = "";
-        if (!filtered.isEmpty()) {
-            selectOrganization(filtered.get(0).getId());
+        if (!filtered.isEmpty() && filtered.get(0).getId() != null) {
+            selectOrganization(filtered.get(0).getId().toString());
         }
     }
 
@@ -90,15 +98,23 @@ public class HorariosBean implements Serializable {
         List<Organization> orgs = organizationService.getAll();
         selectedOrgId = "";
         selectedCourtId = "";
-        if (!orgs.isEmpty()) {
-            selectOrganization(orgs.get(0).getId());
+        if (!orgs.isEmpty() && orgs.get(0).getId() != null) {
+            selectOrganization(orgs.get(0).getId().toString());
         }
     }
 
     public void selectOrganization(String orgId) {
         this.selectedOrgId = orgId;
-        List<Court> courts = courtService.getByOrg(orgId);
-        this.selectedCourtId = courts.isEmpty() ? "" : courts.get(0).getId();
+        if (orgId == null || orgId.isEmpty()) {
+            this.selectedCourtId = "";
+            return;
+        }
+        try {
+            List<Court> courts = courtService.getByOrg(Long.valueOf(orgId));
+            this.selectedCourtId = courts.isEmpty() || courts.get(0).getId() == null ? "" : courts.get(0).getId().toString();
+        } catch (NumberFormatException e) {
+            this.selectedCourtId = "";
+        }
     }
 
     public void selectCourt(String courtId) {

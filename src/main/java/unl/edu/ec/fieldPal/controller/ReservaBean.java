@@ -64,7 +64,11 @@ public class ReservaBean implements Serializable {
 
     public Court getActiveCourt() {
         if (selectedCourtId != null && !selectedCourtId.isEmpty()) {
-            return courtService.findById(selectedCourtId);
+            try {
+                return courtService.findById(Long.valueOf(selectedCourtId));
+            } catch (NumberFormatException e) {
+                return null;
+            }
         }
         return null;
     }
@@ -87,7 +91,8 @@ public class ReservaBean implements Serializable {
         }
         return scheduleService.getSchedule(selectedCourtId, date).stream()
                 .filter(TimeSlot::isAvailable)
-                .map(TimeSlot::getHour)
+                .map(slot -> slot.getHour() != null ? slot.getHour().toString() : "")
+                .filter(h -> !h.isEmpty())
                 .collect(Collectors.toList());
     }
 
@@ -104,22 +109,12 @@ public class ReservaBean implements Serializable {
     }
 
     public String doReserve() {
-        // TODO: Implementar reserva real con BD
-        // Respaldo de seguridad: la página reserva.xhtml ya bloquea el acceso
-        // sin sesión, pero por si se invoca este método de otra forma:
         if (!authBean.isAuthenticated()) {
             FacesContext.getCurrentInstance().addMessage(null,
                     new FacesMessage(FacesMessage.SEVERITY_ERROR, "Debes iniciar sesión para reservar.", ""));
             return "/login.xhtml?faces-redirect=true";
         }
 
-        // Validaciones básicas
-        if (!getAvailableHours().contains(hour)) {
-            FacesContext.getCurrentInstance().addMessage(null,
-                    new FacesMessage(FacesMessage.SEVERITY_ERROR,
-                            "La hora seleccionada ya no está disponible.", ""));
-            return null;
-        }
         if (selectedCourtId == null || selectedCourtId.isEmpty()) {
             FacesContext.getCurrentInstance().addMessage(null,
                     new FacesMessage(FacesMessage.SEVERITY_ERROR, "Selecciona una cancha.", ""));
@@ -136,13 +131,29 @@ public class ReservaBean implements Serializable {
             return null;
         }
 
+        if (!getAvailableHours().contains(hour)) {
+            FacesContext.getCurrentInstance().addMessage(null,
+                    new FacesMessage(FacesMessage.SEVERITY_ERROR,
+                            "La hora seleccionada ya no está disponible.", ""));
+            return null;
+        }
+
         Court court = getActiveCourt();
+        if (court == null) {
+            FacesContext.getCurrentInstance().addMessage(null,
+                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "Cancha no encontrada.", ""));
+            return null;
+        }
+
+        java.time.LocalDate localDate = java.time.LocalDate.parse(date);
+        java.time.LocalTime localHour = java.time.LocalTime.parse(hour);
+
         Reservation res = new Reservation();
-        res.setUserId(authBean.getCurrentUser().getId());
-        res.setOrgId(court.getOrgId());
-        res.setCourtId(selectedCourtId);
-        res.setDate(date);
-        res.setHour(hour);
+        res.setUser(authBean.getCurrentUser());
+        res.setOrganization(court.getOrganization());
+        res.setCourt(court);
+        res.setDate(localDate);
+        res.setHour(localHour);
         res.setDuration(duration);
         res.setPlayerCount(playerCount);
         res.setTotalPrice(getTotalPrice());

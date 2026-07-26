@@ -292,9 +292,28 @@ public class CrudGenericService {
         throw new NonUniqueResultException();
     }
 
+    public long count(String queryString) {
+        Query query = this.em.createQuery(queryString);
+        Object result = query.getSingleResult();
+        return result != null ? ((Number) result).longValue() : 0L;
+    }
+
+    public long count(String queryString, Map<String, Object> parameters) {
+        Query query = this.em.createQuery(queryString);
+        setParameters(query, parameters, 0, 0);
+        Object result = query.getSingleResult();
+        return result != null ? ((Number) result).longValue() : 0L;
+    }
+
+    @SuppressWarnings("unchecked")
+    public <T> T findSingleResultOrNull(String queryString, Class<T> resultClass, Map<String, Object> parameters) {
+        Query query = this.em.createQuery(queryString, resultClass);
+        setParameters(query, parameters, 0, 0);
+        return (T) findSingleResultOrNullWithQuery(query);
+    }
+
     //@Override
     public EntityManager getEntityManager() {
         return em;
     }
-
 }
