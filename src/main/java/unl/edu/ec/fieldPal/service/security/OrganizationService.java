@@ -32,7 +32,7 @@ public class OrganizationService {
         return crudService.findWithNamedQuery("Organization.getByZone", params);
     }
 
-    public Organization findById(String id) throws EntityNotFoundException {
+    public Organization findById(Long id) throws EntityNotFoundException {
         Organization organization = crudService.find(Organization.class, id);
         if (organization == null){
             throw new EntityNotFoundException("Organization no encontrada con [" + id + "]");

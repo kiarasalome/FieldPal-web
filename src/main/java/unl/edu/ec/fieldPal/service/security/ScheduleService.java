@@ -1,10 +1,13 @@
 package unl.edu.ec.fieldPal.service.security;
 
 import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import unl.edu.ec.fieldPal.model.TimeSlot;
 import unl.edu.ec.fieldPal.service.CrudGenericService;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -14,12 +17,14 @@ import java.util.Map;
 @ApplicationScoped
 public class ScheduleService {
 
-    private CrudGenericService crudService = new CrudGenericService();
+    @Inject
+    private CrudGenericService crudService;
+
 
     public ScheduleService() {
     }
 
-    public List<TimeSlot> getSchedule(String courtId, String date) {
+    public List<TimeSlot> getSchedule(Long courtId, LocalDate date) {
         String jpql = "SELECT r.hour FROM Reservation r WHERE r.courtId = :courtId AND r.date = :date";
         Map<String, Object> params = new HashMap<>();
         params.put("courtId", courtId);
@@ -36,7 +41,7 @@ public class ScheduleService {
         return slots;
     }
 
-    public TimeSlot reserve(String courtId, String date, String hour) {
+    public TimeSlot reserve(Long courtId, LocalDate date, LocalTime hour) {
         TimeSlot slot = new TimeSlot(hour, false, courtId, date);
         return crudService.create(slot);
     }

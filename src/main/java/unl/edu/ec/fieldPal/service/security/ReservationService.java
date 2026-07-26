@@ -1,6 +1,7 @@
 package unl.edu.ec.fieldPal.service.security;
 
 
+import jakarta.inject.Inject;
 import jakarta.persistence.EntityNotFoundException;
 import unl.edu.ec.fieldPal.model.Reservation;
 import unl.edu.ec.fieldPal.model.enums.ReservationStatus;
@@ -14,23 +15,24 @@ import java.util.*;
 @ApplicationScoped
 public class ReservationService {
 
+    @Inject
+    private CrudGenericService crudService;
+
     public ReservationService() {
     }
-
-    private CrudGenericService crudService = new CrudGenericService();
 
     public List<Reservation> getAll() {
         String jpql = "SELECT DISTINCT o.reservations FROM Organization o";
         return crudService.findWithQuery(jpql, Collections.emptyMap());
     }
 
-    public List<Reservation> getByUser(String userId){
+    public List<Reservation> getByUser(Long userId){
         Map<String, Object> params = new HashMap<>();
         params.put("user", userId);
         return crudService.findWithNamedQuery("Reservation.getByUser", params);
     }
 
-    public Reservation findById(String id) throws EntityNotFoundException {
+    public Reservation findById(Long id) throws EntityNotFoundException {
         Reservation reservation = crudService.find(Reservation.class, id);
         if (reservation == null){
             throw new EntityNotFoundException("Organization no encontrada con [" + id + "]");
@@ -44,14 +46,14 @@ public class ReservationService {
 
     }
 
-    public void cancelReservation(String id) {
+    public void cancelReservation(Long id) {
         Reservation res = findById(id);
         if (res != null) {
             res.setStatus(ReservationStatus.CANCELLED);
         }
     }
 
-    public void confirmReservation(String id) {
+    public void confirmReservation(Long id) {
         Reservation res = findById(id);
         if (res != null) {
             res.setConfirmed(true);

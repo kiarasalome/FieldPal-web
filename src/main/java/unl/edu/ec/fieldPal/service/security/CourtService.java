@@ -1,5 +1,6 @@
 package unl.edu.ec.fieldPal.service.security;
 
+import jakarta.inject.Inject;
 import jakarta.persistence.EntityNotFoundException;
 import unl.edu.ec.fieldPal.model.Court;
 import unl.edu.ec.fieldPal.model.enums.CourtType;
@@ -13,7 +14,9 @@ import java.util.*;
 @ApplicationScoped
 public class CourtService {
 
-    private CrudGenericService crudService = new CrudGenericService();
+    @Inject
+    private CrudGenericService crudService;
+
     public CourtService() {
     }
 
@@ -22,7 +25,7 @@ public class CourtService {
         return crudService.findWithQuery(jpql, Collections.emptyMap());
     }
 
-    public List<Court> getByOrg(String orgId){
+    public List<Court> getByOrg(Long orgId){
         if (orgId == null) return new ArrayList<>();
         Map<String, Object> params = new HashMap<>();
         params.put("orgId", orgId);
@@ -35,7 +38,7 @@ public class CourtService {
         return crudService.findWithNamedQuery("Court.getByType", params);
     }
 
-    public Court findById(String id) {
+    public Court findById(Long id) {
         if (id == null) return null;
         Court court = crudService.find(Court.class, id);
         if (court == null){
@@ -69,7 +72,7 @@ public class CourtService {
         crudService.update(court);
     }
 
-    public void removeCourt(String id) {
+    public void removeCourt(Long id) {
         if (id == null) return;
         crudService.delete(Court.class, id);
     }

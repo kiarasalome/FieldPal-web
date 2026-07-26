@@ -48,7 +48,7 @@ public class UserService {
         crudService.update(user); // Actualización en base de datos
     }
 
-    public User findById(String id) {
+    public User findById(Long id) {
         return crudService.find(User.class, id);    }
 
     //ATENCION CON LOS SIGUIENTES METODOS
