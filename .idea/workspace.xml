@@ -1,4 +1,92 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="PropertiesComponent">{}</component>
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="8901f649-f81a-450b-b83a-822e2df66ea2" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/liberty/config/server.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/liberty/config/server.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/META-INF/persistence.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/META-INF/persistence.xml" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="McpProjectServerCommands">
+    <commands />
+    <urls />
+  </component>
+  <component name="NextEditCompletionFeaturesState">
+    <decayedCancelled>
+      <entry key="MS100" value="1.5500629816776075" />
+      <entry key="MS500" value="4.1681246175885684" />
+      <entry key="S2" value="6.650365629676429" />
+      <entry key="S5" value="7.417209172932846" />
+      <entry key="S10" value="7.700886891870864" />
+      <entry key="S30" value="7.898524839809494" />
+      <entry key="S60" value="7.949493209531019" />
+      <entry key="M2" value="8.0385046088626" />
+      <entry key="M5" value="9.234658071906228" />
+      <entry key="M10" value="11.342114824266456" />
+      <entry key="M15" value="12.651069119150911" />
+      <entry key="M30" value="14.470566889641225" />
+      <entry key="H1" value="15.631345362054265" />
+      <entry key="H2" value="16.287503524724556" />
+      <entry key="H4" value="16.636416295962412" />
+      <entry key="D1" value="16.938358021700495" />
+      <entry key="W1" value="16.99116807436595" />
+    </decayedCancelled>
+    <decayedSelected>
+      <entry key="MS100" value="0.0" />
+      <entry key="MS500" value="0.0" />
+      <entry key="S2" value="0.0" />
+      <entry key="S5" value="0.0" />
+      <entry key="S10" value="0.0" />
+      <entry key="S30" value="0.0" />
+      <entry key="S60" value="0.0" />
+      <entry key="M2" value="0.0" />
+      <entry key="M5" value="0.0" />
+      <entry key="M10" value="0.0" />
+      <entry key="M15" value="0.0" />
+      <entry key="M30" value="0.0" />
+      <entry key="H1" value="0.0" />
+      <entry key="H2" value="0.0" />
+      <entry key="H4" value="0.0" />
+      <entry key="D1" value="0.0" />
+      <entry key="W1" value="0.0" />
+    </decayedSelected>
+    <decayedShown>
+      <entry key="MS100" value="1.3828101296505262" />
+      <entry key="MS500" value="4.085580231439784" />
+      <entry key="S2" value="6.620930239532645" />
+      <entry key="S5" value="7.404399915760242" />
+      <entry key="S10" value="7.69429279945496" />
+      <entry key="S30" value="7.896282996946235" />
+      <entry key="S60" value="7.948365961784108" />
+      <entry key="M2" value="8.037888389017482" />
+      <entry key="M5" value="9.23403277703902" />
+      <entry key="M10" value="11.34146593972518" />
+      <entry key="M15" value="12.650497282931608" />
+      <entry key="M30" value="14.470184208345879" />
+      <entry key="H1" value="15.631123161110173" />
+      <entry key="H2" value="16.287383702926334" />
+      <entry key="H4" value="16.636354066410423" />
+      <entry key="D1" value="16.938347315701915" />
+      <entry key="W1" value="16.99116653658229" />
+    </decayedShown>
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "git-widget-placeholder": "main",
+    "node.js.selected.package.tslint": "(autodetect)"
+  }
+}]]></component>
+  <component name="TaskManager">
+    <servers />
+  </component>
 </project>
