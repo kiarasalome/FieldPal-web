@@ -249,4 +249,24 @@ public class GestionBean implements Serializable {
         newCourtLighting = true;
         newCourtCovered = false;
     }
+
+    // === Pestaña activa del panel ===
+    // JSF resuelve #{gestionBean.activeTab} mediante estos métodos.
+    public String getActiveTab() {
+        return activeTab;
+    }
+
+    public void setActiveTab(String activeTab) {
+        this.activeTab = activeTab;
+    }
+
+    // === Texto de búsqueda de reservas ===
+    // Requerido por #{gestionBean.search} en gestion.xhtml.
+    public String getSearch() {
+        return search;
+    }
+
+    public void setSearch(String search) {
+        this.search = search;
+    }
 }

@@ -68,7 +68,7 @@
         <!-- ═══ PANEL ═══ -->
         <h:panelGroup rendered="#{authBean.authenticated and authBean.admin}" layout="block" style="max-width:80rem;margin:0 auto;padding:0 1rem 4rem;">
 
-            <div class="fp-flex fp-gap-2" style="flex-wrap:wrap;border-bottom:1px solid var(--fp-border);margin-bottom:1.5rem;">
+            <h:panelGroup id="tabsNav" layout="block" styleClass="fp-flex fp-gap-2" style="flex-wrap:wrap;border-bottom:1px solid var(--fp-border);margin-bottom:1.5rem;">
                 <p:commandLink styleClass="fp-admin-tab #{gestionBean.activeTab == 'dashboard' ? 'active' : ''}"
                                action="#{gestionBean.setActiveTab('dashboard')}" process="@this" update="tabContent tabsNav">
                     <span class="material-symbols-outlined">dashboard</span> Dashboard
@@ -81,7 +81,7 @@
                                action="#{gestionBean.setActiveTab('reservations')}" process="@this" update="tabContent tabsNav">
                     <span class="material-symbols-outlined">event_note</span> Reservas de Clientes
                 </p:commandLink>
-            </div>
+            </h:panelGroup>
 
             <h:panelGroup id="tabContent" layout="block">
 
