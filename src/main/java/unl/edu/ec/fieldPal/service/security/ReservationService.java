@@ -44,10 +44,6 @@ public class ReservationService {
         reservationRepository.save(res);
     }
 
-    public void addRervation(Reservation res) {
-        addReservation(res);
-    }
-
     public void cancelReservation(Long id) {
         Reservation res = findById(id);
         if (res != null) {
