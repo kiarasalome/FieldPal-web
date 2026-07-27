@@ -143,19 +143,14 @@ public class GestionBean implements Serializable {
     }
 
     public String doAddCourt() {
-        if (newCourtOrg == null || newCourtOrg.isEmpty()) {
+        if (newCourtOrg == null) {
             FacesContext.getCurrentInstance().addMessage(null,
                     new FacesMessage(FacesMessage.SEVERITY_ERROR, "Selecciona una organización.", ""));
             return null;
         }
         Court court = new Court();
-        try {
-            court.setOrgId(Long.valueOf(newCourtOrg));
-        } catch (NumberFormatException e) {
-            FacesContext.getCurrentInstance().addMessage(null,
-                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "Organización inválida.", ""));
-            return null;
-        }
+        court.setOrgId(newCourtOrg);
+
         court.setName(newCourtName);
         court.setType(newCourtType);
         court.setPricePerHour(newCourtPrice);

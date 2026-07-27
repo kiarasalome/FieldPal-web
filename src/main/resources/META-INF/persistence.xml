@@ -6,7 +6,7 @@
              version="3.0">
 
     <persistence-unit name="fieldPalPU" transaction-type="JTA">
-        <jta-data-source>jdbc/fieldpalDS</jta-data-source>
+        <jta-data-source>jdbc/fieldPalDS</jta-data-source>
 
         <properties>
             <!-- 1. Configuración de generación / actualización de tablas (esquema de BD) -->

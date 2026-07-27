@@ -57,7 +57,7 @@ public class ReservaBean implements Serializable {
     private Long selectedCourtId = null;
 
     // Datos de reserva
-    private LocalDate date = null;
+    private LocalDate date = LocalDate.now();
     private LocalTime hour = null;
     private int duration = 1;
     private int playerCount = 5;
@@ -91,8 +91,8 @@ public class ReservaBean implements Serializable {
         }
         return scheduleService.getSchedule(selectedCourtId, date).stream()
                 .filter(TimeSlot::isAvailable)
-                .map(slot -> slot.getHour() != null ? slot.getHour().toString() : "")
-                .filter(h -> !h.isEmpty())
+                .map(TimeSlot::getHour)
+                .filter(java.util.Objects::nonNull)
                 .collect(Collectors.toList());
     }
 
@@ -151,15 +151,12 @@ public class ReservaBean implements Serializable {
             return null;
         }
 
-        java.time.LocalDate localDate = java.time.LocalDate.parse(date);
-        java.time.LocalTime localHour = java.time.LocalTime.parse(hour);
-
         Reservation res = new Reservation();
         res.setUser(authBean.getCurrentUser());
         res.setOrganization(court.getOrganization());
         res.setCourt(court);
-        res.setDate(localDate);
-        res.setHour(localHour);
+        res.setDate(date);
+        res.setHour(hour);
         res.setDuration(duration);
         res.setPlayerCount(playerCount);
         res.setTotalPrice(getTotalPrice());
@@ -202,4 +199,3 @@ public class ReservaBean implements Serializable {
     public String getContactPhone() { return contactPhone; }
     public void setContactPhone(String contactPhone) { this.contactPhone = contactPhone; }
 }
-

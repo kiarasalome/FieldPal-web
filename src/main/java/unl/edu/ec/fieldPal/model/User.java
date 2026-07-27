@@ -58,6 +58,9 @@ public class User implements Serializable {
     @NotNull(message = "Debe asignar un rol al usuario")
     private UserRole role; // PLAYER o ADMIN. [2]
 
+    @Column(name = "active", nullable = false)
+    private boolean active = true;
+
     /**
      * Relación con Reservas: Un usuario puede tener muchas reservas.
      * Mapeada por el atributo 'user' en la clase Reservation.
@@ -118,6 +121,9 @@ public class User implements Serializable {
 
     public UserRole getRole() { return role; }
     public void setRole(UserRole role) { this.role = role; }
+
+    public boolean isActive() { return active; }
+    public void setActive(boolean active) { this.active = active; }
 
     public List<Reservation> getReservations() { return reservations; }
     public void setReservations(List<Reservation> reservations) { this.reservations = reservations; }

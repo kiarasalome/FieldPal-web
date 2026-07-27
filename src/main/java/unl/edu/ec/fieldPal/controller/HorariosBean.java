@@ -47,7 +47,7 @@ public class HorariosBean implements Serializable {
     public void init() {
         List<Organization> orgs = organizationService.getAll();
         if (!orgs.isEmpty() && orgs.get(0).getId() != null) {
-            selectOrganization(orgs.get(0).getId().toString());
+            selectOrganization(orgs.get(0).getId());
         }
     }
 

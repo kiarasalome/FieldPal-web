@@ -30,7 +30,7 @@ public class OrganizationService {
     }
 
     public Organization findById(Long id) throws EntityNotFoundException {
-        Organization organization = crudService.find(Organization.class, id);
+        Organization organization = organizationRepository.findById(id);
         if (organization == null){
             throw new EntityNotFoundException("Organization no encontrada con [" + id + "]");
         }

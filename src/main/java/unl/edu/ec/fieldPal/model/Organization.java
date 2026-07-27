@@ -26,6 +26,9 @@ public class Organization implements Serializable {
     @NotBlank(message = "Ingrese el nombre del complejo deportivo")
     private String name;
 
+    @Column(name = "ruc", length = 13, unique = true)
+    private String ruc;
+
     @Enumerated(EnumType.STRING)
     @Column(name = "zone", nullable = false, length = 50)
     @NotNull(message = "Debe seleccionar una zona de la ciudad")
@@ -105,6 +108,9 @@ public class Organization implements Serializable {
 
     public String getName() { return name; }
     public void setName(String name) { this.name = name; }
+
+    public String getRuc() { return ruc; }
+    public void setRuc(String ruc) { this.ruc = ruc; }
 
     public Zone getZone() { return zone; }
     public void setZone(Zone zone) { this.zone = zone; }

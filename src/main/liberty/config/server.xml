@@ -33,7 +33,7 @@
 -->
 <!-- Variables sobreescritas por env vars de Docker: DB_HOST, DB_PORT, DB_NAME, DB_USER, DB_PASSWORD -->
 <variable name="db.host"     defaultValue="localhost"      envVarName="DB_HOST"/>
-<variable name="db.port"     defaultValue="5432"           envVarName="DB_PORT"/>
+<variable name="db.port"     defaultValue="5435"           envVarName="DB_PORT"/>
 <variable name="db.name"     defaultValue="fieldpal"          envVarName="BD_NAME"/>
 <variable name="db.user"     defaultValue="fieldpaluser"      envVarName="BD_USER"/>
 <variable name="db.pwd" defaultValue="fieldpalUser2626"  envVarName="BD_PWD"/>
