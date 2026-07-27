@@ -56,7 +56,7 @@
         </h:panelGroup>
 
         <!-- ═══ SIN CANCHA SELECCIONADA ═══ -->
-        <h:panelGroup rendered="#{empty reservaBean.activeCourt}" layout="block" styleClass="fp-text-center"
+        <h:panelGroup rendered="#{authBean.authenticated and empty reservaBean.activeCourt}" layout="block" styleClass="fp-text-center"
                       style="min-height:60vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:2rem 1rem;">
             <span class="material-symbols-outlined"
                   style="font-size:4rem;color:var(--fp-text-muted);opacity:.25;">sports_soccer</span>
