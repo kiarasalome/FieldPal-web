@@ -7,11 +7,15 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import unl.edu.ec.fieldPal.model.enums.ReservationStatus;
 
-import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Objects;
+
+/**
+ * @author NeoCoreTeam
+ * Entidad que representa la acción de realizar una reserva de una cancha y horario
+ */
 
 @Entity
 @Table(name = "reservations")
@@ -21,7 +25,6 @@ public class Reservation implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // Antes era solo un String suelto; ahora es una relación con User
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
     private User user;
@@ -72,26 +75,6 @@ public class Reservation implements Serializable {
     private String contactPhone;
 
     public Reservation() {}
-
-    public Reservation(Long id, User user, Organization organization, Court court,
-                       LocalDate date, LocalTime hour, int duration, int playerCount,
-                       double totalPrice, ReservationStatus status, boolean confirmed,
-                       String contactName, String contactPhone) {
-        this.id = id;
-        this.user = user;
-        this.organization = organization;
-        this.court = court;
-        this.date = date;
-        this.hour = hour;
-        this.duration = duration;
-        this.playerCount = playerCount;
-        this.totalPrice = totalPrice;
-        this.status = status;
-        this.confirmed = confirmed;
-        this.contactName = contactName;
-        this.contactPhone = contactPhone;
-    }
-
 
     public Long getOrgId() {
         return organization != null ? organization.getId() : null;
@@ -174,8 +157,7 @@ public class Reservation implements Serializable {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof Reservation)) return false;
-        Reservation that = (Reservation) o;
+        if (!(o instanceof Reservation that)) return false;
         return Objects.equals(id, that.id);
     }
 

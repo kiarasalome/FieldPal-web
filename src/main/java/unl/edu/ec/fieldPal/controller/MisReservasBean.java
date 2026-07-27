@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
+ * @author NeoCoreTeam
  * Managed Bean para la página de mis reservas.
  */
 @Named

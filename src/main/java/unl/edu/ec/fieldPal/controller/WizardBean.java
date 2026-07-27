@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * @author NeoCoreTeam
  * Controller para gestionar el asistente (Wizard) de registro de nuevos complejos deportivos.
  * Lógica simplificada de validaciones apoyada en la capa de la Vista (XHTML).
  */
@@ -44,19 +45,15 @@ public class WizardBean implements Serializable {
     private List<Court> tempCourts;
     private Court currentCourt;
 
-    // true si el admin ya tenía un complejo guardado y estamos editándolo
-    // en vez de crear uno nuevo desde cero.
     private boolean editMode = false;
 
-    // Variables del Paso 4 (Políticas y Horarios)
+    // Políticas y Horarios
     private List<ScheduleDay> scheduleDays;
     private Integer reservationDepositPercentage;
     private boolean allowFreeCancellation;
 
     @PostConstruct
     public void init() {
-        // ¿El admin ya configuró su complejo antes? (sin BD todavía: se guarda
-        // el id en la sesión vía AuthBean — ver saveAll() más abajo)
         Long existingOrgId = authBean.getOrganizationId();
         if (existingOrgId != null) {
             Organization existing = organizationService.findById(existingOrgId);
@@ -121,7 +118,7 @@ public class WizardBean implements Serializable {
             }
         }
 
-        // VALIDACIÓN PASO 3: Horarios coherentes de apertura/cierre
+        // Horarios coherentes de apertura/cierre
         if ("horarios".equals(currentStep)) {
             boolean alMenosUnDiaActivo = false;
 
@@ -158,13 +155,13 @@ public class WizardBean implements Serializable {
     }
 
     private int getStepIndex(String step) {
-        switch (step) {
-            case "organizacion": return 1;
-            case "canchas": return 2;
-            case "horarios": return 3;
-            case "politicas": return 4;
-            default: return 99;
-        }
+        return switch (step) {
+            case "organizacion" -> 1;
+            case "canchas" -> 2;
+            case "horarios" -> 3;
+            case "politicas" -> 4;
+            default -> 99;
+        };
     }
 
     // === Lógica del Paso 2 (Canchas) ===
@@ -206,7 +203,7 @@ public class WizardBean implements Serializable {
         }
     }
 
-    // === Lógica de Guardado Final (Paso 4) ===
+    // Lógica de Guardado Final
 
     public String saveAll() {
         try {
@@ -218,8 +215,6 @@ public class WizardBean implements Serializable {
             // 1. Guardar Organización
             organizationService.save(newOrganization);
 
-            // Anclar el complejo a la sesión del admin (sin BD todavía, así
-            // GestionBean y este mismo wizard saben que ya no está vacío).
             authBean.setOrganizationId(newOrganization.getId());
 
             // 2. Asociar y guardar canchas
@@ -236,8 +231,6 @@ public class WizardBean implements Serializable {
 
             FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true);
 
-            // Vuelve al panel de administración para ver el saludo y el dashboard actualizados.
-            // Ajusta la ruta si gestion.xhtml no vive en /admin/.
             return "/admin/gestion.xhtml?faces-redirect=true";
 
         } catch (Exception e) {
@@ -256,7 +249,7 @@ public class WizardBean implements Serializable {
 
     public boolean isEditMode() { return editMode; }
 
-    // === Getters y Setters ===
+    // Getters y Setters
 
     public Organization getNewOrganization() { return newOrganization; }
     public void setNewOrganization(Organization newOrganization) { this.newOrganization = newOrganization; }
@@ -276,11 +269,10 @@ public class WizardBean implements Serializable {
     public boolean isAllowFreeCancellation() { return allowFreeCancellation; }
     public void setAllowFreeCancellation(boolean allowFreeCancellation) { this.allowFreeCancellation = allowFreeCancellation; }
 
-    // =========================================================================
-    // CLASE AUXILIAR INTERNA: Representa el horario de un día individual de la semana
-    // =========================================================================
+    // Clase Auxiliar: Representa el horario de un día individual de la semana
     public static class ScheduleDay implements Serializable {
 
+        @Serial
         private static final long serialVersionUID = 1L;
 
         private String dayName;

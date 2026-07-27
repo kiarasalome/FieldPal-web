@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
+ * @author NeoCoreTeam
  * Managed Bean para la página de reserva.
  * Datos quemados - editar después para conectar a BD real.
  */
