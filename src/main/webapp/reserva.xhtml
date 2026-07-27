@@ -141,6 +141,7 @@
                             <label class="fp-form-label">Fecha</label>
                             <h:inputText id="dateInput" value="#{reservaBean.date}" styleClass="fp-input"
                                          required="true" requiredMessage="Selecciona una fecha para reservar">
+                                <f:converter converterId="localDateConverter"/>
                                 <f:passThroughAttribute name="type" value="date"/>
                                 <p:ajax event="change" process="@this" listener="#{reservaBean.onDateOrCourtChange}" update="scheduleWrap hourMenu"/>
                             </h:inputText>
@@ -149,6 +150,7 @@
                             <label class="fp-form-label">Hora</label>
                             <p:selectOneMenu id="hourMenu" value="#{reservaBean.hour}" styleClass="fp-input" style="width:100%"
                                              required="true" requiredMessage="Selecciona una hora para reservar">
+                                <f:converter converterId="localTimeConverter"/>
                                 <f:selectItem itemLabel="Seleccionar hora" itemValue="" noSelectionOption="true"/>
                                 <f:selectItems value="#{reservaBean.availableHours}"/>
                                 <p:ajax process="@this" update="@this"/>

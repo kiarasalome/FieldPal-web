@@ -121,6 +121,7 @@
                     <div class="fp-form-group" style="max-width:330px;margin-bottom:1.25rem;">
                         <label class="fp-form-label">Fecha</label>
                         <h:inputText value="#{horariosBean.date}" styleClass="fp-input">
+                            <f:converter converterId="localDateConverter"/>
                             <f:passThroughAttribute name="type" value="date"/>
                             <p:ajax event="change" process="@this" update="@form"/>
                         </h:inputText>
