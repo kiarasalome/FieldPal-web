@@ -10,8 +10,10 @@ import unl.edu.ec.fieldPal.model.Organization;
 import unl.edu.ec.fieldPal.model.Court;
 import unl.edu.ec.fieldPal.model.enums.Zone;
 import unl.edu.ec.fieldPal.model.enums.CourtType;
+import unl.edu.ec.fieldPal.model.User;
 import unl.edu.ec.fieldPal.service.security.OrganizationService;
 import unl.edu.ec.fieldPal.service.security.CourtService;
+import unl.edu.ec.fieldPal.service.security.UserService;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -36,6 +38,9 @@ public class WizardBean implements Serializable {
 
     @Inject
     private CourtService courtService;
+
+    @Inject
+    private UserService userService;
 
     @Inject
     private AuthBean authBean;
@@ -216,6 +221,15 @@ public class WizardBean implements Serializable {
             organizationService.save(newOrganization);
 
             authBean.setOrganizationId(newOrganization.getId());
+
+            // Persistir el vínculo admin -> organización en BD (no solo en la sesión),
+            // así la próxima vez que este admin inicie sesión (incluso en otro navegador)
+            // el sistema sabe cuál es SU organización y no mezcla datos con otros admins.
+            User currentUser = authBean.getCurrentUser();
+            if (currentUser != null) {
+                currentUser.setOrganizationId(newOrganization.getId());
+                userService.updateUser(currentUser);
+            }
 
             // 2. Asociar y guardar canchas
             for (Court court : tempCourts) {

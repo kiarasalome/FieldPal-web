@@ -115,6 +115,10 @@ public class AuthBean implements Serializable {
     // === Helpers de validación (evitan repetir la misma lógica en login/registro) ===
     private void loginSuccess(User user, String welcomeMessage) {
         currentUser = user;
+        // Antes esto quedaba en null hasta que el admin pasaba por el Wizard en la MISMA sesión.
+        // Ahora se recupera de BD, así cada admin siempre ve su propia organización
+        // (y no la del admin predefinido u otro admin) desde el mismo login.
+        organizationId = user.isAdmin() ? user.getOrganizationId() : null;
         FacesContext.getCurrentInstance().addMessage(null,
                 new FacesMessage(FacesMessage.SEVERITY_INFO, welcomeMessage, ""));
     }

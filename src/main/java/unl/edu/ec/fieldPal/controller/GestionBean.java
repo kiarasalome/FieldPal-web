@@ -4,6 +4,7 @@ import unl.edu.ec.fieldPal.model.Court;
 import unl.edu.ec.fieldPal.model.Organization;
 import unl.edu.ec.fieldPal.model.Reservation;
 import unl.edu.ec.fieldPal.model.enums.CourtType;
+import unl.edu.ec.fieldPal.model.enums.ReservationStatus;
 import unl.edu.ec.fieldPal.model.enums.Zone;
 import unl.edu.ec.fieldPal.service.security.CourtService;
 import unl.edu.ec.fieldPal.service.security.OrganizationService;
@@ -87,14 +88,31 @@ public class GestionBean implements Serializable {
     public CourtType[] getCourtTypes() { return CourtType.values(); }
 
     // === Dashboard stats ===
-    public int getTotalCanchas() { return Math.toIntExact(courtService.getCourtCount()); }
-    public int getReservasActivas() { return reservationService.getActiveCount(); }
+    // Antes usaban courtService.getCourtCount() / reservationService.getActiveCount() / getMonthlyIncome(),
+    // que consultan TODAS las canchas/reservas del sistema (de cualquier organización/admin).
+    // Ahora se calculan solo sobre lo que pertenece a la organización del admin logueado.
+    public int getTotalCanchas() { return getAllCourts().size(); }
+
+    public int getReservasActivas() {
+        return (int) getAllReservations().stream()
+                .filter(r -> r.getStatus() == ReservationStatus.UPCOMING)
+                .count();
+    }
+
     public int getUsuarios() { return userService.getUserCount(); }
-    public double getIngresosMes() { return reservationService.getMonthlyIncome(); }
+
+    public double getIngresosMes() {
+        return getAllReservations().stream()
+                .filter(r -> r.getStatus() != ReservationStatus.CANCELLED)
+                .mapToDouble(Reservation::getTotalPrice)
+                .sum();
+    }
 
     // === Organizaciones ===
+    // Un admin solo debe ver/gestionar SU propia organización, no las de otros admins.
     public List<Organization> getAllOrganizations() {
-        return organizationService.getAll();
+        Organization mine = getMyOrganization();
+        return mine != null ? List.of(mine) : List.of();
     }
 
     public String doAddOrganization() {
@@ -139,8 +157,10 @@ public class GestionBean implements Serializable {
     }
 
     // === Canchas ===
+    // Antes: courtService.getAll() devolvía TODAS las canchas de TODAS las organizaciones.
+    // Ahora se filtra por la organización del admin logueado.
     public List<Court> getAllCourts() {
-        return courtService.getAll();
+        return courtService.getByOrg(authBean.getOrganizationId());
     }
 
     public String doAddCourt() {
@@ -189,8 +209,10 @@ public class GestionBean implements Serializable {
     }
 
     // === Reservas ===
+    // Antes: reservationService.getAll() devolvía TODAS las reservas del sistema,
+    // incluyendo las del admin predefinido y las de cualquier otra organización.
     public List<Reservation> getAllReservations() {
-        List<Reservation> all = reservationService.getAll();
+        List<Reservation> all = reservationService.getByOrg(authBean.getOrganizationId());
         if (search == null || search.isEmpty()) return all;
         String lowerSearch = search.toLowerCase();
         return all.stream()

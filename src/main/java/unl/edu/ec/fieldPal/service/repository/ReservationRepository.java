@@ -38,6 +38,13 @@ public class ReservationRepository {
         return crud.findWithQuery("SELECT r FROM Reservation r WHERE r.user.id = :userId", params);
     }
 
+    public List<Reservation> findByOrg(Long orgId) {
+        if (orgId == null) return List.of();
+        Map<String, Object> params = new HashMap<>();
+        params.put("orgId", orgId);
+        return crud.findWithQuery("SELECT r FROM Reservation r WHERE r.organization.id = :orgId", params);
+    }
+
     public long countByStatus(ReservationStatus status) {
         Map<String, Object> params = new HashMap<>();
         params.put("status", status);

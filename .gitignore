@@ -1,4 +1,7 @@
 /*.idea
 /docker-env
+/src/main/liberty/config/server.xml
+/docker-compose-dev-pg.yml
+/
 target/
 .mvn/wrapper/maven-wrapper.jar

@@ -30,6 +30,11 @@ public class ReservationService {
         return reservationRepository.findByUser(userId);
     }
 
+    public List<Reservation> getByOrg(Long orgId) {
+        if (orgId == null) return new ArrayList<>();
+        return reservationRepository.findByOrg(orgId);
+    }
+
     public Reservation findById(Long id) throws EntityNotFoundException {
         if (id == null) return null;
         Reservation reservation = reservationRepository.findById(id);
