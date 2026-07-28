@@ -62,6 +62,16 @@ public class User implements Serializable {
     private boolean active = true;
 
     /**
+     * Relación con la Organización que administra (solo aplica a usuarios con rol ADMIN).
+     * Es la que faltaba: sin este vínculo persistido en BD, no había forma de saber
+     * qué organización/canchas/reservas le pertenecen a cada admin, y todos los
+     * paneles terminaban mostrando los datos de TODOS los admins mezclados.
+     */
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "org_id", referencedColumnName = "id", nullable = true)
+    private Organization organization;
+
+    /**
      * Relación con Reservas: Un usuario puede tener muchas reservas.
      * Mapeada por el atributo 'user' en la clase Reservation.
      * */
@@ -127,6 +137,24 @@ public class User implements Serializable {
 
     public List<Reservation> getReservations() { return reservations; }
     public void setReservations(List<Reservation> reservations) { this.reservations = reservations; }
+
+    public Organization getOrganization() { return organization; }
+    public void setOrganization(Organization organization) { this.organization = organization; }
+
+    public Long getOrganizationId() {
+        return organization != null ? organization.getId() : null;
+    }
+
+    public void setOrganizationId(Long organizationId) {
+        if (organizationId == null) {
+            this.organization = null;
+            return;
+        }
+        if (this.organization == null) {
+            this.organization = new Organization();
+        }
+        this.organization.setId(organizationId);
+    }
 
     // === Implementación de Equals y HashCode (Comparación por ID) ===
 

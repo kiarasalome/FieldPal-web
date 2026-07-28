@@ -1,11 +1,17 @@
 -- USUARIOS (Admin y Jugador)
 -- ============================================
+-- NOTA: ORG_ID de este admin se completa con el UPDATE de más abajo (después de
+-- crear la fila 1 de ORGANIZATIONS), para no romper la referencia de llave foránea.
 INSERT INTO USERS (ID, NAME, EMAIL, PHONE, PASSWORD, ROLE, ACTIVE) VALUES (1, 'Admin FieldPal', 'admin@fieldpal.com', '+593990000001', 'admin123', 'ADMIN', true);
 INSERT INTO USERS (ID, NAME, EMAIL, PHONE, PASSWORD, ROLE, ACTIVE) VALUES (2, 'Carlos Mendoza', 'jugador@fieldpal.com', '+593991234567', 'jugador123', 'PLAYER', true);
 
 -- ORGANIZACIONES (complejos deportivos)
 -- ============================================
 INSERT INTO ORGANIZATIONS (ID, NAME, ZONE, ADDRESS, PHONE, EMAIL, RATING, DESCRIPTION, COURT_COUNT, LATITUDE, LONGITUDE) VALUES (1, 'Complejo Deportivo Loja Norte', 'NORTE', 'Av. Universitaria y Circunvalacion', '+593987654321', 'contacto@lojanorte.com', 4.5, 'Complejo con canchas de futbol y voley', 2, -3.9928, -79.2033);
+
+-- Vincular al admin predefinido con SU organización (antes este vínculo no existía
+-- en BD y quedaba solo en la sesión, por eso los datos de distintos admins se mezclaban).
+UPDATE USERS SET ORG_ID = 1 WHERE ID = 1;
 
 -- CANCHAS (dependen de organizations)
 -- ============================================
