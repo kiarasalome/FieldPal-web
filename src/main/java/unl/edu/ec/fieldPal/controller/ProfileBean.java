@@ -11,6 +11,7 @@ import java.io.Serial;
 import java.io.Serializable;
 import unl.edu.ec.fieldPal.domain.User;
 import unl.edu.ec.fieldPal.business.service.UserService;
+import unl.edu.ec.fieldPal.faces.FacesUtil;
 
 /**
  * @author NeoCoreTeam
@@ -49,7 +50,7 @@ public class ProfileBean implements Serializable {
             // Lógica de cambio de contraseña SIN ENCRIPTACIÓN
             if (newPassword != null && !newPassword.isEmpty()) {
                 if (!newPassword.equals(confirmPassword)) {
-                    showMsg(FacesMessage.SEVERITY_ERROR, "Las contraseñas no coinciden.");
+                    FacesUtil.addErrorMessage("Las contraseñas no coinciden.");
                     return;
                 }
                 // Guardamos directo para que el Login (que no usa encriptación) funcione
@@ -62,14 +63,14 @@ public class ProfileBean implements Serializable {
             // Sincronizar sesión actual para actualizar el Header
             authBean.setCurrentUser(editingUser);
 
-            showMsg(FacesMessage.SEVERITY_INFO, "Tu perfil ha sido actualizado.");
+            FacesUtil.addSuccessMessage("Tu perfil ha sido actualizado.");
 
             // Limpiar campos temporales
             this.newPassword = null;
             this.confirmPassword = null;
 
         } catch (Exception e) {
-            showMsg(FacesMessage.SEVERITY_ERROR, "Error al guardar: " + e.getMessage());
+            FacesUtil.addErrorMessage("Error al guardar: " + e.getMessage());
         }
     }
 
