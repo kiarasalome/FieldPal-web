@@ -88,9 +88,7 @@ public class GestionBean implements Serializable {
     public CourtType[] getCourtTypes() { return CourtType.values(); }
 
     // === Dashboard stats ===
-    // Antes usaban courtService.getCourtCount() / reservationService.getActiveCount() / getMonthlyIncome(),
-    // que consultan TODAS las canchas/reservas del sistema (de cualquier organización/admin).
-    // Ahora se calculan solo sobre lo que pertenece a la organización del admin logueado.
+    // Cálculo sobre lo que pertenece a la organización del admin logueado.
     public int getTotalCanchas() { return getAllCourts().size(); }
 
     public int getReservasActivas() {
@@ -157,8 +155,7 @@ public class GestionBean implements Serializable {
     }
 
     // === Canchas ===
-    // Antes: courtService.getAll() devolvía TODAS las canchas de TODAS las organizaciones.
-    // Ahora se filtra por la organización del admin logueado.
+    // Se filtra por la organización del admin logueado.
     public List<Court> getAllCourts() {
         return courtService.getByOrg(authBean.getOrganizationId());
     }

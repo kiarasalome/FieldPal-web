@@ -2,8 +2,8 @@ package unl.edu.ec.fieldPal.business.repository;
 
 import jakarta.ejb.Stateless;
 import jakarta.inject.Inject;
-import jakarta.persistence.EntityNotFoundException;
 import unl.edu.ec.fieldPal.domain.User;
+import unl.edu.ec.fieldPal.exception.EntityNotFoundException;
 import unl.edu.ec.fieldPal.business.genericService.CrudGenericService;
 
 import java.util.HashMap;
