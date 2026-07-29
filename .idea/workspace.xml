@@ -6,13 +6,6 @@
   <component name="ChangeListManager">
     <list default="true" id="8901f649-f81a-450b-b83a-822e2df66ea2" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/unl/edu/ec/fieldPal/controller/AuthBean.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/unl/edu/ec/fieldPal/controller/AuthBean.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/unl/edu/ec/fieldPal/controller/GestionBean.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/unl/edu/ec/fieldPal/controller/GestionBean.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/unl/edu/ec/fieldPal/controller/WizardBean.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/unl/edu/ec/fieldPal/controller/WizardBean.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/unl/edu/ec/fieldPal/model/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/unl/edu/ec/fieldPal/model/User.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/unl/edu/ec/fieldPal/service/repository/ReservationRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/unl/edu/ec/fieldPal/service/repository/ReservationRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/unl/edu/ec/fieldPal/service/security/ReservationService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/unl/edu/ec/fieldPal/service/security/ReservationService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/db/initial-data.sql" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/db/initial-data.sql" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -25,6 +18,7 @@
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+    <option name="RESET_MODE" value="HARD" />
   </component>
   <component name="McpProjectServerCommands">
     <commands />
@@ -32,23 +26,23 @@
   </component>
   <component name="NextEditCompletionFeaturesState">
     <decayedCancelled>
-      <entry key="MS100" value="1.3624811302909885" />
-      <entry key="MS500" value="2.412469757141816" />
-      <entry key="S2" value="4.037053489285218" />
-      <entry key="S5" value="5.690602932168537" />
-      <entry key="S10" value="6.8722500145453935" />
-      <entry key="S30" value="8.12951803237285" />
-      <entry key="S60" value="8.539314191549561" />
-      <entry key="M2" value="8.764493184506257" />
-      <entry key="M5" value="10.250458654301918" />
-      <entry key="M10" value="24.6171942389881" />
-      <entry key="M15" value="53.222640254532045" />
-      <entry key="M30" value="201.45229559333927" />
-      <entry key="H1" value="549.4619817412771" />
-      <entry key="H2" value="1023.7554486632625" />
-      <entry key="H4" value="1449.716955883524" />
-      <entry key="D1" value="1977.4397858890813" />
-      <entry key="W1" value="2089.582351094607" />
+      <entry key="MS100" value="1.3485371411212077" />
+      <entry key="MS500" value="3.855995321942043" />
+      <entry key="S2" value="12.378741256550029" />
+      <entry key="S5" value="21.836370273328985" />
+      <entry key="S10" value="28.23687930836626" />
+      <entry key="S30" value="37.81290606036108" />
+      <entry key="S60" value="47.296122397711265" />
+      <entry key="M2" value="63.20276476619663" />
+      <entry key="M5" value="110.30383287898148" />
+      <entry key="M10" value="186.77891625932565" />
+      <entry key="M15" value="264.2007168023811" />
+      <entry key="M30" value="471.8587628261805" />
+      <entry key="H1" value="754.5069755957303" />
+      <entry key="H2" value="1030.8748152970213" />
+      <entry key="H4" value="1234.853714269491" />
+      <entry key="D1" value="1455.117188084034" />
+      <entry key="W1" value="1498.5756918002658" />
     </decayedCancelled>
     <decayedSelected>
       <entry key="MS100" value="0.0" />
@@ -70,36 +64,39 @@
       <entry key="W1" value="0.0" />
     </decayedSelected>
     <decayedShown>
-      <entry key="MS100" value="1.2885197683412704" />
-      <entry key="MS500" value="2.3842392316672933" />
-      <entry key="S2" value="4.019998265753135" />
-      <entry key="S5" value="5.679609467119794" />
-      <entry key="S10" value="6.865351512628488" />
-      <entry key="S30" value="8.12673282843102" />
-      <entry key="S60" value="8.537842931994005" />
-      <entry key="M2" value="8.763735961743539" />
-      <entry key="M5" value="10.250092071521227" />
-      <entry key="M10" value="24.616698122175674" />
-      <entry key="M15" value="53.22192612603566" />
-      <entry key="M30" value="201.45104568930776" />
-      <entry key="H1" value="549.460362276684" />
-      <entry key="H2" value="1023.7539755287921" />
-      <entry key="H4" value="1449.715923514049" />
-      <entry key="D1" value="1977.4395528038942" />
-      <entry key="W1" value="2089.5823159424135" />
+      <entry key="MS100" value="1.3045924936334792" />
+      <entry key="MS500" value="3.826700927963306" />
+      <entry key="S2" value="12.353922864129311" />
+      <entry key="S5" value="21.81679520588346" />
+      <entry key="S10" value="28.22288452095" />
+      <entry key="S30" value="37.80600891592923" />
+      <entry key="S60" value="47.29172374020445" />
+      <entry key="M2" value="63.199863708681285" />
+      <entry key="M5" value="110.3017739614442" />
+      <entry key="M10" value="186.77685164676743" />
+      <entry key="M15" value="264.1984845562611" />
+      <entry key="M30" value="471.8564346292303" />
+      <entry key="H1" value="754.5050142471607" />
+      <entry key="H2" value="1030.8734542829168" />
+      <entry key="H4" value="1234.852893681237" />
+      <entry key="D1" value="1455.1170259645587" />
+      <entry key="W1" value="1498.5756679219796" />
     </decayedShown>
   </component>
+  <component name="ProblemsViewState">
+    <option name="selectedTabId" value="ProjectErrors" />
+  </component>
   <component name="ProjectColorInfo">{
-  &quot;customColor&quot;: &quot;&quot;,
-  &quot;associatedIndex&quot;: 3
-}</component>
+    &quot;customColor&quot;: &quot;&quot;,
+    &quot;associatedIndex&quot;: 3
+    }</component>
   <component name="ProjectId" id="3H4N2rCb5ywQK4w00hhVt0bXl7C" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
   <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
+    &quot;keyToString&quot;: {
     &quot;RunOnceActivity.MCP Project settings loaded&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
@@ -114,8 +111,8 @@
     &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
     &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
     &quot;to.speed.mode.migration.done&quot;: &quot;true&quot;
-  }
-}</component>
+    }
+    }</component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
