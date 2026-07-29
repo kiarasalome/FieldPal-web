@@ -29,6 +29,7 @@
     <title>FieldPal — <ui:insert name="title">Reserva tu cancha</ui:insert></title>
 
     <h:outputStylesheet library="css" name="fieldpal.css" />
+    <h:outputScript library="js" name="fieldpal-theme-persist.js" target="head" />
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&amp;family=DM+Sans:wght@400;500;600;700&amp;family=Space+Grotesk:wght@500;600;700&amp;family=JetBrains+Mono:wght@500;700&amp;display=swap" rel="stylesheet" />
@@ -68,7 +69,7 @@
         <h:panelGroup rendered="#{authBean.authenticated}">
             <ui:include src="/WEB-INF/templates/fragments/profile-modal.xhtml"/>
         </h:panelGroup>
-        
+
     </h:form>
 
 </h:body>
