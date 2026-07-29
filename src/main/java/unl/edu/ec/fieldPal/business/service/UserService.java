@@ -1,23 +1,20 @@
 package unl.edu.ec.fieldPal.business.service;
 
+import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+import jakarta.inject.Named;
 import unl.edu.ec.fieldPal.domain.User;
 import unl.edu.ec.fieldPal.domain.enums.UserRole;
-import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.inject.Named;
-import unl.edu.ec.fieldPal.business.genericService.CrudGenericService;
-
-import java.util.HashMap;
+import unl.edu.ec.fieldPal.business.repository.UserRepository;
 
 import java.util.List;
-import java.util.Map;
 
 @Named
 @ApplicationScoped
 public class UserService {
 
     @Inject
-    private CrudGenericService crudService;
+    private UserRepository userRepository;
 
     public UserService() {
     }
@@ -26,41 +23,31 @@ public class UserService {
         if (email == null || password == null) return null;
 
         // TODO SEGURIDAD: aquí se compara la contraseña en texto plano contra la BD.
-        Map<String, Object> params = new HashMap<>();
-        params.put("email", email);
-        params.put("password", password);
-        return crudService.findSingleResultOrNullWithNamedQuery("User.login", params);
+        return userRepository.login(email, password);
     }
 
     public User register(String name, String email, String phone, String password, UserRole role) {
         if (email == null) return null;
 
-        Map<String, Object> params = new HashMap<>();
-        params.put("email", email);
-        List<User> existing = crudService.findWithQuery(
-                "SELECT u FROM User u WHERE u.email = :email", params);
-        if (!existing.isEmpty()) {
+        if (userRepository.findByEmail(email) != null) {
             return null; // Ya existe una cuenta con este email
         }
 
         // TODO SEGURIDAD: password debería guardarse como hash, no en texto plano.
         User newUser = new User(null, name, email, phone, password, role);
-        return crudService.create(newUser);
+        return userRepository.save(newUser);
     }
 
     public void updateUser(User user) {
         if (user == null || user.getId() == null) return;
-        crudService.update(user);
+        userRepository.save(user);
     }
 
     public int getUserCount() {
-        String jpql = "SELECT COUNT(u) FROM User u";
-        List<Long> result = crudService.findWithQuery(jpql, new HashMap<>());
-        return result.isEmpty() ? 0 : result.get(0).intValue();
+        return (int) userRepository.count();
     }
 
     public List<User> getAllUsers() {
-        String jpql = "SELECT u FROM User u";
-        return crudService.findWithQuery(jpql, new HashMap<>());
+        return userRepository.findAll();
     }
 }

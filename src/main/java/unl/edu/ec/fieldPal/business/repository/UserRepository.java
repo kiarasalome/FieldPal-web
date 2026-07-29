@@ -2,6 +2,7 @@ package unl.edu.ec.fieldPal.business.repository;
 
 import jakarta.ejb.Stateless;
 import jakarta.inject.Inject;
+import jakarta.persistence.EntityNotFoundException;
 import unl.edu.ec.fieldPal.domain.User;
 import unl.edu.ec.fieldPal.business.genericService.CrudGenericService;
 
@@ -33,6 +34,27 @@ public class UserRepository {
         params.put("email", email);
         return crud.findSingleResultOrNull(
                 "SELECT u FROM User u WHERE LOWER(u.email) = LOWER(:email)", User.class, params);
+    }
+
+    /**
+     * Login vía la named query "User.login" (email + password), tal como
+     * antes se invocaba directamente desde UserService con CrudGenericService.
+     */
+    public User login(String email, String password) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("email", email);
+        params.put("password", password);
+        return crud.findSingleResultOrNullWithNamedQuery("User.login", params);
+    }
+
+    public User find(String name) throws EntityNotFoundException {
+        Map<String, Object> params = new HashMap<>();
+        params.put("name", name);
+        User userFound = crud.findSingleResultOrNullWithNamedQuery("User.findLikeName", params);
+        if (userFound == null) {
+            throw new EntityNotFoundException("User no encontrado con [" + name + "]");
+        }
+        return userFound;
     }
 
     public List<User> findAll() {
