@@ -6,6 +6,7 @@ import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import jakarta.persistence.EntityNotFoundException;
 import unl.edu.ec.fieldPal.model.Court;
+import unl.edu.ec.fieldPal.model.Organization;
 import unl.edu.ec.fieldPal.model.enums.CourtType;
 import unl.edu.ec.fieldPal.service.repository.CourtRepository;
 
@@ -18,6 +19,9 @@ public class CourtService {
 
     @Inject
     private CourtRepository courtRepository;
+
+    @Inject
+    private OrganizationService organizationService;
 
     public CourtService() {
     }
@@ -48,11 +52,11 @@ public class CourtService {
     public void save(Court court) {
         if (court == null) return;
         courtRepository.save(court);
+        syncCourtCount(court.getOrgId());
     }
 
     public void addCourt(Court court) {
-        if (court == null) return;
-        courtRepository.save(court);
+        save(court);
     }
 
     public void updateCourt(Court court) {
@@ -62,10 +66,27 @@ public class CourtService {
 
     public void removeCourt(Long id) {
         if (id == null) return;
+        Court court = courtRepository.findById(id);
+        Long orgId = court != null ? court.getOrgId() : null;
         courtRepository.deleteById(id);
+        syncCourtCount(orgId);
     }
 
     public int getCourtCount() {
         return (int) courtRepository.count();
+    }
+
+    // El campo Organization.courtCount es un contador "de caché" para mostrar
+    // rápido "X canchas" en homepage/search/horarios. Nadie lo recalculaba al
+    // crear/eliminar canchas, así que se quedaba pegado en 0 para siempre.
+    private void syncCourtCount(Long orgId) {
+        if (orgId == null) return;
+        try {
+            Organization org = organizationService.findById(orgId);
+            org.setCourtCount(courtRepository.findByOrg(orgId).size());
+            organizationService.updateOrganization(org);
+        } catch (EntityNotFoundException e) {
+            // Organización inexistente (dato inconsistente); no hay nada que sincronizar.
+        }
     }
 }
