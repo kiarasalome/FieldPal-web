@@ -11,7 +11,6 @@
 <ui:composition template="/WEB-INF/templates/fragments/layout.xhtml"
                 xmlns="http://www.w3.org/1999/xhtml"
                 xmlns:h="jakarta.faces.html"
-                xmlns:f="jakarta.faces.core"
                 xmlns:ui="jakarta.faces.facelets"
                 xmlns:p="primefaces">
 
@@ -29,15 +28,19 @@
             <p:messages showDetail="true" closable="false" globalOnly="true"/>
 
             <div class="fp-card fp-card-padded" style="text-align:left;">
-                <div class="fp-form-group fp-input-icon-wrapper">
+                <div class="fp-form-group">
                     <label class="fp-form-label">Correo electrónico</label>
-                    <span class="fp-input-icon material-symbols-outlined">mail</span>
-                    <p:inputText value="#{authBean.loginEmail}" styleClass="fp-input fp-input-icon-field" placeholder="correo@ejemplo.com"/>
+                    <div class="fp-input-icon-wrapper">
+                        <span class="fp-input-icon material-symbols-outlined">mail</span>
+                        <p:inputText value="#{authBean.loginEmail}" styleClass="fp-input fp-input-icon-field" placeholder="correo@ejemplo.com"/>
+                    </div>
                 </div>
-                <div class="fp-form-group fp-input-icon-wrapper">
+                <div class="fp-form-group">
                     <label class="fp-form-label">Contraseña</label>
-                    <span class="fp-input-icon material-symbols-outlined">lock</span>
-                    <p:password value="#{authBean.loginPassword}" styleClass="fp-input fp-input-icon-field" placeholder="••••••••" feedback="false" redisplay="true"/>
+                    <div class="fp-input-icon-wrapper">
+                        <span class="fp-input-icon material-symbols-outlined">lock</span>
+                        <p:password value="#{authBean.loginPassword}" styleClass="fp-input fp-input-icon-field" placeholder="••••••••" feedback="false" redisplay="true"/>
+                    </div>
                 </div>
 
                 <!-- ajax="false": submit tradicional de formulario completo, igual que en registro.xhtml -->

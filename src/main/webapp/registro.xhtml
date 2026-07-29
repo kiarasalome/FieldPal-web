@@ -31,30 +31,40 @@
             <p:messages showDetail="true" closable="false" globalOnly="true"/>
 
             <div class="fp-card fp-card-padded" style="text-align:left;">
-                <div class="fp-form-group fp-input-icon-wrapper">
+                <div class="fp-form-group">
                     <label class="fp-form-label">Nombre completo</label>
-                    <span class="fp-input-icon material-symbols-outlined">person</span>
-                    <p:inputText value="#{authBean.registerName}" styleClass="fp-input fp-input-icon-field" placeholder="Tu nombre"/>
+                    <div class="fp-input-icon-wrapper">
+                        <span class="fp-input-icon material-symbols-outlined">person</span>
+                        <p:inputText value="#{authBean.registerName}" styleClass="fp-input fp-input-icon-field" placeholder="Tu nombre"/>
+                    </div>
                 </div>
-                <div class="fp-form-group fp-input-icon-wrapper">
+                <div class="fp-form-group">
                     <label class="fp-form-label">Teléfono</label>
-                    <span class="fp-input-icon material-symbols-outlined">call</span>
-                    <p:inputText value="#{authBean.registerPhone}" styleClass="fp-input fp-input-icon-field" placeholder="+593 99 123 4567"/>
+                    <div class="fp-input-icon-wrapper">
+                        <span class="fp-input-icon material-symbols-outlined">call</span>
+                        <p:inputText value="#{authBean.registerPhone}" styleClass="fp-input fp-input-icon-field" placeholder="+593 99 123 4567"/>
+                    </div>
                 </div>
-                <div class="fp-form-group fp-input-icon-wrapper">
+                <div class="fp-form-group">
                     <label class="fp-form-label">Correo electrónico</label>
-                    <span class="fp-input-icon material-symbols-outlined">mail</span>
-                    <p:inputText value="#{authBean.registerEmail}" styleClass="fp-input fp-input-icon-field" placeholder="correo@ejemplo.com"/>
+                    <div class="fp-input-icon-wrapper">
+                        <span class="fp-input-icon material-symbols-outlined">mail</span>
+                        <p:inputText value="#{authBean.registerEmail}" styleClass="fp-input fp-input-icon-field" placeholder="correo@ejemplo.com"/>
+                    </div>
                 </div>
-                <div class="fp-form-group fp-input-icon-wrapper">
+                <div class="fp-form-group">
                     <label class="fp-form-label">Contraseña</label>
-                    <span class="fp-input-icon material-symbols-outlined">lock</span>
-                    <p:password value="#{authBean.registerPassword}" styleClass="fp-input fp-input-icon-field" placeholder="Mínimo 6 caracteres" feedback="false"/>
+                    <div class="fp-input-icon-wrapper">
+                        <span class="fp-input-icon material-symbols-outlined">lock</span>
+                        <p:password value="#{authBean.registerPassword}" styleClass="fp-input fp-input-icon-field" placeholder="Mínimo 6 caracteres" feedback="false"/>
+                    </div>
                 </div>
-                <div class="fp-form-group fp-input-icon-wrapper">
+                <div class="fp-form-group">
                     <label class="fp-form-label">Confirmar contraseña</label>
-                    <span class="fp-input-icon material-symbols-outlined">lock_reset</span>
-                    <p:password value="#{authBean.registerConfirmPassword}" styleClass="fp-input fp-input-icon-field" placeholder="Repite tu contraseña" feedback="false"/>
+                    <div class="fp-input-icon-wrapper">
+                        <span class="fp-input-icon material-symbols-outlined">lock_reset</span>
+                        <p:password value="#{authBean.registerConfirmPassword}" styleClass="fp-input fp-input-icon-field" placeholder="Repite tu contraseña" feedback="false"/>
+                    </div>
                 </div>
 
                 <div class="fp-form-group">
