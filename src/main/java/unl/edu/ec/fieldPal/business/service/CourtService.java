@@ -1,14 +1,13 @@
-package unl.edu.ec.fieldPal.service.security;
+package unl.edu.ec.fieldPal.business.service;
 
 import jakarta.inject.Inject;
 import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import jakarta.persistence.EntityNotFoundException;
-import unl.edu.ec.fieldPal.model.Court;
-import unl.edu.ec.fieldPal.model.Organization;
-import unl.edu.ec.fieldPal.model.enums.CourtType;
-import unl.edu.ec.fieldPal.service.repository.CourtRepository;
+import unl.edu.ec.fieldPal.domain.Court;
+import unl.edu.ec.fieldPal.domain.Organization;
+import unl.edu.ec.fieldPal.domain.enums.CourtType;
+import unl.edu.ec.fieldPal.business.repository.CourtRepository;
 
 import java.util.ArrayList;
 import java.util.List;

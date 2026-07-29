@@ -9,8 +9,8 @@ import jakarta.inject.Named;
 
 import java.io.Serial;
 import java.io.Serializable;
-import unl.edu.ec.fieldPal.model.User;
-import unl.edu.ec.fieldPal.service.security.UserService;
+import unl.edu.ec.fieldPal.domain.User;
+import unl.edu.ec.fieldPal.business.service.UserService;
 
 /**
  * @author NeoCoreTeam

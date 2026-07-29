@@ -1,4 +1,4 @@
-package unl.edu.ec.fieldPal.model.enums;
+package unl.edu.ec.fieldPal.domain.enums;
 
 public enum ReservationStatus {
     UPCOMING("Próxima", "event_upcoming", "chip-primary"),

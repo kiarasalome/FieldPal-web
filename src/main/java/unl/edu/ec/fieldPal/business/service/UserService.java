@@ -1,17 +1,13 @@
-package unl.edu.ec.fieldPal.service.security;
+package unl.edu.ec.fieldPal.business.service;
 
 import jakarta.inject.Inject;
-import unl.edu.ec.fieldPal.model.User;
-import unl.edu.ec.fieldPal.model.enums.UserRole;
+import unl.edu.ec.fieldPal.domain.User;
+import unl.edu.ec.fieldPal.domain.enums.UserRole;
 import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.inject.Inject;
 import jakarta.inject.Named;
-import unl.edu.ec.fieldPal.service.CrudGenericService;
+import unl.edu.ec.fieldPal.business.genericService.CrudGenericService;
 
 import java.util.HashMap;
-import unl.edu.ec.fieldPal.model.User;
-import unl.edu.ec.fieldPal.model.enums.UserRole;
-import unl.edu.ec.fieldPal.service.repository.UserRepository;
 
 import java.util.List;
 import java.util.Map;

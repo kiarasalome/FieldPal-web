@@ -1,10 +1,10 @@
-package unl.edu.ec.fieldPal.service.repository;
+package unl.edu.ec.fieldPal.business.repository;
 
 import jakarta.ejb.Stateless;
 import jakarta.inject.Inject;
-import unl.edu.ec.fieldPal.model.Organization;
-import unl.edu.ec.fieldPal.model.enums.Zone;
-import unl.edu.ec.fieldPal.service.CrudGenericService;
+import unl.edu.ec.fieldPal.domain.Organization;
+import unl.edu.ec.fieldPal.domain.enums.Zone;
+import unl.edu.ec.fieldPal.business.genericService.CrudGenericService;
 
 import java.util.HashMap;
 import java.util.List;

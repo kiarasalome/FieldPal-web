@@ -1,16 +1,15 @@
-package unl.edu.ec.fieldPal.service.security;
+package unl.edu.ec.fieldPal.business.service;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
-import unl.edu.ec.fieldPal.model.Court;
-import unl.edu.ec.fieldPal.model.TimeSlot;
-import unl.edu.ec.fieldPal.service.repository.CourtRepository;
-import unl.edu.ec.fieldPal.service.repository.TimeSlotRepository;
+import unl.edu.ec.fieldPal.domain.Court;
+import unl.edu.ec.fieldPal.domain.TimeSlot;
+import unl.edu.ec.fieldPal.business.repository.CourtRepository;
+import unl.edu.ec.fieldPal.business.repository.TimeSlotRepository;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
 

@@ -1,17 +1,17 @@
 package unl.edu.ec.fieldPal.controller;
 
-import unl.edu.ec.fieldPal.model.Court;
-import unl.edu.ec.fieldPal.model.Organization;
-import unl.edu.ec.fieldPal.model.TimeSlot;
-import unl.edu.ec.fieldPal.model.enums.Zone;
-import unl.edu.ec.fieldPal.service.security.CourtService;
-import unl.edu.ec.fieldPal.service.security.OrganizationService;
+import unl.edu.ec.fieldPal.domain.Court;
+import unl.edu.ec.fieldPal.domain.Organization;
+import unl.edu.ec.fieldPal.domain.TimeSlot;
+import unl.edu.ec.fieldPal.domain.enums.Zone;
+import unl.edu.ec.fieldPal.business.service.CourtService;
+import unl.edu.ec.fieldPal.business.service.OrganizationService;
 
 import jakarta.annotation.PostConstruct;
 import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
-import unl.edu.ec.fieldPal.service.security.ScheduleService;
+import unl.edu.ec.fieldPal.business.service.ScheduleService;
 
 import java.io.Serial;
 import java.io.Serializable;

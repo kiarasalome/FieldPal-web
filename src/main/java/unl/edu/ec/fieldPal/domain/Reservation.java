@@ -1,11 +1,11 @@
-package unl.edu.ec.fieldPal.model;
+package unl.edu.ec.fieldPal.domain;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
-import unl.edu.ec.fieldPal.model.enums.ReservationStatus;
+import unl.edu.ec.fieldPal.domain.enums.ReservationStatus;
 
 import java.io.Serializable;
 import java.time.LocalDate;

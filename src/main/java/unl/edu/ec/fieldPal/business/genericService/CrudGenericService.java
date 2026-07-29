@@ -1,4 +1,4 @@
-package unl.edu.ec.fieldPal.service;
+package unl.edu.ec.fieldPal.business.genericService;
 
 import jakarta.ejb.Stateless;
 import jakarta.persistence.*;

@@ -1,10 +1,10 @@
-package unl.edu.ec.fieldPal.model;
+package unl.edu.ec.fieldPal.domain;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import unl.edu.ec.fieldPal.model.enums.CourtType;
+import unl.edu.ec.fieldPal.domain.enums.CourtType;
 
 import java.io.Serializable;
 import java.util.Objects;
