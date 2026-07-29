@@ -1,15 +1,15 @@
 package unl.edu.ec.fieldPal.controller;
 
-import unl.edu.ec.fieldPal.model.Court;
-import unl.edu.ec.fieldPal.model.Organization;
-import unl.edu.ec.fieldPal.model.Reservation;
-import unl.edu.ec.fieldPal.model.enums.CourtType;
-import unl.edu.ec.fieldPal.model.enums.ReservationStatus;
-import unl.edu.ec.fieldPal.model.enums.Zone;
-import unl.edu.ec.fieldPal.service.security.CourtService;
-import unl.edu.ec.fieldPal.service.security.OrganizationService;
-import unl.edu.ec.fieldPal.service.security.ReservationService;
-import unl.edu.ec.fieldPal.service.security.UserService;
+import unl.edu.ec.fieldPal.domain.Court;
+import unl.edu.ec.fieldPal.domain.Organization;
+import unl.edu.ec.fieldPal.domain.Reservation;
+import unl.edu.ec.fieldPal.domain.enums.CourtType;
+import unl.edu.ec.fieldPal.domain.enums.ReservationStatus;
+import unl.edu.ec.fieldPal.domain.enums.Zone;
+import unl.edu.ec.fieldPal.business.service.CourtService;
+import unl.edu.ec.fieldPal.business.service.OrganizationService;
+import unl.edu.ec.fieldPal.business.service.ReservationService;
+import unl.edu.ec.fieldPal.business.service.UserService;
 
 import jakarta.faces.application.FacesMessage;
 import jakarta.faces.context.FacesContext;

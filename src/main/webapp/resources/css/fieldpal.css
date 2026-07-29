@@ -39,8 +39,8 @@ body:has(#fpDarkToggle:checked) {
     --fp-primary-light: #c8da8a;
     --fp-primary-dark: #96b04f;
     --fp-primary-text: #b7cd71;
-    --fp-accent: #0a0a0a;
-    --fp-accent-hover: #0a0a0a;
+    --fp-accent: #c8da8a;
+    --fp-accent-hover: #d6e6a4;
     --fp-accent-text: #0A0A0A;
     --fp-text: #F3F4F6;
     --fp-text-secondary: #9CA3AF;
@@ -228,10 +228,14 @@ body:has(#fpDarkToggle:checked) .fp-input:focus { box-shadow: 0 0 0 3px rgba(183
 
 .fp-input-icon-wrapper { position: relative; }
 .fp-input-icon {
+    /* El wrapper debe contener SOLO el ícono + el input (la etiqueta va
+       afuera, ver login.xhtml/registro.xhtml). Así top:50% centra contra
+       la altura real del input, sea cual sea (no depende de adivinar
+       su altura exacta, que puede variar por las clases de PrimeFaces). */
     position: absolute; left: 0.75rem; top: 50%; transform: translateY(-50%);
     color: var(--fp-text-muted); font-size: 1.125rem;
 }
-.fp-input-icon-field { padding-left: 2.5rem !important; }
+.fp-input.fp-input-icon-field { padding-left: 2.5rem !important; }
 
 .fp-form-group { margin-bottom: 1rem; }
 .fp-form-label {
@@ -370,7 +374,7 @@ footer {
     gap: 8px;
 }
 .footer-inner p {
-    font-size: 13.5px;
+    font-size: 14px;
     color: var(--fp-text-secondary);
     max-width: 320px;
     line-height: 1.6;
@@ -647,11 +651,13 @@ body:has(#fpDarkToggle:checked) .fp-slot-selected { color:#0A0A0A !important; }
     font-size: 2.75rem;
     line-height: 1.15;
     color: #FFFFFF;
+    text-shadow: 0 1px 12px rgba(0, 0, 0, 0.25);
     margin-bottom: 1rem;
 }
 .fp-hero-subtitle {
     font-size: 1.125rem;
     color: rgba(255, 255, 255, 0.85);
+    text-shadow: 0 1px 8px rgba(0, 0, 0, 0.2);
     max-width: 36rem;
     margin: 0 auto 2rem;
 }
@@ -679,7 +685,7 @@ body:has(#fpDarkToggle:checked) .fp-slot-selected { color:#0A0A0A !important; }
 .fp-org-card {
     display:block; text-align:left; cursor:pointer;
     border-radius:1rem; overflow:hidden;
-    border:1.5px solid var(--fp-border-light);
+    border:2px solid var(--fp-border-light);
     background: var(--fp-bg-card);
     box-shadow: 0 1px 3px rgba(0,0,0,.04);
     transition: all .25s ease;

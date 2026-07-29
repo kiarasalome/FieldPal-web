@@ -5,9 +5,9 @@ import jakarta.faces.context.FacesContext;
 import jakarta.enterprise.context.SessionScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
-import unl.edu.ec.fieldPal.model.User;
-import unl.edu.ec.fieldPal.model.enums.UserRole;
-import unl.edu.ec.fieldPal.service.security.UserService;
+import unl.edu.ec.fieldPal.domain.User;
+import unl.edu.ec.fieldPal.domain.enums.UserRole;
+import unl.edu.ec.fieldPal.business.service.UserService;
 
 import java.io.Serial;
 import java.io.Serializable;

@@ -1,0 +1,168 @@
+package unl.edu.ec.fieldPal.domain;
+
+import jakarta.persistence.*;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
+import unl.edu.ec.fieldPal.domain.enums.ReservationStatus;
+
+import java.io.Serializable;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.util.Objects;
+
+/**
+ * @author NeoCoreTeam
+ * Entidad que representa la acción de realizar una reserva de una cancha y horario
+ */
+
+@Entity
+@Table(name = "reservations")
+public class Reservation implements Serializable {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
+    private User user;
+
+    // Relación con Organización (FK: org_id)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "org_id", referencedColumnName = "id", nullable = false)
+    private Organization organization;
+
+    // Relación con Cancha (FK: court_id)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "court_id", referencedColumnName = "id", nullable = false)
+    private Court court;
+
+    @Column(name = "reservation_date", nullable = false)
+    @NotNull(message = "La fecha de reserva es obligatoria")
+    private LocalDate date;
+
+    @Column(name = "reservation_hour", nullable = false)
+    @NotNull(message = "La hora de reserva es obligatoria")
+    private LocalTime hour;
+
+    @Column(name = "duration", nullable = false)
+    @Positive(message = "La duración debe ser mayor a cero")
+    private int duration;
+
+    @Column(name = "player_count")
+    @Min(value = 1, message = "Debe haber al menos 1 jugador")
+    private int playerCount;
+
+    @Column(name = "total_price", nullable = false)
+    @Min(value = 0, message = "El precio total no puede ser negativo")
+    private double totalPrice;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status", nullable = false, length = 30)
+    @NotNull(message = "Defina el estado de la reserva")
+    private ReservationStatus status;
+
+    @Column(name = "confirmed", nullable = false)
+    private boolean confirmed;
+
+    @Column(name = "contact_name", length = 150)
+    @NotBlank(message = "El nombre de contacto es obligatorio")
+    private String contactName;
+
+    @Column(name = "contact_phone", length = 30)
+    private String contactPhone;
+
+    public Reservation() {}
+
+    public Long getOrgId() {
+        return organization != null ? organization.getId() : null;
+    }
+
+    public void setOrgId(Long orgId) {
+        if (this.organization == null) {
+            this.organization = new Organization();
+        }
+        this.organization.setId(orgId);
+    }
+
+    public Long getCourtId() {
+        return court != null ? court.getId() : null;
+    }
+
+    public void setCourtId(Long courtId) {
+        if (this.court == null) {
+            this.court = new Court();
+        }
+        this.court.setId(courtId);
+    }
+
+    // === Método Puente de Compatibilidad con userId (Long) ===
+
+    public Long getUserId() {
+        return user != null ? user.getId() : null;
+    }
+
+    public void setUserId(Long userId) {
+        if (this.user == null) {
+            this.user = new User();
+        }
+        this.user.setId(userId);
+    }
+
+    // === Getters y Setters Estándar ===
+
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
+
+    public User getUser() { return user; }
+    public void setUser(User user) { this.user = user; }
+
+    public Organization getOrganization() { return organization; }
+    public void setOrganization(Organization organization) { this.organization = organization; }
+
+    public Court getCourt() { return court; }
+    public void setCourt(Court court) { this.court = court; }
+
+    public LocalDate getDate() { return date; }
+    public void setDate(LocalDate date) { this.date = date; }
+
+    public LocalTime getHour() { return hour; }
+    public void setHour(LocalTime hour) { this.hour = hour; }
+
+    public int getDuration() { return duration; }
+    public void setDuration(int duration) { this.duration = duration; }
+
+    public int getPlayerCount() { return playerCount; }
+    public void setPlayerCount(int playerCount) { this.playerCount = playerCount; }
+
+    public double getTotalPrice() { return totalPrice; }
+    public void setTotalPrice(double totalPrice) { this.totalPrice = totalPrice; }
+
+    public ReservationStatus getStatus() { return status; }
+    public void setStatus(ReservationStatus status) { this.status = status; }
+
+    public boolean isConfirmed() { return confirmed; }
+    public void setConfirmed(boolean confirmed) { this.confirmed = confirmed; }
+
+    public String getContactName() { return contactName; }
+    public void setContactName(String contactName) { this.contactName = contactName; }
+
+    public String getContactPhone() { return contactPhone; }
+    public void setContactPhone(String contactPhone) { this.contactPhone = contactPhone; }
+
+    // === Equals & HashCode ===
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Reservation that)) return false;
+        return Objects.equals(id, that.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
+}
