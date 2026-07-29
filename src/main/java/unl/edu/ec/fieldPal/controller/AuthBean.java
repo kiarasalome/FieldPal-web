@@ -99,7 +99,7 @@ public class AuthBean implements Serializable {
     }
 
     // === Método de Registro ===
-    public String submitRegister() throws EncryptorException {
+    public String submitRegister() {
         registerName = trim(registerName);
         registerEmail = trim(registerEmail);
         registerPhone = trim(registerPhone);
@@ -135,6 +135,9 @@ public class AuthBean implements Serializable {
             return "/homepage.xhtml?faces-redirect=true";
         } catch (AlreadyEntityException e) {
             addError("Ya existe una cuenta con este nombre de usuario.");
+            return null;
+        } catch (EncryptorException e) {
+            addError("Ocurrió un problema al procesar tu contraseña. Intenta nuevamente.");
             return null;
         }
     }
