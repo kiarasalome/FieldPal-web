@@ -6,6 +6,11 @@ import jakarta.inject.Named;
 import unl.edu.ec.fieldPal.domain.User;
 import unl.edu.ec.fieldPal.domain.enums.UserRole;
 import unl.edu.ec.fieldPal.business.repository.UserRepository;
+import unl.edu.ec.fieldPal.exception.AlreadyEntityException;
+import unl.edu.ec.fieldPal.exception.CredentialInvalidException;
+import unl.edu.ec.fieldPal.exception.EncryptorException;
+import unl.edu.ec.fieldPal.exception.EntityNotFoundException;
+import unl.edu.ec.fieldPal.util.security.EncryptorManager;
 
 import java.util.List;
 
@@ -19,28 +24,57 @@ public class UserService {
     public UserService() {
     }
 
-    public User login(String email, String password) {
-        if (email == null || password == null) return null;
-
-        // TODO SEGURIDAD: aquí se compara la contraseña en texto plano contra la BD.
-        return userRepository.login(email, password);
-    }
-
-    public User register(String name, String email, String phone, String password, UserRole role) {
-        if (email == null) return null;
-
-        if (userRepository.findByEmail(email) != null) {
-            return null; // Ya existe una cuenta con este email
+    public User authenticate(String name, String password)
+            throws CredentialInvalidException {
+        try {
+            User userFound = userRepository.find(name);
+            String pwdEncrypted = EncryptorManager.encrypt(password);
+            if (userFound.getPassword().equals(pwdEncrypted)) {
+                return userFound;
+            }
+            throw new CredentialInvalidException();
+        } catch (EncryptorException e) {
+            throw new CredentialInvalidException("Credenciales incorrectas", e);
+        } catch (EntityNotFoundException e) {
+            throw new CredentialInvalidException();
         }
-
-        // TODO SEGURIDAD: password debería guardarse como hash, no en texto plano.
-        User newUser = new User(null, name, email, phone, password, role);
-        return userRepository.save(newUser);
     }
 
-    public void updateUser(User user) {
-        if (user == null || user.getId() == null) return;
+    public User register(String name, String email, String phone, String password, UserRole role) throws EncryptorException, AlreadyEntityException {
+        if (email == null) return null;
+        User user = new User(null, name, email, phone, password, role);
+
+        String pwdEncrypted = EncryptorManager.encrypt(user.getPassword());
+        user.setPassword(pwdEncrypted);
+        // Regla Negocio => El nombre de usuario debe ser unico
+        try {
+            User userFound = userRepository.find(user.getName());
+        } catch (EntityNotFoundException e) {
+            return userRepository.save(user);
+        }
+        throw new AlreadyEntityException("Ya existe otro usuario con ese nombre");
+    }
+
+    public void updateUser(User user) throws EncryptorException, AlreadyEntityException {
+        String pwdEncrypted = EncryptorManager.encrypt(user.getPassword());
+        user.setPassword(pwdEncrypted);
+        // Regla Negocio => El nombre de usuario debe ser unico
+        try {
+            User userFound = userRepository.find(user.getName());
+            if (!userFound.getId().equals(user.getId())) {
+                throw new AlreadyEntityException("Ya existe otro usuario con ese nombre");
+            }
+        } catch (EntityNotFoundException e) {
+        }
         userRepository.save(user);
+    }
+
+    public User findUser(Long id) throws EntityNotFoundException {
+        User user = userRepository.findById(id);
+        if (user == null) {
+            throw new EntityNotFoundException("Usuario no encontrado con id: " + id);
+        }
+        return user;
     }
 
     public int getUserCount() {

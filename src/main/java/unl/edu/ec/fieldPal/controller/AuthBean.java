@@ -8,9 +8,15 @@ import jakarta.inject.Named;
 import unl.edu.ec.fieldPal.domain.User;
 import unl.edu.ec.fieldPal.domain.enums.UserRole;
 import unl.edu.ec.fieldPal.business.service.UserService;
+import unl.edu.ec.fieldPal.exception.AlreadyEntityException;
+import unl.edu.ec.fieldPal.exception.CredentialInvalidException;
+import unl.edu.ec.fieldPal.exception.EncryptorException;
+import unl.edu.ec.fieldPal.util.security.EncryptorManager;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
 /**
@@ -26,6 +32,11 @@ public class AuthBean implements Serializable {
 
     @Inject
     private UserService userService;
+
+    private static final Logger logger = Logger.getLogger(AuthBean.class.getName());
+
+    private User user;
+    private Long selectedUserId;
 
     // Campos del formulario
     private String loginEmail = "";
@@ -45,10 +56,27 @@ public class AuthBean implements Serializable {
     // Usuario actual en sesión
     private User currentUser;
 
-    // Organización del admin logueado (sin BD todavía: se ancla a la sesión
-    // para que WizardBean/GestionBean sepan si ya configuró su complejo,
-    // sin tener que volver a pedir los datos en cada visita mientras dure la sesión).
     private Long organizationId;
+
+    private User editableUser;
+
+    public void loadUserForEdit() {
+        if (currentUser == null) return;
+        editableUser = new User(
+                currentUser.getId(),
+                currentUser.getName(),
+                currentUser.getEmail(),
+                currentUser.getPhone(),
+                currentUser.getPassword(), // sigue encriptada aquí
+                currentUser.getRole()
+        );
+        decryptPassword(editableUser); // solo en esta copia temporal
+    }
+
+    public String cancelEdit() {
+        editableUser = null; // se descarta, no vive más que el tiempo de edición
+        return null;
+    }
 
     // === Método de Login ===
     public String submitLogin() {
@@ -59,17 +87,15 @@ public class AuthBean implements Serializable {
             return null;
         }
 
-        User user = userService.login(loginEmail, loginPassword);
-        if (user == null) {
+        try {
+            User user = userService.authenticate(loginEmail, loginPassword);
+            loginSuccess(user, "¡Bienvenido, " + user.getName() + "!");
+            clearLoginForm();
+            return "/homepage.xhtml?faces-redirect=true";
+        } catch (CredentialInvalidException e) {
             addError("Correo o contraseña incorrectos.");
             return null;
         }
-
-        loginSuccess(user, "¡Bienvenido, " + user.getName() + "!");
-        clearLoginForm();
-        // Por ahora, tanto admin como jugador aterrizan en el inicio;
-        // el menú superior ya se adapta según el rol (ver header.xhtml).
-        return "/homepage.xhtml?faces-redirect=true";
     }
 
     // === Método de Registro ===
@@ -100,27 +126,41 @@ public class AuthBean implements Serializable {
         }
 
         UserRole role = "ADMIN".equals(registerRole) ? UserRole.ADMIN : UserRole.PLAYER;
-        User user = userService.register(registerName, registerEmail,
-                registerPhone, registerPassword, role);
-        if (user == null) {
-            addError("Ya existe una cuenta con este correo electrónico.");
+
+        try {
+            User user = userService.register(registerName, registerEmail,
+                    registerPhone, registerPassword, role);
+            loginSuccess(user, "Cuenta creada exitosamente. ¡Bienvenido, " + user.getName() + "!");
+            clearRegisterForm();
+            return "/homepage.xhtml?faces-redirect=true";
+        } catch (AlreadyEntityException e) {
+            addError("Ya existe una cuenta con este nombre de usuario.");
+            return null;
+        } catch (EncryptorException e) {
+            addError("Ocurrió un problema al procesar tu contraseña. Intenta nuevamente.");
             return null;
         }
-
-        loginSuccess(user, "Cuenta creada exitosamente. ¡Bienvenido, " + user.getName() + "!");
-        clearRegisterForm();
-        return "/homepage.xhtml?faces-redirect=true";
     }
 
     // === Helpers de validación (evitan repetir la misma lógica en login/registro) ===
     private void loginSuccess(User user, String welcomeMessage) {
         currentUser = user;
-        // Antes esto quedaba en null hasta que el admin pasaba por el Wizard en la MISMA sesión.
-        // Ahora se recupera de BD, así cada admin siempre ve su propia organización
-        // (y no la del admin predefinido u otro admin) desde el mismo login.
         organizationId = user.isAdmin() ? user.getOrganizationId() : null;
         FacesContext.getCurrentInstance().addMessage(null,
                 new FacesMessage(FacesMessage.SEVERITY_INFO, welcomeMessage, ""));
+    }
+
+    private void decryptPassword(User user) {
+        try {
+            if (user.getPassword() != null && !user.getPassword().isEmpty()) {
+                logger.info("Password no nulo y no vacío, procediendo a desencriptar");
+                String pwdDecrypted = EncryptorManager.decrypt(user.getPassword());
+                user.setPassword(pwdDecrypted);
+            }
+        } catch (Exception e) {
+            logger.log(Level.SEVERE, "Inconveniente al descifrar la clave", e);
+            addError("Inconveniente al descifrar la clave: " + e.getMessage());
+        }
     }
 
     private void addError(String detail) {
